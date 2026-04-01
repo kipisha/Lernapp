@@ -1,4 +1,0 @@
-##**Kurzbeschreibung der Persönlichkeit**##
-Sie ist eine extrovertierte, temperamentvolle Person mit auffälligen roten Haaren und einer Vorliebe für die Farbe Blau. Sie diskutiert gerne – auch mit Lehrpersonen – bleibt dabei aber schlagfertig und leistungsstark, weshalb sie trotz ihrer rebellischen Art gute Noten erzielt.
-Im Alltag ist sie jedoch chaotisch und unorganisiert: Hausaufgaben vergisst sie oft, schreibt sich nichts auf und verliert schnell den Überblick. Gruppenarbeiten mag sie nicht, besonders nicht mit Freunden, weil sie sich dort schlecht konzentrieren kann.
-Ihr Hobby Boxen zeigt ihre energiegeladene, kämpferische Seite und gibt ihr Struktur, die ihr im Schulalltag fehlt. Trotz allem möchte sie organisierter werden und spürt, dass sie mit etwas mehr Ordnung noch viel mehr erreichen könnte.
