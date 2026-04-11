@@ -126,7 +126,7 @@
 - WhatsApp / Snapchat  
 - Spotify  
 - Kamera-App (für Tafelnotizen)  
-- Kalender-App (selten genutzt)  
+
 
 ---
 
