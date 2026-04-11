@@ -1,28 +1,37 @@
 # 👤 Persona: Lara Meier
 
 ## 1. Allgemeine Informationen
-- **Name:** Lara Meier
-- **Alter:** 18
-- **Wohnort:** Zürich-Wiedikon
-- **Beruf:** BMS-Schülerin, Teilzeitjob am Wochenende
-- **Haarfarbe:** Rot (Ginger)
-- **Lieblingsfarbe:** Blau
+- **Name:** Lara Meier  
+- **Alter:** 18  
+- **Wohnort:** Zürich-Wiedikon  
+- **Beruf:** BMS-Schülerin, Teilzeitjob am Wochenende  
+- **Haarfarbe:** Rot (Ginger), leicht gewellt  
+- **Augenfarbe:** Grün  
+- **Lieblingsfarbe:** Blau  
+- **Körperbau:** sportlich (Boxing)  
+- **Technik:** Smartphone-heavy, organisiert fast alles digital  
 
 ---
 
-## 2. Persönlichkeit
-- Extrovertiert, temperamentvoll, humorvoll
-- Diskutiert gerne mit Lehrpersonen, erzielt aber gute Noten
-- Vergesslich, schreibt sich nichts auf
-- Macht ungern Gruppenarbeiten
-- Hobby: Boxing
+## 2. Persönlichkeit (sehr detailliert)
+- **Extrovertiert & energiegeladen:** Sie liebt Gespräche, lacht viel und ist selten allein.  
+- **Temperamentvoll:** Sie reagiert schnell, manchmal impulsiv, aber immer ehrlich.  
+- **Chaotisch-kreativ:** Ihr Zimmer ist halb organisiert, halb Chaos – genauso wie ihr Schulalltag.  
+- **Optimistisch:** Sie glaubt immer, dass „es schon irgendwie klappt“.  
+- **Ungeduldig:** Lange Erklärungen oder komplizierte Apps frustrieren sie.  
+- **Selbstbewusst:** Sie sagt ihre Meinung offen, auch wenn es aneckt.  
+- **Emotional spontan:** Sie zeigt Gefühle offen – Freude, Stress, Frust.  
+- **Lernverhalten:** Sie lernt am besten unter Druck, aber das stresst sie.  
+- **Stressreaktion:** Wenn sie überfordert ist, scrollt sie TikTok statt anzufangen.  
+- **Motivationstyp:** Sie braucht sichtbare Fortschritte (Punkte, Badges, Häkchen).  
 
 ---
 
 ## 3. Kurzbiografie
-Lara besucht die Berufsmaturitätsschule und hat viele Hausaufgaben, Prüfungen und Projekte gleichzeitig.  
-Neben der Schule arbeitet sie Teilzeit und verdient nicht viel Geld.  
-Sie nutzt ihr Smartphone täglich, um ihren Alltag zu organisieren, bevorzugt aber kostenlose und einfache Apps.
+- Lara besucht die Berufsmaturitätsschule und jongliert gleichzeitig Hausaufgaben, Prüfungen und Projekte.  
+- Neben der Schule arbeitet sie Teilzeit und verdient nicht viel Geld, weshalb sie nur kostenlose Apps nutzt.  
+- Sie lebt in Zürich-Wiedikon, liebt Boxing und verbringt viel Zeit mit Freund:innen.  
+- Ihr Alltag ist lebendig, aber chaotisch – sie vergisst oft Aufgaben, weil sie sich zu sehr auf ihr Gedächtnis verlässt.
 
 ---
 
@@ -31,108 +40,100 @@ Sie nutzt ihr Smartphone täglich, um ihren Alltag zu organisieren, bevorzugt ab
 
 ---
 
-## 5. Ein typischer Tag
-### Morgen
-- Steht knapp auf, frühstückt schnell
-- Im Tram: Social Media, Chats, Musik
-- In der Schule: macht Fotos von Tafelnotizen, trägt Aufgaben aber nicht ein
+## 5. Ein typischer Tag (Story)
+### 🌅 Morgen
+- Steht knapp auf, frühstückt schnell oder gar nicht.  
+- Im Tram: Social Media, Chats, Musik.  
+- In der Schule: macht Fotos von Tafelnotizen, trägt Aufgaben aber nicht ein.  
 
-### Nachmittag
-- Müde nach der Schule
-- Scrollt am Handy, trifft Freund:innen
-- Hausaufgaben nur, wenn sie dringend sind
+### ☀️ Nachmittag
+- Nach der Schule müde.  
+- Scrollt am Handy, trifft Freund:innen.  
+- Hausaufgaben nur, wenn sie dringend sind.  
+- Oft: „Ich fang später an“ → fängt nicht an.  
 
-### Abend
-- Merkt plötzlich, dass morgen eine Prüfung ist
-- Lernt unter Stress
-- Nimmt sich vor, organisierter zu sein
+### 🌙 Abend
+- Merkt plötzlich, dass morgen eine Prüfung ist.  
+- Lernt unter Stress.  
+- Fühlt sich überfordert.  
+- Nimmt sich vor, organisierter zu sein – setzt es aber nicht um.  
 
 ---
 
 ## 6. Probleme (Pain Points)
-- Vergisst Hausaufgaben
-- Lernt zu spät für Prüfungen
-- Kein Überblick über Aufgaben
-- Viele gute Apps kosten Geld
-- Verliert schnell Motivation
+- Vergisst Hausaufgaben  
+- Lernt zu spät für Prüfungen  
+- Kein Überblick über Aufgaben  
+- Viele gute Apps kosten Geld  
+- Verliert schnell Motivation  
+- Stress durch Last-Minute-Lernen  
 
-### Kernproblem
+### 🎯 Kernproblem
 > „Ich fühle mich überfordert, weil ich keinen Überblick über meine Aufgaben habe und dadurch Stress und Last-Minute-Lernen entsteht.“
 
 ---
 
 ## 7. Bedürfnisse
-- Einfache Übersicht über alle Aufgaben
-- Erinnerungen für Prüfungen und Hausaufgaben
-- Motivation zum Lernen
-- Schnelle Eingabe ohne Aufwand
-- App soll gratis sein
-- Alles auf dem Smartphone
+- Einfache Übersicht über alle Aufgaben  
+- Erinnerungen für Prüfungen und Hausaufgaben  
+- Motivation zum Lernen  
+- Schnelle Eingabe ohne Aufwand  
+- App soll gratis sein  
+- Alles auf dem Smartphone  
 
 ---
 
 ## 8. Ziele
 ### Funktionale Ziele
-- Bessere Noten
-- Weniger Stress
-- Aufgaben rechtzeitig erledigen
-- Schule besser organisieren
+- Bessere Noten  
+- Weniger Stress  
+- Aufgaben rechtzeitig erledigen  
+- Schule besser organisisieren  
 
 ### Emotionale Ziele
-- Sicherheit, nichts zu vergessen
-- Stolz auf Fortschritt
-- Mehr Freizeit ohne schlechtes Gewissen
+- Sicherheit, nichts zu vergessen  
+- Stolz auf Fortschritt  
+- Mehr Freizeit ohne schlechtes Gewissen  
+- Struktur ohne Aufwand  
 
 ---
 
 ## 9. Wünsche an die App
-- Hausaufgaben schnell eintragen
-- Prüfungen planen
-- Erinnerungen erhalten
-- Fortschritt sehen
-- Punkte für erledigte Aufgaben
-- App soll kostenlos sein
+- Hausaufgaben schnell eintragen  
+- Prüfungen planen  
+- Erinnerungen erhalten  
+- Fortschritt sehen  
+- Punkte für erledigte Aufgaben  
+- App soll kostenlos sein  
 
 ---
 
-## 10. Digitale Gewohnheiten
-- Nutzt täglich das Smartphone
-- Social Media + Schulapps
-- Lädt nur kostenlose Apps herunter
-- Mag einfache Apps ohne komplizierte Menüs
-- Reagiert gut auf Push-Notifications
-- Mag Belohnungen und Punktesysteme
+## 10. Digitale Gewohnheiten (detailliert)
+- Smartphone täglich 4–6 Stunden  
+- Reagiert gut auf Push-Notifications  
+- Nutzt Apps spontan, nicht geplant  
+- Mag klare Strukturen, aber keine langen Menüs  
+- Braucht visuelles Feedback (Punkte, Fortschritt)  
+- Lädt nur kostenlose Apps herunter  
+- Nutzt Social Media täglich  
+- Macht viele Screenshots statt Notizen  
 
 ---
 
 ## 11. Lieblings-Apps
-- Instagram
-- TikTok
-- WhatsApp / Snapchat
-- Spotify
-- Kamera-App (für Tafelnotizen)
-- Kalender-App (selten genutzt)
+- Instagram  
+- TikTok  
+- WhatsApp / Snapchat  
+- Spotify  
+- Kamera-App (für Tafelnotizen)  
+- Kalender-App (selten genutzt)  
 
 ---
 
 ## 12. Tick / Eigenheiten
-- Denkt „Ich merke mir das schon“ → vergisst es aber
-- Macht viele Screenshots, sortiert sie nie
-- Lernt erst, wenn der Druck groß wird
+- Denkt „Ich merke mir das schon“ → vergisst es aber  
+- Macht viele Screenshots, sortiert sie nie  
+- Lernt erst, wenn der Druck groß wird  
+- Redet mit sich selbst beim Lernen („Okay Lara, Fokus…“)  
+- Belohnt sich nach Prüfungen mit Bubble Tea  
 
-
-
-## 13. Mein nächster Urlaub
-Ein günstiger Trip ans Meer oder in eine europäische Stadt, spontan und unkompliziert.  
-Hauptsache Sonne, Freiheit und kein Schulstress.
-
-
-
-## 14. Was bedeutet das für die App?
-- Extrem schnelle Eingabe (1–2 Klicks)
-- Automatische Erinnerungen
-- Wöchentliche Übersicht
-- Gamification (Punkte, Badges)
-- Sehr einfache UI
-- Kostenlos
-- Motivierende Elemente
