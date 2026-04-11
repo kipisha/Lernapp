@@ -65,4 +65,6 @@ Diese Funktionen wurden in mehreren Iterationen verbessert.
 Alle Screens wurden in einem einzigen Wireframe‑Bild zusammengeführt.
 
 ![Wireframes](./docs/Wireframe/Wireframe.jpg)
+-
+
 
