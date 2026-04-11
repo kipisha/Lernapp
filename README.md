@@ -1,4 +1,4 @@
-# 📱 Lernapp – Projektbeschreibung
+# Lernapp – Projektbeschreibung
 
 Dieses Projekt wurde im Rahmen des Moduls Informatik II erstellt.  
 Ziel war es, eine Lernapplikation zu konzipieren, die Schüler*innen beim Organisieren ihres Schulalltags unterstützt.
@@ -13,11 +13,10 @@ Ziel war es, eine Lernapplikation zu konzipieren, die Schüler*innen beim Organi
 - Hannah Jung : *[junghan1@students.zhaw.ch]*
 - Mimoza Mehmeti: *[mehmemim@students.zhaw.ch]*
 
-  
 **Dozent:**  
 - [Wehrli Samuel] :  *[wehs@zhaw.ch]*
-- [Ho Ka Men ] : *[hokam001@students.zhaw.ch]*
 - [Fox Paul] : *[foxp@zhaw.ch]*
+- [Ho Ka Men ] : *[hokam001@students.zhaw.ch]*
 
 ---
 
@@ -65,5 +64,5 @@ Diese Funktionen wurden in mehreren Iterationen verbessert.
 
 Alle Screens wurden in einem einzigen Wireframe‑Bild zusammengeführt.
 
-![Wireframes](./docs/Wireframe.jpg)
+![Wireframes](./docs/Wireframe/Wireframe.jpg)
 
