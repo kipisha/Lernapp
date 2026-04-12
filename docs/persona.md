@@ -23,7 +23,7 @@
 
 ---
 
-## 2. Persönlichkeit (sehr detailliert)
+## 2. Persönlichkeit
 - **Extrovertiert & energiegeladen:** Sie liebt Gespräche, lacht viel und ist selten allein.  
 - **Temperamentvoll:** Sie reagiert schnell, manchmal impulsiv, aber immer ehrlich.  
 - **Chaotisch-kreativ:** Ihr Zimmer ist halb organisiert, halb Chaos – genauso wie ihr Schulalltag.  
