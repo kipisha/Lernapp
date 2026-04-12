@@ -8,8 +8,8 @@ Ziel war es, eine Lernapplikation zu konzipieren, die Schüler*innen beim Organi
 ## 👥 Projektteam & Kontakt
 
 **Teammitglieder:**  
-- Kipisha Selvan : *[selvakip@students.zhaw.ch]*  
 - Darlene Armenio :  *[armdar01@students.zhaw.ch]*  
+- Kipisha Selvan : *[selvakip@students.zhaw.ch]*  
 - Hannah Jung : *[junghan1@students.zhaw.ch]*
 - Mimoza Mehmeti: *[mehmemim@students.zhaw.ch]*
 
