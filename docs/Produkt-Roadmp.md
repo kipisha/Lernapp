@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Roadmap
 
 # Woche 9
@@ -33,4 +34,6 @@
 
 
 
+=======
+>>>>>>> 0866692 (ich habe alles nochmals überarbeiter)
 
