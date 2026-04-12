@@ -1,6 +1,9 @@
 ## 1. Wireframe
 
-![Wireframe](docs/images/Wireframe.jpg)
+![Wireframe](/docs/images/Wireframe.jpg)
+
+
+
 
 
 

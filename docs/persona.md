@@ -1,6 +1,8 @@
-# 👤 Persona: Lara Meier
-
 ## 1. Allgemeine Informationen
+<div style="display:flex; justify-content:flex-start; align-items:flex-start; gap:20px;">
+
+<div style="flex:1;">
+
 - **Name:** Lara Meier  
 - **Alter:** 18  
 - **Wohnort:** Zürich-Wiedikon  
@@ -10,6 +12,14 @@
 - **Lieblingsfarbe:** Blau  
 - **Körperbau:** sportlich (Boxing)  
 - **Technik:** Smartphone-heavy, organisiert fast alles digital  
+
+</div>
+
+<img src="images/Lara Meier.jpg" width="150" style="border-radius:8px;">
+
+</div>
+
+
 
 ---
 
@@ -69,7 +79,7 @@
 - Stress durch Last-Minute-Lernen  
 
 ### 🎯 Kernproblem
-> „Ich fühle mich überfordert, weil ich keinen Überblick über meine Aufgaben habe und dadurch Stress und Last-Minute-Lernen entsteht.“
+„Ich fühle mich überfordert, weil ich keinen Überblick über meine Aufgaben habe und dadurch Stress und Last-Minute-Lernen entsteht.“
 
 ---
 
