@@ -118,7 +118,7 @@
 
 ---
 
-## 10. Digitale Gewohnheiten (detailliert)
+## 10. Digitale Gewohnheiten
 - Smartphone täglich 4–6 Stunden  
 - Reagiert gut auf Push-Notifications  
 - Nutzt Apps spontan, nicht geplant  
