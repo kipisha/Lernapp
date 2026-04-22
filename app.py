@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd 
 
+
+
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
@@ -32,4 +34,7 @@ pg_weeklyview = st.Page("views/weeklyview.py", title="Wochenansicht", icon=":mat
 pg_progresspoints = st.Page("views/progresspoints.py", title="Punktefortschritt", icon=":material/show_chart:")
 
 pg = st.navigation([pg_home, pg_weeklyview, pg_progresspoints])
-pg.run()
+
+username = st.secrets["webdav"]["username"]
+password = st.secrets["webdav"]["password"]
+base_url = st.secrets["webdav"]["base_url"]
