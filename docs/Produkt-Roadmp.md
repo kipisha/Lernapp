@@ -5,12 +5,14 @@
 - Einträge erstellen können ,die angezeigt werden mit eingegebenem Namen 
 
 ## Woche 10 (MVP Abgabe)
-- Abgabefrist ergänzen zu Einträgen
-- To-Do-Liste erstellen daraus: Aufgaben abhaken können
+- App‑Gerüst aufgebaut (Home, Wochenansicht, Punktefortschritt)
 - Login und Registrieren: Daten werden gespeichert für Nutzer:innen
 
 ## Woche 11 
 - Wochenansicht erstellen für die Aufgaben
+- Einträge erstellen
+- Abgabefrist hinzufügen
+- Aufgaben abhaken
 - Aufgaben und Prüfungen einfügen können in der Wochenübersicht und gespeichert weden
 - Das beim login keine Fehlermeldungen kommen und login speichern können in der App
 

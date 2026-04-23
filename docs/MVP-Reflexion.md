@@ -1,6 +1,6 @@
 ## **MVP‑Reflexion – Woche 09–10**
 ### **1. Konnte das MVP (V1.0) wie geplant umgesetzt werden?**
-Das MVP konnte teilweise erfolgreich umgesetzt werden. Die Grundfunktionen wie das Erstellen von Einträgen und das Anzeigen der Aufgaben im Listenformat funktionieren stabil. Die grundlegende Struktur der App ist lauffähig und entspricht den Anforderungen an ein MVP.
+Das MVP konnte noch nicht vollständig umgesetzt werden. Wir haben in dieser Phase vor allem das Grundgerüst der App erstellt, die Navigation aufgebaut und die Login‑Seite vorbereitet. Die eigentlichen MVP‑Funktionen (Einträge erstellen, Abgabefrist, Aufgaben abhaken) wurden noch nicht implementiert.
 
 ### **2. Was konnte nicht umgesetzt werden und warum?**
 Während der Entwicklung traten mehrere technische Probleme auf. Die Login‑Funktion konnte zunächst nicht umgesetzt werden, da das SWITCH‑Drive‑Passwort versehentlich im GitHub‑Repository sichtbar war. Dadurch mussten wir das Passwort zurücksetzen und die Datei secrets.toml mehrfach korrigieren, da sie sich im falschen Ordner befand.
@@ -8,7 +8,7 @@ Zusätzlich zeigte die Streamlit‑App lokal zeitweise keine Website an, weshalb
 Nach mehreren Anpassungen konnten alle Fehler erfolgreich behoben werden. 
 
 ### **3. Müssen wir die Roadmap anpassen?**
-Ja, wir haben die Roadmap in Woche 11 angepasst. Dabei haben wir festgestellt, dass einige wichtige Informationen fehlten und die Prioritäten für die kommenden Wochen klarer definiert werden mussten. Die Anpassung stellt sicher, dass wir realistisch planen und die wichtigsten Funktionen zuerst umsetzen.
+Ja, wir haben die Roadmap angepasst. Die MVP‑Funktionen werden nun in Woche 11–12 umgesetzt, da wir in Woche 10 hauptsächlich technische Probleme lösen mussten. Die neue Planung ist realistischer und priorisiert die wichtigsten Funktionen.
 
 ### **4. Welche Unterstützung brauchen wir?**
 Wir benötigen gezielte Unterstützung bei folgenden Punkten:
