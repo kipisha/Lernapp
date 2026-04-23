@@ -38,3 +38,9 @@ pg = st.navigation([pg_home, pg_weeklyview, pg_progresspoints])
 username = st.secrets["webdav"]["username"]
 password = st.secrets["webdav"]["password"]
 base_url = st.secrets["webdav"]["base_url"]
+pg_home = st.Page("views/home.py", title="Home", icon=":material/home:")
+pg_weeklyview = st.Page("views/weeklyview.py", title="Wochenansicht")
+pg_progresspoints = st.Page("views/progresspoints.py", title="Punktefortschritt")
+
+pg = st.navigation([pg_home, pg_weeklyview, pg_progresspoints])
+pg.run()
