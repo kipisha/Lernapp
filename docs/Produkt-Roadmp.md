@@ -14,7 +14,6 @@
 - Abgabefrist hinzufügen
 - Aufgaben abhaken
 - Aufgaben und Prüfungen einfügen können in der Wochenübersicht und gespeichert weden
-- Das beim login keine Fehlermeldungen kommen und login speichern können in der App
 
 ## Woche 12
 - Punktesystem: Aufgaben geben Punkte wenn abgehakt
