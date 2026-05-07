@@ -46,6 +46,28 @@ for i, day in enumerate(days):
                 if done:
                     st.markdown("✅ Erledigt")
 
+
+
+# Löschen von Einträgen
+st.markdown("---")
+st.subheader("Eintrag löschen")
+
+all_entries = []
+entry_map = {}
+for day, entries in st.session_state.weekly_entries.items():
+    for idx, entry in enumerate(entries):
+        label = f"{day}: {entry['task']} (Deadline: {entry['deadline']})"
+        all_entries.append(label)
+        entry_map[label] = (day, idx)
+
+if all_entries:
+    entry_to_delete = st.selectbox("Wähle einen Eintrag zum Löschen", all_entries)
+    if st.button("Löschen"):
+        day, idx = entry_map[entry_to_delete]
+        del st.session_state.weekly_entries[day][idx]
+else:
+    st.write("Keine Einträge zum Löschen")
+
 st.markdown("---")
 st.subheader("Eintrag löschen")
 delete_day = st.selectbox("Tag wählen", days)
