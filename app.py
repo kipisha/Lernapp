@@ -13,46 +13,7 @@ data_manager = DataManager(       # initialize data manager
     fs_root_folder="BMLD_App_DB"  # folder on switch drive where the data is stored
     ) 
 login_manager = LoginManager(data_manager) # handles user login and registration
-login_manager.login_register()             # stops if not logged in
-import streamlit as st
-import pandas as pd
-
-# --- Bestehender Code bleibt ---
-from utils.data_manager import DataManager
-from utils.login_manager import LoginManager
-
-st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
-
-data_manager = DataManager(fs_protocol='webdav', fs_root_folder="BMLD_App_DB")
-login_manager = LoginManager(data_manager)
-login_manager.login_register()
-
-# --- Wochenplan-Layout ---
-st.title("📅 Wochenübersicht")
-
-# Woche auswählen
-selected_week = st.selectbox("Woche auswählen:", ["11–17 März", "18–24 März", "25–31 März"])
-
-# Spalten für Wochentage
-cols = st.columns(7)
-days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-
-for i, day in enumerate(days):
-    with cols[i]:
-        st.markdown(f"### {day}")
-        st.write("🟦 Aufgabenplatzhalter")  # später dynamisch aus Daten laden
-
-# Produktivitätsanzeige
-st.subheader("Wochen-Produktivität")
-progress = 0.58  # Beispielwert
-st.progress(progress)
-st.write(f"{int(progress * 100)}%")
-
-# Neue Aufgabe hinzufügen
-if st.button("+ Neue Aufgabe"):
-    st.info("Hier kannst du später Aufgaben hinzufügen ✨")
-
-
+login_manager.login_register()             # stops if not logged inz
 
 
 # --- CODE UPDATE: load user data from data manager if not already present in session state --
