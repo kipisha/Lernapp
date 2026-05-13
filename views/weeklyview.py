@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime
+from utils.data_manager import DataManager
 
 st.title("Wochenansicht")
 
@@ -20,12 +21,20 @@ with st.form("weekly_input", clear_on_submit=True):
         deadline = st.date_input("Deadline", value=datetime.now())
     add_button = st.form_submit_button("Eintrag hinzufügen")
 
+
+
 if add_button and task_name:
     st.session_state.weekly_entries[selected_day].append({
         "task": task_name,
         "deadline": deadline.strftime("%d.%m.%Y"),
         "done": False
     })
+    data_manager = DataManager(  # folder on switch drive where the data is stored
+    )  # Assuming you have a DataManager instance available
+    data_manager.save_user_data(
+        st.session_state.weekly_entries,
+        'data.json'                     # The file on switch drive where the data is stored
+    )
 
 st.subheader("Wochenübersicht")
 
