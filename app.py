@@ -14,29 +14,36 @@ data_manager = DataManager(       # initialize data manager
     ) 
 login_manager = LoginManager(data_manager) # handles user login and registration
 login_manager.login_register()             # stops if not logged in
-# --- Wochenübersicht ---
-st.title("📅 Wochenübersicht")
+selected_page = st.sidebar.radio("Navigation", ["Home", "Woche", "Aufgaben", "Prüfungen", "Punkte"])
 
-selected_week = st.selectbox(
-    "Woche auswählen:",
-    ["11–17 März", "18–24 März", "25–31 März"]
-)
+if selected_page == "Home":
 
-days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-cols = st.columns(7)
+    st.title("👋 Hallo, Lara!")
 
-for i, day in enumerate(days):
-    with cols[i]:
-        st.markdown(f"### {day}")
-        st.write("🟦 Aufgabenplatzhalter")  # später dynamisch
+    # --- Produktivität ---
+    st.subheader("Deine heutige Produktivität")
+    productivity = 0.421
+    st.progress(productivity)
+    st.caption("Du bist gut gestartet!")
 
-st.subheader("Wochen-Produktivität")
-progress = 0.58
-st.progress(progress)
-st.write(f"{int(progress * 100)}%")
+    st.write("---")
 
-if st.button("+ Neue Aufgabe"):
-    st.info("Hier kannst du später Aufgaben hinzufügen ✨")
+    # --- Aufgaben heute ---
+    st.subheader("📌 Heute")
+    today_tasks = [
+        "Mathe – Übung 12",
+        "Englisch – Vokabeln"
+    ]
+
+    for task in today_tasks:
+        st.checkbox(task, value=False)
+
+    st.write("---")
+
+    # --- Nächste Prüfung ---
+    st.subheader("📅 Nächste Prüfung")
+    st.write("📝 **Mathe – 14.03** (in 3 Tagen)")
+
 
 
 
