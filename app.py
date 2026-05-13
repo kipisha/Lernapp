@@ -14,6 +14,30 @@ data_manager = DataManager(       # initialize data manager
     ) 
 login_manager = LoginManager(data_manager) # handles user login and registration
 login_manager.login_register()             # stops if not logged in
+# --- Wochenübersicht ---
+st.title("📅 Wochenübersicht")
+
+selected_week = st.selectbox(
+    "Woche auswählen:",
+    ["11–17 März", "18–24 März", "25–31 März"]
+)
+
+days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+cols = st.columns(7)
+
+for i, day in enumerate(days):
+    with cols[i]:
+        st.markdown(f"### {day}")
+        st.write("🟦 Aufgabenplatzhalter")  # später dynamisch
+
+st.subheader("Wochen-Produktivität")
+progress = 0.58
+st.progress(progress)
+st.write(f"{int(progress * 100)}%")
+
+if st.button("+ Neue Aufgabe"):
+    st.info("Hier kannst du später Aufgaben hinzufügen ✨")
+
 
 
 # --- CODE UPDATE: load user data from data manager if not already present in session state --
