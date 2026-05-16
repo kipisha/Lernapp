@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
+import altair as alt
 from team.team_page import show_team_page
 from datetime import datetime, timedelta
 from functions.week_helpers import show_weekly_view
+from functions.productivity_helpers import show_productivity_view
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
@@ -402,10 +404,7 @@ elif selected_page == "Prüfungen":
 # ------------------------- PUNKTE -------------------------
 # ---------------------------------------------------------
 elif selected_page == "Punkte":
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.title("🏆 Punkte")
-    st.write("Hier kommt dein Punktefortschritt hin.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    show_productivity_view()
 
 
 # ---------------------------------------------------------
