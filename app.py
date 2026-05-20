@@ -5,6 +5,7 @@ from team.team_page import show_team_page
 from datetime import datetime, timedelta
 from functions.week_helpers import show_weekly_view
 from functions.productivity_helpers import show_productivity_view
+import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
@@ -276,12 +277,12 @@ elif selected_page == "Aufgaben":
                 date_str = task["date"]
 
             table_data.append({
-                "Fach": task["title"].split(" – ")[0],
-                "Aufgabe": task["title"].split(" – ")[1],
+                "Fach": html.escape(task["title"].split(" – ")[0]),
+                "Aufgabe": html.escape(task["title"].split(" – ")[1]),
                 "Datum": date_str,
                 "Priorität": task["priority"],
                 "Punkte": task["points"],
-                "Beschreibung": task["description"],
+                "Beschreibung": html.escape(task["description"]),
                 "Index": i
             })
 
@@ -376,11 +377,11 @@ elif selected_page == "Prüfungen":
                 time_range += f"–{exam['time_to']}"
 
             table_data.append({
-                "Fach": exam["title"],
+                "Fach": html.escape(exam["title"]),
                 "Datum": date_str,
-                "Zeit": time_range,
-                "Raum": exam.get("room", ""),
-                "Lernplan": exam.get("plan", ""),
+                "Zeit": html.escape(time_range),
+                "Raum": html.escape(exam.get("room","")),
+                "Lernplan": html.escape(exam.get("plan","")),
                 "Index": i
             })
 

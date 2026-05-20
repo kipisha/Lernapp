@@ -1,7 +1,11 @@
 import streamlit as st
 from datetime import datetime, timedelta
 from utils.data_manager import DataManager
+import re
+import html 
 
+def escape_text(text: str) -> str:
+    return html.escape(text or "")
 
 def show_weekly_view(data_manager: DataManager):
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -50,37 +54,40 @@ def show_weekly_view(data_manager: DataManager):
             if items_by_date[date]:
                 for item in items_by_date[date]:
                     if item["type"] == "task":
+                        description_text = escape_text(item.get("description", ""))
                         st.markdown(
                             f'''
                             <div style="background:#e6f2ff; padding:10px; border-radius:10px; margin-bottom:8px;">
-                                <strong>{item["title"]}</strong><br>
+                                <strong>{escape_text(item["title"])}</strong><br>
                                 <span style="font-size:0.9em; color:#333;">
-                                    {item.get("description","")}
-                                </span>
-                            </div>
-                            ''',
-                        unsafe_allow_html=True,
-                        )
-                    else:
-                        time_str = ""
-                        if item.get("time_from"):
-                            time_str = item["time_from"]
-                        if item.get("time_to"):
-                            time_str += f"–{item['time_to']}" if time_str else item["time_to"]
-
-                        st.markdown(
-                            f'''
-                            <div style="background:#f3e6ff; padding:10px; border-radius:10px; margin-bottom:8px;">
-                                <strong>{item["title"]}</strong><br>
-                                <span style="font-size:0.9em; color:#333;">
-                                    {time_str}<br>
-                                    {item.get("room","")}<br>
-                                    {item.get("plan","")}
+                                    {description_text}
                                 </span>
                             </div>
                             ''',
                             unsafe_allow_html=True,
                         )
+                    else:
+                        time_str = ""
+                        if item.get("time_from"):
+                            time_str = escape_text(item["time_from"])
+                        if item.get("time_to"):
+                            time_str += f"–{escape_text(item['time_to'])}" if time_str else escape_text(item["time_to"])
+
+                        plan_text = escape_text(item.get("plan", ""))
+                        room_text = escape_text(item.get("room", ""))
+                        st.markdown(
+                            f'''
+                            <div style="background:#f3e6ff; padding:10px; border-radius:10px; margin-bottom:8px;">
+                                <strong>{escape_text(item["title"])}</strong><br>
+                                <span style="font-size:0.9em; color:#333;">
+                                    {time_str}<br>
+                                    {room_text}<br>
+                                    {plan_text}
+                                </span>
+                            </div>
+                            ''',
+                            unsafe_allow_html=True,
+    )
             else:
                 st.write("Keine Aufgaben oder Prüfungen")
 
