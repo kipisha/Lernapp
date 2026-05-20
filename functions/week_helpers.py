@@ -12,42 +12,77 @@ def show_weekly_view(data_manager: DataManager):
         loaded_tasks = data_manager.load_user_data("tasks.json")
         st.session_state.tasks = loaded_tasks if loaded_tasks else []
 
+    # Lade Prüfungen falls noch nicht vorhanden
+    if "exams" not in st.session_state:
+        loaded_exams = data_manager.load_user_data("exams.json")
+        st.session_state.exams = loaded_exams if loaded_exams else []
+
     today = datetime.now().date()
     current_monday = today - timedelta(days=today.weekday())
-    week_starts = [current_monday + timedelta(weeks=i) for i in range(4)]
-    week_options = [
-        f"{start.strftime('%d.%m.')} – {(start + timedelta(days=6)).strftime('%d.%m.')}"
-        for start in week_starts
-    ]
-
-    selected_week = st.selectbox("Woche auswählen:", week_options)
-    selected_start = week_starts[week_options.index(selected_week)]
+    today = datetime.now().date()
+    selected_date = st.date_input("Wähle ein Datum für die Woche:", value=today)
+    selected_start = selected_date - timedelta(days=selected_date.weekday())
     week_dates = [selected_start + timedelta(days=i) for i in range(7)]
     day_names = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 
     # Aufgaben nach Datum gruppieren
-    tasks_by_date = {date: [] for date in week_dates}
+    items_by_date = {date: [] for date in week_dates}
     for task in st.session_state.tasks:
         try:
-            task_date = datetime.strptime(task["date"], "%Y-%m-%d").date()
+            date_obj = datetime.strptime(task["date"], "%Y-%m-%d").date()
         except Exception:
             continue
-        if task_date in tasks_by_date:
-            tasks_by_date[task_date].append(task)
+        if date_obj in items_by_date:
+            items_by_date[date_obj].append({"type": "task", **task})
+
+    for exam in st.session_state.exams:
+            try:
+                date_obj = datetime.strptime(exam["date"], "%Y-%m-%d").date()
+            except Exception:
+                continue
+            if date_obj in items_by_date:
+                items_by_date[date_obj].append({"type": "exam", **exam})
 
     cols = st.columns(7)
     for i, date in enumerate(week_dates):
         with cols[i]:
             st.markdown(f"### {day_names[i]} {date.strftime('%d.%m.')}")
-            if tasks_by_date[date]:
-                for task in tasks_by_date[date]:
-                    st.markdown(
-                        f"- **{task['title']}** "
-                        f"({task.get('priority',''), task.get('points','')} Pkt)"
-                    )
-                    if task.get("description"):
-                        st.caption(task["description"])
-            else:
-                st.write("Keine Aufgaben")
+            if items_by_date[date]:
+                for item in items_by_date[date]:
+                    if item["type"] == "task":
+                        st.markdown(
+                            f'''
+                            <div style="background:#e6f2ff; padding:10px; border-radius:10px; margin-bottom:8px;">
+                                <strong>{item["title"]}</strong><br>
+                                <span style="font-size:0.9em; color:#333;">
+                                    {item.get("description","")}
+                                </span>
+                            </div>
+                            ''',
+                        unsafe_allow_html=True,
+                        )
+                    else:
+                        time_str = ""
+                        if item.get("time_from"):
+                            time_str = item["time_from"]
+                        if item.get("time_to"):
+                            time_str += f"–{item['time_to']}" if time_str else item["time_to"]
 
+                        st.markdown(
+                            f'''
+                            <div style="background:#f3e6ff; padding:10px; border-radius:10px; margin-bottom:8px;">
+                                <strong>{item["title"]}</strong><br>
+                                <span style="font-size:0.9em; color:#333;">
+                                    {time_str}<br>
+                                    {item.get("room","")}<br>
+                                    {item.get("plan","")}
+                                </span>
+                            </div>
+                            ''',
+                            unsafe_allow_html=True,
+                        )
+            else:
+                st.write("Keine Aufgaben oder Prüfungen")
+
+    st.markdown('<span style="font-size:0.9em"> hellblau = Aufgabe, lila = Prüfung </span>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
