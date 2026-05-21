@@ -1,95 +1,141 @@
 import streamlit as st
 from datetime import datetime, timedelta
 from utils.data_manager import DataManager
-import re
-import html 
+import html
 
 def escape_text(text: str) -> str:
     return html.escape(text or "")
 
 def show_weekly_view(data_manager: DataManager):
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+
     st.title("📅 Wochenübersicht")
 
-    # Lade Aufgaben falls noch nicht vorhanden
+    # Daten laden
     if "tasks" not in st.session_state:
-        loaded_tasks = data_manager.load_user_data("tasks.json")
-        st.session_state.tasks = loaded_tasks if loaded_tasks else []
+        st.session_state.tasks = data_manager.load_user_data("tasks.json") or []
 
-    # Lade Prüfungen falls noch nicht vorhanden
     if "exams" not in st.session_state:
-        loaded_exams = data_manager.load_user_data("exams.json")
-        st.session_state.exams = loaded_exams if loaded_exams else []
+        st.session_state.exams = data_manager.load_user_data("exams.json") or []
 
-    today = datetime.now().date()
-    current_monday = today - timedelta(days=today.weekday())
+    # Datumsauswahl
     today = datetime.now().date()
     selected_date = st.date_input("Wähle ein Datum für die Woche:", value=today)
-    selected_start = selected_date - timedelta(days=selected_date.weekday())
-    week_dates = [selected_start + timedelta(days=i) for i in range(7)]
+    week_start = selected_date - timedelta(days=selected_date.weekday())
+    week_dates = [week_start + timedelta(days=i) for i in range(7)]
     day_names = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 
-    # Aufgaben nach Datum gruppieren
-    items_by_date = {date: [] for date in week_dates}
-    for task in st.session_state.tasks:
+    # Items gruppieren
+    items_by_date = {d: [] for d in week_dates}
+
+    for t in st.session_state.tasks:
         try:
-            date_obj = datetime.strptime(task["date"], "%Y-%m-%d").date()
-        except Exception:
-            continue
-        if date_obj in items_by_date:
-            items_by_date[date_obj].append({"type": "task", **task})
+            d = datetime.strptime(t["date"], "%Y-%m-%d").date()
+            if d in items_by_date:
+                items_by_date[d].append({"type": "task", **t})
+        except:
+            pass
 
-    for exam in st.session_state.exams:
-            try:
-                date_obj = datetime.strptime(exam["date"], "%Y-%m-%d").date()
-            except Exception:
-                continue
-            if date_obj in items_by_date:
-                items_by_date[date_obj].append({"type": "exam", **exam})
+    for e in st.session_state.exams:
+        try:
+            d = datetime.strptime(e["date"], "%Y-%m-%d").date()
+            if d in items_by_date:
+                items_by_date[d].append({"type": "exam", **e})
+        except:
+            pass
 
-    cols = st.columns(7)
-    for i, date in enumerate(week_dates):
-        with cols[i]:
-            st.markdown(f"### {day_names[i]} {date.strftime('%d.%m.')}")
-            if items_by_date[date]:
-                for item in items_by_date[date]:
-                    if item["type"] == "task":
-                        description_text = escape_text(item.get("description", ""))
-                        st.markdown(
-                            f'''
-                            <div style="background:#e6f2ff; padding:10px; border-radius:10px; margin-bottom:8px;">
-                                <strong>{escape_text(item["title"])}</strong><br>
-                                <span style="font-size:0.9em; color:#333;">
-                                    {description_text}
-                                </span>
-                            </div>
-                            ''',
-                            unsafe_allow_html=True,
-                        )
-                    else:
-                        time_str = ""
-                        if item.get("time_from"):
-                            time_str = escape_text(item["time_from"])
-                        if item.get("time_to"):
-                            time_str += f"–{escape_text(item['time_to'])}" if time_str else escape_text(item["time_to"])
+    # CSS – keine divs in der Tabelle!
+    st.markdown("""
+        <style>
+            table.week-table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+            table.week-table th {
+                background: #f2f2f2;
+                padding: 10px;
+                border: 1px solid #ddd;
+                font-size: 16px;
+            }
+            table.week-table td {
+                vertical-align: top;
+                padding: 10px;
+                border: 1px solid #ddd;
+                height: 150px;
+                font-size: 14px;
+            }
+            .task {
+                background: #d8e8c8; /* Pastell-Olive-Grün */
+                display: block;
+                padding: 6px;
+                border-radius: 6px;
+                margin-bottom: 6px;
+            }
+            .exam {
+                background: #d7e9ff; /* Pastell-Blau */
+                display: block;
+                padding: 6px;
+                border-radius: 6px;
+                margin-bottom: 6px;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
-                        plan_text = escape_text(item.get("plan", ""))
-                        room_text = escape_text(item.get("room", ""))
-                        st.markdown(
-                            f'''
-                            <div style="background:#f3e6ff; padding:10px; border-radius:10px; margin-bottom:8px;">
-                                <strong>{escape_text(item["title"])}</strong><br>
-                                <span style="font-size:0.9em; color:#333;">
-                                    {time_str}<br>
-                                    {room_text}<br>
-                                    {plan_text}
-                                </span>
-                            </div>
-                            ''',
-                            unsafe_allow_html=True,
-    )
-            else:
-                st.write("Keine Aufgaben oder Prüfungen")
+    # Tabelle erzeugen
+    html_table = "<table class='week-table'><tr>"
 
-    st.markdown('<span style="font-size:0.9em"> hellblau = Aufgabe, lila = Prüfung </span>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Kopfzeile
+    for i, d in enumerate(week_dates):
+        html_table += f"<th>{day_names[i]}<br>{d.strftime('%d.%m.')}</th>"
+    html_table += "</tr><tr>"
+
+    # Inhalte
+    for d in week_dates:
+        html_table += "<td>"
+
+        if items_by_date[d]:
+            for item in items_by_date[d]:
+
+                if item["type"] == "task":
+                    html_table += (
+                        f"<span class='task'><strong>{escape_text(item['title'])}</strong><br>"
+                        f"{escape_text(item.get('description',''))}</span>"
+                    )
+
+                else:
+                    time_str = ""
+                    if item.get("time_from"):
+                        time_str = escape_text(item["time_from"])
+                    if item.get("time_to"):
+                        time_str += f"–{escape_text(item['time_to'])}" if time_str else escape_text(item["time_to"])
+
+                    html_table += (
+                        f"<span class='exam'><strong>{escape_text(item['title'])}</strong><br>"
+                        f"{time_str}<br>"
+                        f"{escape_text(item.get('room',''))}<br>"
+                        f"{escape_text(item.get('plan',''))}</span>"
+                    )
+
+        else:
+            html_table += "<span style='color:#777;'>Keine Einträge</span>"
+
+        html_table += "</td>"
+
+    html_table += "</tr></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
+
+    # Legende
+    st.markdown("""
+        <br>
+        <div style="display:flex; gap:20px; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+                <div style="width:18px; height:18px; background:#d8e8c8; border-radius:4px;"></div>
+                <span>Aufgabe</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <div style="width:18px; height:18px; background:#d7e9ff; border-radius:4px;"></div>
+                <span>Prüfung</span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)

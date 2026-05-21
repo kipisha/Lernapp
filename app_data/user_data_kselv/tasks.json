@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "title": "Biologie \u2013 ",
+        "date": "2026-05-20",
+        "priority": "Hoch",
+        "points": 5,
+        "description": ""
+    },
+    {
+        "title": "Biologie \u2013 ",
+        "date": "2026-05-21",
+        "priority": "Hoch",
+        "points": 5,
+        "description": ""
+    },
+    {
+        "title": "Biologie \u2013 ",
+        "date": "2026-05-23",
+        "priority": "Hoch",
+        "points": 5,
+        "description": ""
+    },
+    {
+        "title": "Physik \u2013 wdjd",
+        "date": "2026-05-23",
+        "priority": "Niedrig",
+        "points": 5,
+        "description": ""
+    },
+    {
+        "title": "Chemie \u2013 lmao",
+        "date": "2026-05-27",
+        "priority": "Hoch",
+        "points": 3,
+        "description": ""
+    }
+]
