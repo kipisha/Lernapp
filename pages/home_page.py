@@ -3,15 +3,6 @@ import streamlit as st
 def show_home_page():
 
     # -----------------------------
-    # PAGE CONFIG
-    # -----------------------------
-    st.set_page_config(
-        page_title="smartplan",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
-
-    # -----------------------------
     # CUSTOM CSS
     # -----------------------------
     st.markdown("""
