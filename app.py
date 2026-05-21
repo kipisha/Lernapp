@@ -9,6 +9,8 @@ import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
+from pages.home_page import show_home_page
+
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
 st.markdown("""
@@ -128,77 +130,8 @@ selected_page = st.sidebar.radio("Navigation", ["Home", "Woche", "Aufgaben", "Pr
 # ------------------------- HOME ---------------------------
 # ---------------------------------------------------------
 if selected_page == "Home":
-    user_name = st.session_state.get("username", "Nutzer")
+    show_home_page()
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.title(f"👋 Hallo, {user_name}!")
-
-    def calculate_productivity():
-        tasks = st.session_state.get("tasks", [])
-        checked = st.session_state.get("checked", {})
-        if len(tasks) == 0:
-            return 0
-        done = sum(1 for t in tasks if checked.get(t["title"], False))
-        return done / len(tasks)
-
-    st.subheader("Deine heutige Produktivität")
-    productivity = calculate_productivity()
-    st.progress(productivity)
-    st.caption(f"{int(productivity * 100)} % erledigt")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📅 Aufgaben der nächsten 7 Tage")
-
-    today = datetime.now().date()
-    week_limit = today + timedelta(days=7)
-
-    tasks = st.session_state.get("tasks", [])
-    checked = st.session_state.get("checked", {})
-
-    upcoming_tasks = []
-
-    for t in tasks:
-        date_obj = datetime.strptime(t["date"], "%Y-%m-%d").date()
-        if today <= date_obj <= week_limit:
-            if not checked.get(t["title"], False):
-                upcoming_tasks.append(t)
-
-    if len(upcoming_tasks) == 0:
-        st.info("Keine Aufgaben in den nächsten 7 Tagen.")
-    else:
-        for task in upcoming_tasks:
-            is_checked = st.checkbox(
-                f"{task['title']} – {task['date']}",
-                value=checked.get(task["title"], False),
-                key=f"chk_home_{task['title']}"
-            )
-            st.session_state.checked[task["title"]] = is_checked
-            if is_checked:
-                st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📚 Prüfungen der nächsten 7 Tage")
-
-    exams = st.session_state.get("exams", [])
-    upcoming_exams = []
-
-    for e in exams:
-        try:
-            exam_date = datetime.strptime(e["date"], "%Y-%m-%d").date()
-        except:
-            continue
-        if today <= exam_date <= week_limit:
-            upcoming_exams.append({**e, "date": exam_date})
-
-    if len(upcoming_exams) == 0:
-        st.info("Keine Prüfungen in den nächsten 7 Tagen.")
-    else:
-        for exam in upcoming_exams:
-            days_left = (exam["date"] - today).days
-            st.write(f"📘 **{exam['title']} – {exam['date']}** ({days_left} Tage)")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
