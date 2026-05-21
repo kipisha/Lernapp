@@ -129,8 +129,11 @@ selected_page = st.sidebar.radio("Navigation", ["Home", "Woche", "Aufgaben", "Pr
 # ---------------------------------------------------------
 # ------------------------- HOME ---------------------------
 # ---------------------------------------------------------
+from pages.home_page import show_home_page
+
 if selected_page == "Home":
     show_home_page()
+
 
 
 
