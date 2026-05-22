@@ -198,5 +198,9 @@ if st.session_state.page == "Home":
 elif st.session_state.page == "Woche":
     from pages.weekly_page import show_weekly_page
     show_weekly_page()
+elif st.session_state.page == "Aufgaben":
+    show_tasks_page()
+elif st.session_state.page == "Team":
+    show_team_page()
 
 
