@@ -18,7 +18,7 @@ import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
-from pages.home_page import show_home_page
+from pages.home_page import show_home_page, show_sidebar_nav
 
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
@@ -187,135 +187,7 @@ if "theme" not in st.session_state:
     st.session_state.theme = "default"
 
 # immer Sidebar anzeigen
-def show_sidebar_nav():
-    colors = get_theme_colors()
-
-    sidebar_bg = colors["card"]
-    primary = colors["primary"]
-    text = colors["text"]
-
-    st.markdown(
-        f"""
-        <style>
-        /* Sidebar Hintergrund */
-        [data-testid="stSidebar"] {{
-            background: {sidebar_bg} !important;
-            padding: 20px;
-        }}
-
-        /* Sidebar Titel */
-        .sidebar-title {{
-            font-size: 32px;
-            font-weight: 800;
-            color: {primary};
-            margin-bottom: 20px;
-        }}
-
-        /* Navigation Buttons */
-        .sidebar-btn > button {{
-            width: 100%;
-            background: {primary};
-            color: white;
-            border-radius: 12px;
-            padding: 10px 18px;
-            font-weight: 600;
-            border: none;
-            margin-bottom: 10px;
-            transition: 0.2s ease;
-        }}
-
-        .sidebar-btn > button:hover {{
-            background: {colors["secondary"]};
-            transform: scale(1.03);
-        }}
-
-        /* Streak Box */
-        .streak-box {{
-            background: rgba(255,255,255,0.5);
-            padding: 14px;
-            border-radius: 12px;
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }}
-
-        .streak-box span {{
-            font-size: 28px;
-        }}
-
-        .streak-text {{
-            font-size: 14px;
-            color: {text};
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    with st.sidebar:
-        st.markdown("<div class='sidebar-title'>kipi✦</div>", unsafe_allow_html=True)
-
-        nav_items = [
-            ("🏠 Home", "Home"),
-            ("📅 Woche", "Woche"),
-            ("✅ Aufgaben", "Aufgaben"),
-            ("📚 Prüfungen", "Prüfungen"),
-            ("📈 Produktivität", "Produktivität"),
-            ("⭐ Punkte", "Punkte"),
-            ("📝 Notizen", "Notizen"),
-            ("🎯 Ziele", "Ziele"),
-            ("👥 Team", "Team"),
-        ]
-
-        for label, page in nav_items:
-            if st.button(label, key=f"nav_{page}", use_container_width=True):
-                st.session_state.page = page
-                st.rerun()
-
-        st.markdown(
-            f"""
-            <div class="streak-box">
-                <span>🔥</span>
-                <div>
-                    <b>{st.session_state.get("streak", 7)} Tage Streak</b><br>
-                    <span class="streak-text">Weiter so!</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown("---")
-
-        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
-            st.session_state.username = None
-            st.rerun()
-
-
-        # Streak Box
-        st.markdown(
-            f"""
-            <div style='background:{colors['card']}; padding:12px; border-radius:12px;
-                 display:flex; align-items:center; gap:10px;'>
-                <span style='font-size:26px;'>🔥</span>
-                <div>
-                    <b>{st.session_state.get("streak", 7)} Tage Streak</b><br>
-                    <span style='font-size:12px; color:#666;'>Weiter so!</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown("---")
-
-        # Logout
-        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
-            st.session_state.username = None
-            st.rerun()
-
-
+show_sidebar_nav()
 
 if st.session_state.page == "Home":
     show_home_page()
