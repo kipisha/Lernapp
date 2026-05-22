@@ -80,3 +80,12 @@ def show_theme_switcher():
         if st.button("📚 Minimal"):
             st.session_state.theme = "Minimal"
             st.rerun()
+
+button_colors = {
+    "Cozy": "#ec4899",     # pink
+    "Focus": "#22c55e",    # grün
+    "Energy": "#facc15",   # gelb
+    "Minimal": "#4b5563"   # bleibt neutral
+}
+
+button_color = button_colors.get(st.session_state.theme, "#4b5563")

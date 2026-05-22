@@ -71,6 +71,28 @@ html, body, .stApp {
 # ---------------------------------------------------------
 # ------------------------- CSS ----------------------------
 # ---------------------------------------------------------
+
+st.markdown(f"""
+<style>
+
+.stButton button,
+div[data-testid="stButton"] button {{
+    background-color: {button_color} !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+}}
+
+.stButton button:hover,
+div[data-testid="stButton"] button:hover {{
+    background-color: {button_color} !important;
+    opacity: 0.85 !important;
+    color: white !important;
+}}
+
+</style>
+""", unsafe_allow_html=True)
 # Neue Farben für die violetten Buttons
 BUTTON_PRIMARY = "#14b8a6"      # Türkis
 BUTTON_HOVER = "#0f766e"        # Dunkler beim Hover
@@ -151,6 +173,7 @@ st.markdown("""
 
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # ------------------------- LOGIN --------------------------

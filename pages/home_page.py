@@ -7,29 +7,52 @@ def show_home_page():
     if "theme" not in st.session_state:
         st.session_state.theme = "Cozy"
 
+    # --- GET THEME COLORS ---
+    colors = get_theme_colors()
+
+    # --- APPLY THEME ---
+    apply_theme()
+
+    # --- DYNAMIC SIDEBAR NAVIGATION STYLING ---
+    st.markdown(f"""
+        <style>
+        .nav-button {{
+            background: linear-gradient(135deg, {colors['primary']} 0%, {colors['secondary']} 100%);
+            color: white;
+            border-radius: 12px;
+            border: none;
+            padding: 12px 20px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+        }}
+        .nav-button:hover {{
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
     # --- SIDEBAR NAVIGATION ---
     with st.sidebar:
-        st.markdown("<h1 style='color:#7c3aed;'>smartplan</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
         
-        # Navigation Buttons
-        if st.button("🏠 Home", use_container_width=True):
-            st.session_state.page = "Home"
-            st.rerun()
-        if st.button("📅 Woche", use_container_width=True):
-            st.session_state.page = "Woche"
-            st.rerun()
-        if st.button("✅ Aufgaben", use_container_width=True):
-            st.session_state.page = "Aufgaben"
-            st.rerun()
-        if st.button("📚 Prüfungen", use_container_width=True):
-            st.session_state.page = "Prüfungen"
-            st.rerun()
-        if st.button("⭐ Punkte", use_container_width=True):
-            st.session_state.page = "Punkte"
-            st.rerun()
-        if st.button("👥 Team", use_container_width=True):
-            st.session_state.page = "Team"
-            st.rerun()
+        # Navigation Buttons mit Theme-Farben
+        nav_items = [
+            ("🏠 Home", "Home"),
+            ("📅 Woche", "Woche"),
+            ("✅ Aufgaben", "Aufgaben"),
+            ("📚 Prüfungen", "Prüfungen"),
+            ("⭐ Punkte", "Punkte"),
+            ("👥 Team", "Team"),
+        ]
+        
+        for label, page in nav_items:
+            if st.button(label, use_container_width=True):
+                st.session_state.page = page
+                st.rerun()
         
         st.markdown("---")
         st.markdown(
@@ -41,10 +64,6 @@ def show_home_page():
         if st.button("Logout", use_container_width=True):
             st.session_state.username = None
             st.rerun()
-
-    # --- APPLY THEME ---
-    apply_theme()
-    colors = get_theme_colors()
 
     # --- THEME SWITCHER ---
     show_theme_switcher()
@@ -105,7 +124,7 @@ def show_home_page():
         st.button("Prüfung ansehen")
         st.markdown("</div>", unsafe_allow_html=True)
     with col6:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown("<div class='card'>", unsafe_after_html=True)
         st.markdown("##### Motivation für dich")
         st.markdown("🏁", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
@@ -122,4 +141,4 @@ def show_home_page():
             st.markdown(f"{(today + timedelta(days=i)).day}")
             st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
     st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True) 
