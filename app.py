@@ -9,7 +9,7 @@ import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
-from pages.home_page import show_home_page, show_sidebar_nav
+from pages.home_page import show_home_page
 
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
@@ -178,6 +178,25 @@ if "theme" not in st.session_state:
     st.session_state.theme = "default"
 
 # immer Sidebar anzeigen
+def show_sidebar_nav():
+    with st.sidebar:
+        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
+
+        nav_items = [
+            ("🏠 Home", "Home"),
+            ("📅 Woche", "Woche"),
+        ]
+
+        for label, page in nav_items:
+            if st.button(label, use_container_width=True):
+                st.session_state.page = page
+                st.rerun()
+
+        st.markdown("---")
+        if st.button("Logout", use_container_width=True):
+            st.session_state.username = None
+            st.rerun()
+
 show_sidebar_nav()
 
 if st.session_state.page == "Home":

@@ -144,3 +144,4 @@ def show_home_page():
             st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
     st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True) 
+
