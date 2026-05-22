@@ -123,7 +123,6 @@ login_manager = LoginManager(data_manager)
 login_manager.login_register()
 st.session_state["username"]
 
-selected_page = st.sidebar.radio("Navigation", ["Home", "Woche", "Aufgaben", "Prüfungen", "Punkte", "Team"])
 
 
 # ---------------------------------------------------------
