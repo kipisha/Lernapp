@@ -7,17 +7,17 @@ def get_theme_colors():
     
     themes = {
         "Cozy": {
-            "primary": "#629BB6",
-            "secondary": "#73a3ec",
+            "primary": "#E26DBF",
+            "secondary": "#eb73e9",
             "background": "#ffe6f6",
             "card": "#fffadc",
             "text": "#000000"
         },
         "Focus": {
-            "primary": "#82d868",
-            "secondary": "#83da8b",
+            "primary": "#337b1d",
+            "secondary": "#8abe93",
             "background": "#d4f0cc",
-            "card": "#f3d572",
+            "card": "#508662",
             "text": "#000000"
         },
         "Energy": {
@@ -28,9 +28,9 @@ def get_theme_colors():
             "text": "#22223b"
         },
         "Minimal": {
-            "primary": "#3b82f6",
+            "primary": "#000000",
             "secondary": "#1f2937",
-            "background": "#ffffff",
+            "background": "#fff9ec",
             "card": "#f5f5f5",
             "text": "#222"
         }

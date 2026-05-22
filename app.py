@@ -9,7 +9,7 @@ import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
-from pages.home_page import show_home_page
+from pages.home_page import show_home_page, show_sidebar_nav
 
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
@@ -189,9 +189,13 @@ st.session_state["username"]
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
+# immer Sidebar anzeigen
+show_sidebar_nav()
+
 if st.session_state.page == "Home":
     show_home_page()
 elif st.session_state.page == "Woche":
-    show_weekly_view(data_manager)
+    from pages.weekly_page import show_weekly_page
+    show_weekly_page()
 
 

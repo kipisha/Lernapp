@@ -59,8 +59,10 @@ def show_home_page():
             "<div style='background:#fff7f0;padding:10px;border-radius:12px;display:flex;align-items:center;'>"
             "<span style='font-size:24px;'>🔥</span>"
             "<div style='margin-left:10px;'><b>7 Tage Streak</b><br><span style='font-size:12px;color:#b0aeb8;'>Weiter so! 🔥</span></div>"
-            "</div>", unsafe_allow_html=True
+            "</div>",
+            unsafe_allow_html=True
         )
+
         if st.button("Logout", use_container_width=True):
             st.session_state.username = None
             st.rerun()
@@ -106,7 +108,7 @@ def show_home_page():
     with col3:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("#### Motivation für dich")
-        st.info("„Disziplin heute, Stolz morgen.,,")
+        st.info("„Disziplin heute, Stolz morgen.\"")
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --- TASKS & EXAMS ---
