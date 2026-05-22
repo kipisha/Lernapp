@@ -11,19 +11,23 @@ from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 from pages.home_page import show_home_page
 
-st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
 
-# Optional: Globales CSS
+st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
 st.markdown("""
 <style>
+
 html, body, .stApp {
     height: 100%;
     background: linear-gradient(135deg, #dbeafe, #fce7f3);
     background-attachment: fixed;
 }
+
+/* Entfernt ALLE weißen Balken */
 .stAppViewContainer, .main, .block-container {
     background: transparent !important;
 }
+
+/* Cards wirken wie schwebende Elemente */
 .card {
     background: rgba(255,255,255,0.55);
     backdrop-filter: blur(12px);
@@ -32,6 +36,79 @@ html, body, .stApp {
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     margin-bottom: 30px;
 }
+
+/* Eingabefelder */
+.stTextInput > div > div > input,
+.stTextArea textarea,
+.stSelectbox div[data-baseweb="select"] {
+    border-radius: 12px;
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(6px);
+}
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-weight: bold;
+    border: none;
+    transition: 0.2s;
+}
+
+.stButton > button:hover {
+    transform: scale(1.03);
+    background: linear-gradient(135deg, #4338ca, #7e22ce);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------
+# ------------------------- CSS ----------------------------
+# ---------------------------------------------------------
+st.markdown("""
+<style>
+
+    .main {
+        padding-top: 20px;
+    }
+
+    .stTextInput > div > div > input,
+    .stTextArea textarea,
+    .stSelectbox div[data-baseweb="select"] {
+        border-radius: 10px;
+        border: 1px solid #d0d0d0;
+        padding: 8px;
+    }
+
+    .stButton > button {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: bold;
+        border: none;
+        transition: 0.2s;
+    }
+
+    .stButton > button:hover {
+        background-color: #45a049;
+        transform: scale(1.02);
+    }
+
+    .card {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -46,50 +123,23 @@ login_manager = LoginManager(data_manager)
 login_manager.login_register()
 st.session_state["username"]
 
-# ---------------------------------------------------------
-# --------------------- NAVIGATION -------------------------
-# ---------------------------------------------------------
-# Initialisiere die Seite beim ersten Laden
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+# Navigation-Auswahl in der Sidebar
+selected_page = st.sidebar.radio(
+    "Navigation",
+    ["Home", "Woche", "Aufgaben", "Prüfungen", "Punkte", "Team"]
+)
 
-# Sidebar Navigation
-with st.sidebar:
-    st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
-    if st.button("🏠 Home"):
-        st.session_state.page = "Home"
-    if st.button("📅 Woche"):
-        st.session_state.page = "Woche"
-    if st.button("✅ Aufgaben"):
-        st.session_state.page = "Aufgaben"
-    if st.button("📚 Prüfungen"):
-        st.session_state.page = "Prüfungen"
-    if st.button("⭐ Punkte"):
-        st.session_state.page = "Punkte"
-    if st.button("👥 Team"):
-        st.session_state.page = "Team"
-    st.markdown(
-        "<div style='background:#fff7f0;padding:10px;border-radius:12px;display:flex;align-items:center;margin-top:32px;'>"
-        "<span style='font-size:24px;'>🔥</span>"
-        "<div style='margin-left:10px;'><b>7 Tage Streak</b><br><span style='font-size:12px;color:#b0aeb8;'>Weiter so! 🔥</span></div>"
-        "</div>", unsafe_allow_html=True
-    )
-    st.button("Logout", use_container_width=True)
-
-# ---------------------------------------------------------
-# --------------------- SEITENLOGIK ------------------------
-# ---------------------------------------------------------
-if st.session_state.page == "Home":
+if selected_page == "Home":
     show_home_page()
-elif st.session_state.page == "Woche":
+elif selected_page == "Woche":
     show_weekly_view(data_manager)
-elif st.session_state.page == "Aufgaben":
+elif selected_page == "Aufgaben":
     st.write("Hier kommt deine Aufgaben-Ansicht.")
-elif st.session_state.page == "Prüfungen":
+elif selected_page == "Prüfungen":
     st.write("Hier kommt deine Prüfungs-Ansicht.")
-elif st.session_state.page == "Punkte":
+elif selected_page == "Punkte":
     show_productivity_view()
-elif st.session_state.page == "Team":
+elif selected_page == "Team":
     st.markdown('<div class="card">', unsafe_allow_html=True)
     show_team_page()
     st.markdown('</div>', unsafe_allow_html=True)
