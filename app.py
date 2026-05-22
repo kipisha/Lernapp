@@ -1,163 +1,113 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from team.team_page import show_team_page
 from datetime import datetime, timedelta
+
+# Pages
+from pages.home_page import show_home_page
+from pages.weekly_page import show_weekly_page
+from team.team_page import show_team_page
+
+# Helpers
 from functions.week_helpers import show_weekly_view
 from functions.productivity_helpers import show_productivity_view
-import html
 
+# Utils
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
-from pages.home_page import show_home_page
 
 
+# ---------------------------------------------------------
+# ------------------------- PAGE CONFIG --------------------
+# ---------------------------------------------------------
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
-st.markdown("""
-<style>
-
-html, body, .stApp {
-    height: 100%;
-    background: linear-gradient(135deg, #dbeafe, #fce7f3);
-    background-attachment: fixed;
-}
-
-/* Entfernt ALLE weißen Balken */
-.stAppViewContainer, .main, .block-container {
-    background: transparent !important;
-}
-
-/* Cards wirken wie schwebende Elemente */
-.card {
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 30px;
-}
-
-/* Eingabefelder */
-.stTextInput > div > div > input,
-.stTextArea textarea,
-.stSelectbox div[data-baseweb="select"] {
-    border-radius: 12px;
-    border: 1px solid #d0d0d0;
-    padding: 10px;
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(6px);
-}
-
-/* Buttons */
-.stButton > button {
-    background: linear-gradient(135deg, #4f46e5, #9333ea);
-    color: white;
-    border-radius: 12px;
-    padding: 10px 22px;
-    font-weight: bold;
-    border: none;
-    transition: 0.2s;
-}
-
-.stButton > button:hover {
-    transform: scale(1.03);
-    background: linear-gradient(135deg, #4338ca, #7e22ce);
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# ------------------------- CSS ----------------------------
+# ------------------------- THEME SYSTEM -------------------
 # ---------------------------------------------------------
 
-st.markdown(f"""
-<style>
+if "theme" not in st.session_state:
+    st.session_state["theme"] = "Cozy"
 
-
-</style>
-""", unsafe_allow_html=True)
-# Neue Farben für die violetten Buttons
-BUTTON_PRIMARY = "#14b8a6"      # Türkis
-BUTTON_HOVER = "#0f766e"        # Dunkler beim Hover
-BUTTON_TEXT = "#ffffff"
-
-st.markdown(f"""
-<style>
-
-/* Sidebar Buttons links */
-.stButton > button {{
-    background-color: {BUTTON_PRIMARY};
-    color: {BUTTON_TEXT};
-    border-radius: 12px;
-    border: none;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: 0.3s;
-}}
-
-/* Hover Effekt */
-.stButton > button:hover {{
-    background-color: {BUTTON_HOVER};
-    color: white;
-}}
-
-/* Obere Theme Buttons */
-.theme-btn {{
-    background-color: {BUTTON_PRIMARY};
-    color: white;
-    border-radius: 14px;
-    padding: 12px 24px;
-    font-weight: bold;
-    border: none;
-}}
-
-.theme-btn:hover {{
-    background-color: {BUTTON_HOVER};
-}}
-
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-
-    .main {
-        padding-top: 20px;
+THEMES = {
+    "Cozy": {
+        "primary": "#E26DBF",
+        "secondary": "#eb73e9",
+        "background": "#ffe6f6",
+        "card": "#fffadc",
+        "text": "#000000",
+        "button": "#ec4899"
+    },
+    "Focus": {
+        "primary": "#337b1d",
+        "secondary": "#8abe93",
+        "background": "#d4f0cc",
+        "card": "#e8f5e9",
+        "text": "#000000",
+        "button": "#22c55e"
+    },
+    "Energy": {
+        "primary": "#fca311",
+        "secondary": "#38bdf8",
+        "background": "#fef9c3",
+        "card": "#fffbea",
+        "text": "#22223b",
+        "button": "#facc15"
+    },
+    "Minimal": {
+        "primary": "#000000",
+        "secondary": "#1f2937",
+        "background": "#fff9ec",
+        "card": "#f5f5f5",
+        "text": "#222",
+        "button": "#4b5563"
     }
-    .stTextInput > div > div > input,
-    .stTextArea textarea,
-    .stSelectbox div[data-baseweb="select"] {
-        border-radius: 10px;
-        border: 1px solid #d0d0d0;
-        padding: 8px;
-    }
-    .stButton > button {
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-weight: bold;
-        border: none;
-        transition: 0.2s;
-    }
+}
 
-    .stButton > button:hover {
-        background-color: #45a049;
-        transform: scale(1.02);
-    }
+def get_theme_colors():
+    return THEMES.get(st.session_state.theme, THEMES["Cozy"])
 
-    .card {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }
+def apply_theme():
+    c = get_theme_colors()
 
-</style>
-""", unsafe_allow_html=True)
+    st.markdown(f"""
+        <style>
+        .stApp {{
+            background: {c['background']} !important;
+            color: {c['text']};
+        }}
+
+        .card {{
+            background: {c['card']};
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }}
+
+        .stProgress > div > div > div > div {{
+            background-image: linear-gradient(90deg, {c['primary']} 0%, {c['secondary']} 100%);
+        }}
+
+        .stButton > button {{
+            background-color: {c['button']} !important;
+            color: white !important;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            border: none;
+            transition: 0.2s;
+        }}
+
+        .stButton > button:hover {{
+            filter: brightness(0.9);
+            transform: scale(1.02);
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
+apply_theme()
 
 
 # ---------------------------------------------------------
@@ -168,23 +118,36 @@ data_manager = DataManager(
     fs_protocol='webdav',
     fs_root_folder="lernapp"
 )
+
 login_manager = LoginManager(data_manager)
 login_manager.login_register()
 
-# Session State initialisieren
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
-if "theme" not in st.session_state:
-    st.session_state.theme = "default"
 
-# immer Sidebar anzeigen
+# ---------------------------------------------------------
+# ------------------------- SIDEBAR NAV --------------------
+# ---------------------------------------------------------
+
 def show_sidebar_nav():
-    with st.sidebar:
-        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
+    colors = get_theme_colors()
 
+    with st.sidebar:
+        # Logo
+        st.markdown(
+            f"<h1 style='color:{colors['primary']}; margin-bottom: 10px;'>kipi✦</h1>",
+            unsafe_allow_html=True
+        )
+
+        # Navigation
         nav_items = [
             ("🏠 Home", "Home"),
             ("📅 Woche", "Woche"),
+            ("✅ Aufgaben", "Aufgaben"),
+            ("📚 Prüfungen", "Prüfungen"),
+            ("📈 Produktivität", "Produktivität"),
+            ("⭐ Punkte", "Punkte"),
+            ("📝 Notizen", "Notizen"),
+            ("🎯 Ziele", "Ziele"),
+            ("👥 Team", "Team"),
         ]
 
         for label, page in nav_items:
@@ -193,15 +156,49 @@ def show_sidebar_nav():
                 st.rerun()
 
         st.markdown("---")
-        if st.button("Logout", key="logout_btn", use_container_width=True):
+
+        # Streak Box
+        streak = data_manager.load("streak.json") or 0
+        st.markdown(
+            f"""
+            <div style='background:{colors['card']}; padding:12px; border-radius:12px;
+                 display:flex; align-items:center; gap:10px;'>
+                <span style='font-size:26px;'>🔥</span>
+                <div>
+                    <b>{streak} Tage Streak</b><br>
+                    <span style='font-size:12px; color:#666;'>Weiter so!</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown("---")
+
+        # Logout
+        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
             st.session_state.username = None
             st.rerun()
 
 
+# Sidebar anzeigen
+show_sidebar_nav()
+
+
+# ---------------------------------------------------------
+# ------------------------- PAGE ROUTING -------------------
+# ---------------------------------------------------------
+
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
 if st.session_state.page == "Home":
     show_home_page()
+
 elif st.session_state.page == "Woche":
-    from pages.weekly_page import show_weekly_page
     show_weekly_page()
+
+elif st.session_state.page == "Team":
+    show_team_page()
 
 
