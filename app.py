@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+<<<<<<< HEAD
+=======
+from datetime import datetime, timedelta
+
+# Pages
+from pages.home_page import show_home_page
+from pages.weekly_page import show_weekly_page
+from pages.tasks_page import show_tasks_page
+>>>>>>> d1ed5bb (tasks_page)
 from team.team_page import show_team_page
 from datetime import datetime, timedelta
 from functions.week_helpers import show_weekly_view
