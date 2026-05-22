@@ -2,17 +2,10 @@ import streamlit as st
 from datetime import datetime, timedelta
 from pages.themes_page import get_theme_colors, apply_theme, show_theme_switcher
 
-def show_home_page():
-    # --- THEME INITIALIZATION ---
-    if "theme" not in st.session_state:
-        st.session_state.theme = "Cozy"
-
-    # --- GET THEME COLORS ---
+def show_sidebar_nav():
+    """Rendert ausschließlich die Sidebar-Navigation auf der linken Seite"""
     colors = get_theme_colors()
-
-    # --- APPLY THEME ---
-    apply_theme()
-
+    
     # --- DYNAMIC SIDEBAR NAVIGATION STYLING ---
     st.markdown(f"""
         <style>
@@ -39,7 +32,6 @@ def show_home_page():
     with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
         
-        # Navigation Buttons mit Theme-Farben
         nav_items = [
             ("🏠 Home", "Home"),
             ("📅 Woche", "Woche"),
@@ -66,6 +58,15 @@ def show_home_page():
         if st.button("Logout", use_container_width=True):
             st.session_state.username = None
             st.rerun()
+
+
+def show_home_page():
+    """Rendert den Hauptinhalt der Startseite im Zentrum"""
+    if "theme" not in st.session_state:
+        st.session_state.theme = "Cozy"
+
+    colors = get_theme_colors()
+    apply_theme()
 
     # --- THEME SWITCHER ---
     show_theme_switcher()
