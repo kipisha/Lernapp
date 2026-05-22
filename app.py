@@ -123,23 +123,12 @@ login_manager = LoginManager(data_manager)
 login_manager.login_register()
 st.session_state["username"]
 
-# Navigation-Auswahl in der Sidebar
-selected_page = st.sidebar.radio(
-    "Navigation",
-    ["Home", "Woche", "Aufgaben", "Prüfungen", "Punkte", "Team"]
-)
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
 
-if selected_page == "Home":
+if st.session_state.page == "Home":
     show_home_page()
-elif selected_page == "Woche":
+elif st.session_state.page == "Woche":
     show_weekly_view(data_manager)
-elif selected_page == "Aufgaben":
-    st.write("Hier kommt deine Aufgaben-Ansicht.")
-elif selected_page == "Prüfungen":
-    st.write("Hier kommt deine Prüfungs-Ansicht.")
-elif selected_page == "Punkte":
-    show_productivity_view()
-elif selected_page == "Team":
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    show_team_page()
-    st.markdown('</div>', unsafe_allow_html=True)
+# usw.
+

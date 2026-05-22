@@ -2,47 +2,44 @@ import streamlit as st
 from datetime import datetime, timedelta
 
 def show_home_page():
-    # --- Theme / Mood Switcher ---
+    # --- SIDEBAR NAVIGATION ---
+    with st.sidebar:
+        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
+        
+        # Navigation Buttons
+        if st.button("🏠 Home", use_container_width=True):
+            st.session_state.page = "Home"
+            st.rerun()
+        if st.button("📅 Woche", use_container_width=True):
+            st.session_state.page = "Woche"
+            st.rerun()
+        if st.button("✅ Aufgaben", use_container_width=True):
+            st.session_state.page = "Aufgaben"
+            st.rerun()
+        if st.button("📚 Prüfungen", use_container_width=True):
+            st.session_state.page = "Prüfungen"
+            st.rerun()
+        if st.button("⭐ Punkte", use_container_width=True):
+            st.session_state.page = "Punkte"
+            st.rerun()
+        if st.button("👥 Team", use_container_width=True):
+            st.session_state.page = "Team"
+            st.rerun()
+        
+        st.markdown("---")
+        st.markdown(
+            "<div style='background:#fff7f0;padding:10px;border-radius:12px;display:flex;align-items:center;'>"
+            "<span style='font-size:24px;'>🔥</span>"
+            "<div style='margin-left:10px;'><b>7 Tage Streak</b><br><span style='font-size:12px;color:#b0aeb8;'>Weiter so! 🔥</span></div>"
+            "</div>", unsafe_allow_html=True
+        )
+        if st.button("Logout", use_container_width=True):
+            st.session_state.username = None
+            st.rerun()
+
+    # --- THEME / MOOD SWITCHER ---
     st.markdown("""
         <style>
-        .sidebar .sidebar-content {width: 300px;}
-        .sidebar .sidebar-content, .stApp {background: #faf8ff;}
-        .sidebar .sidebar-content {padding-top: 32px;}
-        .sidebar .sidebar-content h1 {font-size: 2rem;}
-        .sidebar .sidebar-content .nav-btn {
-            background: #f3eaff;
-            color: #7c3aed;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            border: none;
-            width: 100%;
-            padding: 10px 0;
-        }
-        .sidebar .sidebar-content .nav-btn.selected {
-            background: linear-gradient(90deg, #a78bfa 0%, #f3e8ff 100%);
-            color: #fff;
-        }
-        .mood-switcher {
-            display: flex;
-            gap: 16px;
-            background: #fff;
-            border-radius: 18px;
-            padding: 12px 32px;
-            box-shadow: 0 2px 8px #f3eaff;
-            margin-bottom: 32px;
-            justify-content: flex-end;
-        }
-        .mood-switcher .mood-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 14px;
-            color: #222;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
         .card {
             background: #fff;
             border-radius: 18px;
@@ -56,38 +53,14 @@ def show_home_page():
         </style>
     """, unsafe_allow_html=True)
 
-    # --- SIDEBAR ---
-    with st.sidebar:
-        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
-        nav_items = [
-            ("Home", "🏠"),
-            ("Woche", "📅"),
-            ("Aufgaben", "✅"),
-            ("Prüfungen", "📚"),
-            ("Produktivität", "⚡"),
-            ("Punkte", "⭐"),
-            ("Notizen", "📝"),
-            ("Ziele", "🎯"),
-            ("Team", "👥"),
-        ]
-        for name, icon in nav_items:
-            st.button(f"{icon} {name}", key=name, use_container_width=True)
-        st.markdown(
-            "<div style='background:#fff7f0;padding:10px;border-radius:12px;display:flex;align-items:center;margin-top:32px;'>"
-            "<span style='font-size:24px;'>🔥</span>"
-            "<div style='margin-left:10px;'><b>7 Tage Streak</b><br><span style='font-size:12px;color:#b0aeb8;'>Weiter so! 🔥</span></div>"
-            "</div>", unsafe_allow_html=True
-        )
-        st.button("Logout", use_container_width=True)
-
     # --- MOOD SWITCHER (rechts oben) ---
     st.markdown(
         """
-        <div class="mood-switcher">
-            <button class="mood-btn">🌸<span>Cozy</span></button>
-            <button class="mood-btn">⚡<span>Focus</span></button>
-            <button class="mood-btn">🌞<span>Energy</span></button>
-            <button class="mood-btn">📚<span>Minimal</span></button>
+        <div style='display:flex;gap:16px;background:#fff;border-radius:18px;padding:12px 32px;box-shadow:0 2px 8px #f3eaff;margin-bottom:32px;justify-content:flex-end;'>
+            <div style='text-align:center;'><div style='font-size:24px;'>🌸</div><div style='font-size:12px;'>Cozy</div></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>⚡</div><div style='font-size:12px;'>Focus</div></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>🌞</div><div style='font-size:12px;'>Energy</div></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>📚</div><div style='font-size:12px;'>Minimal</div></div>
         </div>
         """,
         unsafe_allow_html=True
@@ -131,7 +104,7 @@ def show_home_page():
     with col3:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("#### Motivation für dich")
-        st.info("„Disziplin heute, Stolz morgen.”")
+        st.info("„Disziplin heute, Stolz morgen.,,")
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --- TASKS & EXAMS ---
