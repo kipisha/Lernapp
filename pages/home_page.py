@@ -2,7 +2,69 @@ import streamlit as st
 from datetime import datetime, timedelta
 
 def show_home_page():
-    # Optional: st.set_page_config(page_title="smartplan Dashboard", layout="wide")
+    # Theme-Auswahl (Session-State)
+    if "theme" not in st.session_state:
+        st.session_state.theme = "Cozy"
+
+    theme = st.session_state.theme
+
+    # Theme-Auswahl UI
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("🌸 Cozy"):
+            st.session_state.theme = "Cozy"
+    with col2:
+        if st.button("⚡ Focus"):
+            st.session_state.theme = "Focus"
+    with col3:
+        if st.button("🌞 Energy"):
+            st.session_state.theme = "Energy"
+    with col4:
+        if st.button("📚 Minimal"):
+            st.session_state.theme = "Minimal"
+
+    # Theme-Styles anwenden
+    if theme == "Cozy":
+        st.markdown("""
+            <style>
+            .stApp {
+                background: linear-gradient(135deg, #fdf6f0, #f3e8ff, #ffe4ef) !important;
+                color: #6d4c41;
+            }
+            .card {background: #fff7f0cc !important; border-radius: 22px;}
+            </style>
+        """, unsafe_allow_html=True)
+    elif theme == "Focus":
+        st.markdown("""
+            <style>
+            .stApp {
+                background: linear-gradient(135deg, #1e1b4b, #7c3aed, #a5b4fc) !important;
+                color: #fff;
+            }
+            .card {background: #312e81cc !important; border-radius: 18px;}
+            </style>
+        """, unsafe_allow_html=True)
+    elif theme == "Energy":
+        st.markdown("""
+            <style>
+            .stApp {
+                background: linear-gradient(135deg, #fef9c3, #fca311, #38bdf8) !important;
+                color: #22223b;
+            }
+            .card {background: #fffbeacc !important; border-radius: 18px;}
+            </style>
+        """, unsafe_allow_html=True)
+    elif theme == "Minimal":
+        st.markdown("""
+            <style>
+            .stApp {
+                background: linear-gradient(135deg, #fff, #e5e7eb) !important;
+                color: #222;
+            }
+            .card {background: #f5f5f5cc !important; border-radius: 10px;}
+            </style>
+        """, unsafe_allow_html=True)
+
     # --- Sidebar ---
     with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
