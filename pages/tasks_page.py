@@ -3,6 +3,62 @@ from pages.themes_page import get_theme_colors, apply_theme
 from utils.data_manager import DataManager
 from datetime import datetime
 
+# --- Vorschau-Karten (oben) ---
+def _render_task_card(entry, colors):
+    title = entry.get("title", "Mathe Hausaufgaben")
+    badge = entry.get("tag", "Hausaufgaben")
+    due = entry.get("due", "")
+    duration = entry.get("duration_min", "")
+    subject = entry.get("subject", "")
+    notes = entry.get("notes", "")
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown(f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="https://via.placeholder.com/40/9bf0c7/ffffff" style="border-radius:8px"/><div><strong>{title}</strong></div><div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fällig am:</strong> {due}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Dauer:</strong> {duration} min</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex;gap:12px;margin-top:12px;"><button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button><button style="padding:8px 14px;border-radius:10px;border:1px solid {0};background:white;color:{0};font-weight:600">Als erledigt markieren</button></div>'.format(colors.get("primary")), unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def _render_exam_card(entry, colors):
+    title = entry.get("title", "Deutsch Prüfung")
+    badge = "Prüfung"
+    date = entry.get("date", "")
+    time = entry.get("time", "")
+    subject = entry.get("subject", "")
+    topics = entry.get("topics", []) or []
+    progress = entry.get("progress", 0)
+    notes = entry.get("notes", "")
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown(f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="https://via.placeholder.com/40/ffb4b4/ffffff" style="border-radius:8px"/><div><strong>{title}</strong></div><div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Datum:</strong> {date}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Uhrzeit:</strong> {time}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
+    if topics:
+        st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Themen:</strong></div>', unsafe_allow_html=True)
+        for top in topics:
+            st.markdown(f'<div style="margin-left:18px;color:#374151">• {top}</div>', unsafe_allow_html=True)
+    # Fortschrittsbalken
+    st.markdown(f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;"><div style="width:160px;height:10px;background:#f3f4f6;border-radius:8px;overflow:hidden;"><div style="width:{int(progress)}%;height:100%;background:linear-gradient(90deg,{colors.get("primary")},{colors.get("secondary")})"></div></div><div style="color:#6b7280">{int(progress)}%</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
+    st.markdown('<div style="display:flex;gap:12px;margin-top:12px;"><button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button><button style="padding:8px 14px;border-radius:10px;border:1px solid #fb7185;background:white;color:#fb7185;font-weight:600">Als erledigt markieren</button></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def show_preview_top_on_tasks(dm, colors):
+    tasks = dm.load_user_data("tasks.json", initial_value=[]) or []
+    exams = dm.load_user_data("exams.json", initial_value=[]) or []
+    sample_task = tasks[0] if tasks else {"title":"Mathe Hausaufgaben","due":"13. Mai 2024, 15:00","duration_min":90,"subject":"Mathematik","notes":"Kapitel 5 & 6 lösen","tag":"Hausaufgaben"}
+    sample_exam = exams[0] if exams else {"title":"Deutsch Prüfung","date":"17. Mai 2024","time":"10:30 - 12:00","subject":"Deutsch","topics":["Zusammenfassung schreiben","Textanalyse","Grammatik"],"progress":60,"notes":"Alte Prüfungen lösen!"}
+
+    c1, c2 = st.columns([1,1], gap="large")
+    with c1:
+        _render_task_card(sample_task, colors)
+    with c2:
+        _render_exam_card(sample_exam, colors)
+# --- Ende Vorschau-Karten ---
+
 def show_tasks_page():
     """Formular zum Anlegen, Speichern und Rückgängig machen von Aufgaben."""
     if "theme" not in st.session_state:
