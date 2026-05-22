@@ -1,8 +1,10 @@
 import streamlit as st
 from pages.themes_page import get_theme_colors, apply_theme
+from utils.data_manager import DataManager
+from datetime import datetime
 
 def show_tasks_page():
-    """Zeigt eine einzelne Aufgaben-Karte im Stil des Screenshots."""
+    """Formular zum Anlegen, Speichern und Rückgängig machen von Aufgaben."""
     if "theme" not in st.session_state:
         st.session_state.theme = "Cozy"
 
@@ -12,89 +14,61 @@ def show_tasks_page():
     card_bg = colors.get("card", "#ffffff")
     text_color = colors.get("text", "#111827")
 
-    st.markdown(
-        f"<h3 style='color:{primary};margin-bottom:6px;'>AUFGABE (EINTRAG)</h3>",
-        unsafe_allow_html=True
-    )
+    st.markdown(f"<h3 style='color:{primary};margin-bottom:6px;'>AUFGABEN</h3>", unsafe_allow_html=True)
 
-    st.markdown(
-        f"""
-    <style>
-    .task-card {{
-        background: {card_bg};
-        border-radius: 14px;
-        padding: 18px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-        max-width: 760px;
-        margin: 8px 0;
-    }}
-    .task-header {{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-    }}
-    .task-title {{
-        font-weight:700;
-        font-size:18px;
-        color: {text_color};
-    }}
-    .task-tag {{
-        background: rgba(0,0,0,0.04);
-        color: {primary};
-        padding:6px 10px;
-        border-radius:999px;
-        font-size:13px;
-        font-weight:600;
-    }}
-    .meta {{ color: #666; font-size:13px; margin-top:8px; }}
-    .notes {{ margin-top:10px; color:#333; }}
-    .buttons {{ margin-top:14px; display:flex; gap:10px; }}
-    </style>
-    """,
-        unsafe_allow_html=True,
-    )
+    dm = DataManager()
+    tasks = dm.load_user_data("tasks.json", initial_value=[])
 
-    st.markdown("<div class='task-card'>", unsafe_allow_html=True)
+    # Eingabeformular
+    with st.form("task_form"):
+        st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
+        st.text_input("Fälligkeitsdatum", key="task_due", placeholder="TT.MM.JJJJ oder 2024-05-13")
+        st.text_input("Uhrzeit", key="task_time", placeholder="z. B. 15:00")
+        st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
+        st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
+        st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
+        st.text_area("Notizen", key="task_notes", height=80, placeholder="Details / Aufgabenbeschreibung")
 
-    # Header: Icon + Title + Tag
-    st.markdown(
-        "<div class='task-header'>"
-        "<div style='display:flex;align-items:center;gap:12px'>"
-        "<div style='width:44px;height:44px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:20px;'>📗</div>"
-        "<div><div class='task-title'>Mathe Hausaufgaben</div><div class='meta'>Fällig am <b>13. Mai 2024, 15:00</b></div></div>"
-        "</div>"
-        f"<div class='task-tag'>Hausaufgaben</div>"
-        "</div>",
-        unsafe_allow_html=True,
-    )
+        submitted = st.form_submit_button("Speichern")
 
-    # Details: Dauer, Fach, Notizen
-    st.markdown(
-        "<div class='meta' style='margin-top:14px;'>Dauer: <b>90 min</b> &nbsp;•&nbsp; Fach: <b>Mathematik</b></div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<div class='notes'><b>Notizen:</b> Kapitel 5 & 6 lösen, Aufgaben im Buch Seite 120–125.</div>",
-        unsafe_allow_html=True,
-    )
+    if submitted:
+        record = {
+            "title": st.session_state.get("task_title", "").strip(),
+            "due": st.session_state.get("task_due", "").strip(),
+            "time": st.session_state.get("task_time", "").strip(),
+            "duration_min": int(st.session_state.get("task_duration", 0) or 0),
+            "subject": st.session_state.get("task_subject", "").strip(),
+            "tag": st.session_state.get("task_tag", "").strip(),
+            "notes": st.session_state.get("task_notes", "").strip(),
+            "created_at": datetime.utcnow().isoformat(),
+        }
 
-    # Checkliste (Streamlit native checkboxes for interactivity)
-    st.markdown("<div style='margin-top:12px;'><b>Checkliste</b></div>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        done1 = st.checkbox("Aufgaben lesen", value=True, key="task_read")
-        done2 = st.checkbox("Lösen", value=False, key="task_solve")
-    with col2:
-        done3 = st.checkbox("Kontrollieren", value=False, key="task_check")
-        st.write("")  # spacing
+        # Backup vor dem Schreiben (für Undo)
+        st.session_state["tasks_backup"] = tasks.copy() if isinstance(tasks, list) else list(tasks)
+        new_tasks = DataManager.append_record(tasks, record)
+        dm.save_user_data(new_tasks, "tasks.json")
+        st.success("Aufgabe gespeichert. Du kannst die letzte Änderung rückgängig machen.")
 
-    # Buttons (mit expliziten Keys)
-    cols = st.columns([1, 1.2])
-    with cols[0]:
-        if st.button("Bearbeiten", key="edit_task_btn"):
-            st.info("Bearbeiten: noch nicht implementiert")
-    with cols[1]:
-        if st.button("Als erledigt markieren", key="complete_task_btn"):
-            st.success("Aufgabe als erledigt markiert")
+        # Aktualisiere lokale variable nach Save
+        tasks = new_tasks
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Rückgängig-Funktionalität
+    if "tasks_backup" in st.session_state:
+        if st.button("Letzte Änderung rückgängig machen", key="undo_task"):
+            backup = st.session_state.pop("tasks_backup")
+            dm.save_user_data(backup, "tasks.json")
+            st.experimental_rerun()
+
+    st.markdown("---")
+    st.markdown("### Deine gespeicherten Aufgaben")
+    if not tasks:
+        st.info("Noch keine Aufgaben vorhanden.")
+    else:
+        for i, t in enumerate(tasks):
+            with st.expander(f"{t.get('title','(ohne Titel)')} — {t.get('due','')}", expanded=False):
+                st.write(f"**Fach:** {t.get('subject','')}")
+                st.write(f"**Dauer:** {t.get('duration_min','')} min")
+                st.write(f"**Tag:** {t.get('tag','')}")
+                st.write(f"**Uhrzeit:** {t.get('time','')}")
+                st.write(f"**Notizen:** {t.get('notes','')}")
+                st.write(f"**Erstellt:** {t.get('created_at','')}")
