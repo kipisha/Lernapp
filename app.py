@@ -71,13 +71,54 @@ html, body, .stApp {
 # ---------------------------------------------------------
 # ------------------------- CSS ----------------------------
 # ---------------------------------------------------------
+# Neue Farben für die violetten Buttons
+BUTTON_PRIMARY = "#14b8a6"      # Türkis
+BUTTON_HOVER = "#0f766e"        # Dunkler beim Hover
+BUTTON_TEXT = "#ffffff"
+
+st.markdown(f"""
+<style>
+
+/* Sidebar Buttons links */
+.stButton > button {{
+    background-color: {BUTTON_PRIMARY};
+    color: {BUTTON_TEXT};
+    border-radius: 12px;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: 0.3s;
+}}
+
+/* Hover Effekt */
+.stButton > button:hover {{
+    background-color: {BUTTON_HOVER};
+    color: white;
+}}
+
+/* Obere Theme Buttons */
+.theme-btn {{
+    background-color: {BUTTON_PRIMARY};
+    color: white;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-weight: bold;
+    border: none;
+}}
+
+.theme-btn:hover {{
+    background-color: {BUTTON_HOVER};
+}}
+
+</style>
+""", unsafe_allow_html=True)
+
 st.markdown("""
 <style>
 
     .main {
         padding-top: 20px;
     }
-
     .stTextInput > div > div > input,
     .stTextArea textarea,
     .stSelectbox div[data-baseweb="select"] {
@@ -85,7 +126,6 @@ st.markdown("""
         border: 1px solid #d0d0d0;
         padding: 8px;
     }
-
     .stButton > button {
         background-color: #4CAF50;
         color: white;
@@ -130,5 +170,5 @@ if st.session_state.page == "Home":
     show_home_page()
 elif st.session_state.page == "Woche":
     show_weekly_view(data_manager)
-# usw.
+
 

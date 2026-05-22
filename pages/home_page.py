@@ -9,7 +9,7 @@ def show_home_page():
 
     # --- SIDEBAR NAVIGATION ---
     with st.sidebar:
-        st.markdown("<h1 style='color:#7c3aed;'>kipi✦</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='color:#7c3aed;'>smartplan</h1>", unsafe_allow_html=True)
         
         # Navigation Buttons
         if st.button("🏠 Home", use_container_width=True):

@@ -14,11 +14,11 @@ def get_theme_colors():
             "text": "#000000"
         },
         "Focus": {
-            "primary": "#a5b4fc",
-            "secondary": "#7c3aed",
-            "background": "#1e1b4b",
-            "card": "#312e81",
-            "text": "#fff"
+            "primary": "#82d868",
+            "secondary": "#83da8b",
+            "background": "#d4f0cc",
+            "card": "#f3d572",
+            "text": "#000000"
         },
         "Energy": {
             "primary": "#fca311",
