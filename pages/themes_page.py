@@ -1,5 +1,8 @@
 import streamlit as st
-
+# Absicherung direkt in der themes_page
+if "theme" not in st.session_state:
+    st.session_state["theme"] = "Cozy"
+    
 def get_theme_colors():
     """Gibt die Farben des aktuellen Themes zurück"""
     if "theme" not in st.session_state:
