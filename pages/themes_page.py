@@ -8,10 +8,10 @@ def get_theme_colors():
     themes = {
         "Cozy": {
             "primary": "#629BB6",
-            "secondary": "#7c3aed",
-            "background": "#fdf6f0",
-            "card": "#fff7f0",
-            "text": "#6d4c41"
+            "secondary": "#73a3ec",
+            "background": "#a5f2f2",
+            "card": "#f1e48b",
+            "text": "#000000"
         },
         "Focus": {
             "primary": "#a5b4fc",
