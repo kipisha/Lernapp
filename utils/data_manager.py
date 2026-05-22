@@ -193,3 +193,21 @@ class DataManager:
             return data + [record_dict]
         else:
             raise ValueError("DataManager: data must be a DataFrame or a list")
+        
+import json
+import os
+
+class DataManager:
+    def __init__(self, fs_protocol="local", fs_root_folder="data"):
+        self.fs_protocol = fs_protocol
+        self.root = fs_root_folder
+
+    def load(self, filename):
+        """Lädt JSON-Datei und gibt Python-Objekt zurück"""
+        path = os.path.join(self.root, filename)
+
+        if not os.path.exists(path):
+            return None
+
+        with open(path, "r") as f:
+            return json.load(f)
