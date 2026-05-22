@@ -126,7 +126,7 @@ def show_home_page():
         st.button("Prüfung ansehen")
         st.markdown("</div>", unsafe_allow_html=True)
     with col6:
-        st.markdown("<div class='card'>", unsafe_after_html=True)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("##### Motivation für dich")
         st.markdown("🏁", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
