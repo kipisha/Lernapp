@@ -1,8 +1,14 @@
 import streamlit as st
+<<<<<<< HEAD
 # Absicherung direkt in der themes_page
 if "theme" not in st.session_state:
     st.session_state["theme"] = "Cozy"
     
+=======
+st.session_state.setdefault("theme", "default")
+
+
+>>>>>>> 089e9e3 (fehler behoben)
 def get_theme_colors():
     """Gibt die Farben des aktuellen Themes zurück"""
     if "theme" not in st.session_state:
@@ -91,4 +97,6 @@ button_colors = {
     "Minimal": "#4b5563"   # bleibt neutral
 }
 
-button_color = button_colors.get(st.session_state.theme, "#4b5563")
+def get_button_color():
+    return button_colors.get(st.session_state.theme, "#4b5563")
+
