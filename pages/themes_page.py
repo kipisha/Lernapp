@@ -9,8 +9,8 @@ def get_theme_colors():
         "Cozy": {
             "primary": "#629BB6",
             "secondary": "#73a3ec",
-            "background": "#a5f2f2",
-            "card": "#f1e48b",
+            "background": "#cbf5f5",
+            "card": "#fdf5be",
             "text": "#000000"
         },
         "Focus": {
