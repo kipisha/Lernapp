@@ -181,14 +181,72 @@ if "theme" not in st.session_state:
 def show_sidebar_nav():
     colors = get_theme_colors()
 
-    with st.sidebar:
-        # Logo / Titel
-        st.markdown(
-            f"<h1 style='color:{colors['primary']}; margin-bottom: 10px;'>kipi✦</h1>",
-            unsafe_allow_html=True
-        )
+    sidebar_bg = colors["card"]
+    primary = colors["primary"]
+    text = colors["text"]
 
-        # Navigation Items
+    st.markdown(
+        f"""
+        <style>
+        /* Sidebar Hintergrund */
+        [data-testid="stSidebar"] {{
+            background: {sidebar_bg} !important;
+            padding: 20px;
+        }}
+
+        /* Sidebar Titel */
+        .sidebar-title {{
+            font-size: 32px;
+            font-weight: 800;
+            color: {primary};
+            margin-bottom: 20px;
+        }}
+
+        /* Navigation Buttons */
+        .sidebar-btn > button {{
+            width: 100%;
+            background: {primary};
+            color: white;
+            border-radius: 12px;
+            padding: 10px 18px;
+            font-weight: 600;
+            border: none;
+            margin-bottom: 10px;
+            transition: 0.2s ease;
+        }}
+
+        .sidebar-btn > button:hover {{
+            background: {colors["secondary"]};
+            transform: scale(1.03);
+        }}
+
+        /* Streak Box */
+        .streak-box {{
+            background: rgba(255,255,255,0.5);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }}
+
+        .streak-box span {{
+            font-size: 28px;
+        }}
+
+        .streak-text {{
+            font-size: 14px;
+            color: {text};
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    with st.sidebar:
+        st.markdown("<div class='sidebar-title'>kipi✦</div>", unsafe_allow_html=True)
+
         nav_items = [
             ("🏠 Home", "Home"),
             ("📅 Woche", "Woche"),
@@ -206,7 +264,25 @@ def show_sidebar_nav():
                 st.session_state.page = page
                 st.rerun()
 
+        st.markdown(
+            f"""
+            <div class="streak-box">
+                <span>🔥</span>
+                <div>
+                    <b>{st.session_state.get("streak", 7)} Tage Streak</b><br>
+                    <span class="streak-text">Weiter so!</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
         st.markdown("---")
+
+        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
+            st.session_state.username = None
+            st.rerun()
+
 
         # Streak Box
         st.markdown(
