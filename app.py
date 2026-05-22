@@ -163,16 +163,19 @@ st.markdown("""
 # ---------------------------------------------------------
 # ------------------------- LOGIN --------------------------
 # ---------------------------------------------------------
+
 data_manager = DataManager(
     fs_protocol='webdav',
     fs_root_folder="lernapp"
 )
 login_manager = LoginManager(data_manager)
 login_manager.login_register()
-st.session_state["username"]
 
+# Session State initialisieren
 if "page" not in st.session_state:
     st.session_state.page = "Home"
+if "theme" not in st.session_state:
+    st.session_state.theme = "default"
 
 # immer Sidebar anzeigen
 show_sidebar_nav()
