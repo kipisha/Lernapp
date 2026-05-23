@@ -70,8 +70,7 @@ def show_weekly_page():
     sunday = monday + timedelta(days=6)
     st.markdown("<div class='week-header'>", unsafe_allow_html=True)
     st.markdown(f"<div><div class='week-range'>WOCHE: {monday.strftime('%d. %b %Y')} — {sunday.strftime('%d. %b %Y')}</div></div>", unsafe_allow_html=True)
-    if st.button("Aufgabe hinzufügen"):
-        st.session_state.show_add_task = True
+
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Lade Tasks

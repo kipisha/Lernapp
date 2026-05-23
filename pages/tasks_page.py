@@ -140,12 +140,6 @@ def show_tasks_page():
         # Aktualisiere lokale variable nach Save
         tasks = new_tasks
 
-    # Rückgängig-Funktionalität
-    if "tasks_backup" in st.session_state:
-        if st.button("Letzte Änderung rückgängig machen", key="undo_task"):
-            backup = st.session_state.pop("tasks_backup")
-            dm.save_user_data(backup, "tasks.json")
-            st.experimental_rerun()
 
     st.markdown("---")
     st.markdown("### Deine gespeicherten Aufgaben")
@@ -154,9 +148,17 @@ def show_tasks_page():
     else:
         for i, t in enumerate(tasks):
             with st.expander(f"{t.get('title','(ohne Titel)')} — {t.get('due','')}", expanded=False):
+
                 st.write(f"**Fach:** {t.get('subject','')}")
-                st.write(f"**Dauer:** {t.get('duration_min','')} min")
-                st.write(f"**Tag:** {t.get('tag','')}")
-                st.write(f"**Uhrzeit:** {t.get('time','')}")
-                st.write(f"**Notizen:** {t.get('notes','')}")
-                st.write(f"**Erstellt:** {t.get('created_at','')}")
+        st.write(f"**Dauer:** {t.get('duration_min','')} min")
+        st.write(f"**Tag:** {t.get('tag','')}")
+        st.write(f"**Uhrzeit:** {t.get('time','')}")
+        st.write(f"**Notizen:** {t.get('notes','')}")
+        st.write(f"**Erstellt:** {t.get('created_at','')}")
+
+        # --- LÖSCHEN BUTTON ---
+        if st.button(f"🗑️ Aufgabe löschen", key=f"delete_{i}"):
+            tasks.pop(i)
+            dm.save_user_data(tasks, "tasks.json")
+            st.success("Aufgabe gelöscht.")
+            st.experimental_rerun()
