@@ -37,10 +37,19 @@ def show_sidebar_nav():
 }
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* Entfernt gelben Hintergrund hinter Emojis */
+span, div {
+    background: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 
     # --- SIDEBAR NAVIGATION ---
-    with st.sidebar:
+with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
         
         nav_items = [
@@ -162,7 +171,7 @@ def show_home_page():
         st.markdown(
             """
             <div style='display:flex;gap:24px;justify-content:center;'>
-                <div style='text-align:center;'><div style='font-size:24px;'>📅</div><b>3</b><br><span style='font-size:12px;'>Aufgaben</span></div>
+                <div style='text-align:center;'><div style='font-size:24px;'>🗓️</div><b>3</b><br><span style='font-size:12px;'>Aufgaben</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>📚</div><b>1</b><br><span style='font-size:12px;'>Prüfung</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>⭐</div><b>5</b><br><span style='font-size:12px;'>Stufe</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>🏆</div><b>120</b><br><span style='font-size:12px;'>Punkte</span></div>
