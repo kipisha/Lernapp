@@ -37,19 +37,10 @@ def show_sidebar_nav():
 }
 </style>
 """, unsafe_allow_html=True)
-st.markdown("""
-<style>
-/* Entfernt gelben Hintergrund hinter Emojis */
-span, div {
-    background: none !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
 
 
     # --- SIDEBAR NAVIGATION ---
-with st.sidebar:
+    with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
         
         nav_items = [
@@ -149,7 +140,7 @@ def show_home_page():
         f"""
         <div style='margin-bottom: 16px;'>
             <span style='color:{colors['primary']};font-size:14px;font-weight:bold;'>HOME / STARTSEITE</span>
-            <h2 style='margin:0;color:{colors['text']};'>Hey Lara! 👋</h2>
+            <h2 style='margin:0;color:{colors['text']};'>Hey {st.session_state.username}! 👋</h2>
             <span style='color:#b0aeb8;'>Schön, dass du da bist. Bereit für einen produktiven Tag?</span>
         </div>
         """,
@@ -171,7 +162,7 @@ def show_home_page():
         st.markdown(
             """
             <div style='display:flex;gap:24px;justify-content:center;'>
-                <div style='text-align:center;'><div style='font-size:24px;'>🗓️</div><b>3</b><br><span style='font-size:12px;'>Aufgaben</span></div>
+                <div style='text-align:center;'><div style='font-size:24px;'>📅</div><b>3</b><br><span style='font-size:12px;'>Aufgaben</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>📚</div><b>1</b><br><span style='font-size:12px;'>Prüfung</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>⭐</div><b>5</b><br><span style='font-size:12px;'>Stufe</span></div>
                 <div style='text-align:center;'><div style='font-size:24px;'>🏆</div><b>120</b><br><span style='font-size:12px;'>Punkte</span></div>
@@ -179,14 +170,7 @@ def show_home_page():
             """, unsafe_allow_html=True
         )
         st.markdown("</div>", unsafe_allow_html=True)
-    with col3:
-        motivation = get_daily_motivation()
-    st.markdown(f"""
-        <div class="motivation-box">
-            <div class="motivation-icon">🏁</div>
-            <div class="motivation-text">„{motivation}“</div>
-        </div>
-    """, unsafe_allow_html=True)
+
 
 
 
