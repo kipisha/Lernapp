@@ -196,6 +196,9 @@ data_manager = DataManager(
 )
 login_manager = LoginManager(data_manager)
 login_manager.login_register()
+if "username" not in st.session_state or st.session_state.username is None:
+    st.stop()
+
 
 # Session State initialisieren
 if "page" not in st.session_state:
@@ -211,8 +214,6 @@ if st.session_state.page == "Home":
 elif st.session_state.page == "Woche":
     from pages.weekly_page import show_weekly_page
     show_weekly_page()
-elif st.session_state.page == "Timer":
-    show_timer_page()
 elif st.session_state.page == "Aufgaben":
     show_tasks_page()
 elif st.session_state.page == "Prüfungen":
@@ -225,9 +226,3 @@ elif st.session_state.page == "Punktesystem":
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-# ...
-if st.session_state.page == "Home":
-    show_home_page()
-elif st.session_state.page == "Timer":
-    show_timer_page()
-# ...
