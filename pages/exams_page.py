@@ -79,13 +79,29 @@ def show_exams_page():
             dm.save_user_data(backup, "exams.json")
             st.experimental_rerun()
 
-    st.markdown("---")
-    st.markdown("### Deine gespeicherten Prüfungen")
+        st.markdown("---")
+    st.markdown("### Alle deine Prüfungen")
+
     if not exams:
         st.info("Noch keine Prüfungen vorhanden.")
     else:
         for i, e in enumerate(exams):
-            with st.expander(f"{e.get('title','(ohne Titel)')} — {e.get('date','')}", expanded=False):
+
+            # Titelzeile + Delete-Button NEBENAN
+            cols = st.columns([6, 1])
+            with cols[0]:
+                st.markdown(
+                    f"**{e.get('title','(ohne Titel)')}** — {e.get('date','')}"
+                )
+            with cols[1]:
+                if st.button("🗑️", key=f"delete_exam_{i}"):
+                    exams.pop(i)
+                    dm.save_user_data(exams, "exams.json")
+                    st.success("Prüfung gelöscht.")
+                    st.rerun()
+
+            # Details im Expander
+            with st.expander("Details anzeigen"):
                 st.write(f"**Fach:** {e.get('subject','')}")
                 st.write(f"**Uhrzeit:** {e.get('time','')}")
                 st.write("**Themen:**")
