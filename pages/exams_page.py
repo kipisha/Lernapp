@@ -20,36 +20,23 @@ def show_exams_page():
     with st.form("exam_form"):
         st.markdown("### Neue Prüfung hinzufügen")
 
-        # Titel
-        title = st.text_input("Titel", placeholder="z. B. Deutsch Prüfung")
+        title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
+        subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
 
-        # Fach direkt unter Titel
-        subject = st.text_input("Fach", placeholder="z. B. Deutsch")
-
-        # Datum
         exam_date = st.date_input("Datum", value=datetime.utcnow().date())
 
-        # Zeit
         col1, col2 = st.columns(2)
         with col1:
             start_time = st.time_input("Startzeit", value=datetime.utcnow().time())
         with col2:
             end_time = st.time_input("Endzeit", value=(datetime.utcnow() + timedelta(hours=1)).time())
 
-        # Themen
-        topics_input = st.text_area(
-            "Themen (jede Zeile ein Thema)",
-            height=80,
-            placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik"
-        )
+        topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80)
+        notes = st.text_area("Notizen", key="exam_notes", height=80)
 
-        # Notizen
-        notes = st.text_area("Notizen", height=80, placeholder="z. B. Alte Prüfungen lösen")
-
-        # Lernziel & Fortschritt
         st.markdown("### Lernfortschritt")
-        study_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=180)
-        study_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=0)
+        study_goal = st.number_input("Lernziel (Minuten)", key="study_goal", min_value=0, value=0)
+        study_done = st.number_input("Bereits gelernt (Minuten)", key="study_done", min_value=0, value=0)
 
         submitted = st.form_submit_button("Speichern")
 
@@ -75,6 +62,15 @@ def show_exams_page():
 
         exams.append(record)
         dm.save_user_data(exams, "exams.json")
+
+        # Eingabefelder leeren
+        st.session_state.exam_title = ""
+        st.session_state.exam_subject = ""
+        st.session_state.exam_topics = ""
+        st.session_state.exam_notes = ""
+        st.session_state.study_goal = 0
+        st.session_state.study_done = 0
+
         st.success("Prüfung gespeichert.")
         st.rerun()
 
@@ -88,62 +84,39 @@ def show_exams_page():
 
     for i, e in enumerate(exams):
 
-        # Fortschritt berechnen
         goal = e.get("study_goal_min", 0)
         done = e.get("study_done_min", 0)
         progress = int((done / goal) * 100) if goal > 0 else 0
 
-        # Titel + Löschen
-        cols = st.columns([6, 1])
-        with cols[0]:
-            st.markdown(
-                f"<h4 style='margin:0;'>{e['title']}</h4>"
-                f"<span style='color:#6b7280;'>{e['date']}</span>",
-                unsafe_allow_html=True
-            )
-        with cols[1]:
-            if st.button("🗑️", key=f"delete_{i}"):
+        # Kompakte Kopfzeile
+        with st.expander(f"{e['title']} — {e['subject']} — {e['date']}"):
+
+            st.markdown(f"**Uhrzeit:** {e['time']}")
+
+            st.markdown("**Themen:**")
+            for t in e["topics"]:
+                st.markdown(f"- {t}")
+
+            st.markdown("**Notizen:**")
+            st.markdown(e["notes"])
+
+            st.markdown("**Fortschritt:**")
+            st.progress(progress / 100)
+            st.markdown(f"{progress}%")
+
+            st.markdown("### Lernfortschritt aktualisieren")
+            new_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=done, key=f"done_{i}")
+            new_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=goal, key=f"goal_{i}")
+
+            if st.button("Speichern", key=f"save_{i}"):
+                e["study_done_min"] = new_done
+                e["study_goal_min"] = new_goal
+                dm.save_user_data(exams, "exams.json")
+                st.success("Fortschritt aktualisiert.")
+                st.rerun()
+
+            if st.button("🗑️ Löschen", key=f"delete_{i}"):
                 exams.pop(i)
                 dm.save_user_data(exams, "exams.json")
                 st.success("Prüfung gelöscht.")
                 st.rerun()
-
-        # Karte wie im Screenshot
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-
-        st.markdown(f"**Fach:** {e['subject']}")
-        st.markdown(f"**Uhrzeit:** {e['time']}")
-
-        st.markdown("**Themen:**")
-        for t in e["topics"]:
-            st.markdown(f"- {t}")
-
-        st.markdown("**Fortschritt:**")
-        st.progress(progress / 100)
-        st.markdown(f"{progress}%")
-
-        st.markdown(f"**Notizen:** {e['notes']}")
-
-        # Lernfortschritt aktualisieren
-        st.markdown("### Lernfortschritt aktualisieren")
-        new_done = st.number_input(
-            "Bereits gelernt (Minuten)",
-            min_value=0,
-            value=done,
-            key=f"done_{i}"
-        )
-        new_goal = st.number_input(
-            "Lernziel (Minuten)",
-            min_value=0,
-            value=goal,
-            key=f"goal_{i}"
-        )
-
-        if st.button("Speichern", key=f"save_{i}"):
-            e["study_done_min"] = new_done
-            e["study_goal_min"] = new_goal
-            dm.save_user_data(exams, "exams.json")
-            st.success("Fortschritt aktualisiert.")
-            st.rerun()
-
-        st.markdown("</div>", unsafe_allow_html=True)
