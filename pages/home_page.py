@@ -7,41 +7,40 @@ def show_sidebar_nav():
     colors = get_theme_colors()
     
     # --- DYNAMIC SIDEBAR NAVIGATION STYLING ---
-st.markdown("""
+    st.markdown("""
 <style>
 .motivation-box {
     background: white;
-    border-radius: 14px;
-    width: 120px;          /* exakt wie im Screenshot */
-    height: 120px;         /* quadratisch */
-    padding: 12px;
-    margin: 0 auto;
+    border-radius: 12px;
+    width: 110px;        /* feste Breite */
+    height: 110px;       /* feste Höhe */
+    padding: 10px;
+    margin: 0 auto;      /* zentriert */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08); /* gleiche Schattenstärke */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     text-align: center;
 }
 
 .motivation-icon {
-    font-size: 26px;       /* gleiche Icon-Größe */
-    margin-bottom: 6px;
+    font-size: 20px;
+    margin-bottom: 4px;
 }
 
 .motivation-text {
-    font-size: 12px;       /* exakt wie im Screenshot */
+    font-size: 10px;
     font-weight: 600;
     color: #444;
-    line-height: 1.25;
+    line-height: 1.2;
 }
 </style>
 """, unsafe_allow_html=True)
 
 
-
     # --- SIDEBAR NAVIGATION ---
-with st.sidebar:
+    with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
         
         nav_items = [
@@ -179,9 +178,6 @@ def show_home_page():
             <div class="motivation-text">„{motivation}“</div>
         </div>
     """, unsafe_allow_html=True)
-
-
-
 
 
 
