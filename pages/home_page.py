@@ -373,5 +373,6 @@ def show_home_page():
     st.markdown("</div>", unsafe_allow_html=True)
 
 
+key="theme_btn_cozy_home"
 
 
