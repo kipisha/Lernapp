@@ -61,6 +61,39 @@ def show_sidebar_nav():
 
 import random
 from datetime import date
+st.markdown("""
+<style>
+.motivation-box {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 130px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.motivation-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.motivation-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.3;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 
 MOTIVATION_LIST = [
     "Disziplin heute, Stolz morgen.",
@@ -127,13 +160,16 @@ def show_home_page():
         )
         st.markdown("</div>", unsafe_allow_html=True)
     with col3:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("#### Motivation für dich")
+        motivation = get_daily_motivation()
+    st.markdown(f"""
+        <div class="motivation-box">
+            <div class="motivation-icon">🏁</div>
+            <div class="motivation-text">„{motivation}“</div>
+        </div>
+    """, unsafe_allow_html=True)
 
-    motivation = get_daily_motivation()
-    st.info(f"„{motivation}“")
 
-    st.markdown("</div>", unsafe_allow_html=True)
+
 
 
     # --- TASKS & EXAMS ---
