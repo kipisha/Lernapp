@@ -20,8 +20,8 @@ def show_exams_page():
     with st.form("exam_form"):
         st.markdown("### Neue Prüfung hinzufügen")
 
-        title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
-        subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
+        title = st.text_input("Titel", placeholder="z. B. Deutsch Prüfung")
+        subject = st.text_input("Fach", placeholder="z. B. Deutsch")
 
         exam_date = st.date_input("Datum", value=datetime.utcnow().date())
 
@@ -31,12 +31,12 @@ def show_exams_page():
         with col2:
             end_time = st.time_input("Endzeit", value=(datetime.utcnow() + timedelta(hours=1)).time())
 
-        topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80)
-        notes = st.text_area("Notizen", key="exam_notes", height=80)
+        topics_input = st.text_area("Themen (jede Zeile ein Thema)", height=80)
+        notes = st.text_area("Notizen", height=80)
 
         st.markdown("### Lernfortschritt")
-        study_goal = st.number_input("Lernziel (Minuten)", key="study_goal", min_value=0, value=0)
-        study_done = st.number_input("Bereits gelernt (Minuten)", key="study_done", min_value=0, value=0)
+        study_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=0)
+        study_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=0)
 
         submitted = st.form_submit_button("Speichern")
 
@@ -63,15 +63,8 @@ def show_exams_page():
         exams.append(record)
         dm.save_user_data(exams, "exams.json")
 
-        # Eingabefelder leeren
-        st.session_state.exam_title = ""
-        st.session_state.exam_subject = ""
-        st.session_state.exam_topics = ""
-        st.session_state.exam_notes = ""
-        st.session_state.study_goal = 0
-        st.session_state.study_done = 0
-
-        st.success("Prüfung gespeichert.")
+        # Felder leeren OHNE Fehler
+        st.session_state.clear()
         st.rerun()
 
     # ---------------- LISTE ----------------
@@ -105,8 +98,18 @@ def show_exams_page():
             st.markdown(f"{progress}%")
 
             st.markdown("### Lernfortschritt aktualisieren")
-            new_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=done, key=f"done_{i}")
-            new_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=goal, key=f"goal_{i}")
+            new_done = st.number_input(
+                "Bereits gelernt (Minuten)",
+                min_value=0,
+                value=done,
+                key=f"done_{i}"
+            )
+            new_goal = st.number_input(
+                "Lernziel (Minuten)",
+                min_value=0,
+                value=goal,
+                key=f"goal_{i}"
+            )
 
             if st.button("Speichern", key=f"save_{i}"):
                 e["study_done_min"] = new_done
