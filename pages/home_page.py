@@ -335,4 +335,39 @@ def show_home_page():
             st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
     st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True) 
+<<<<<<< HEAD
+=======
+# direkt nach: next_task = get_next_task(tasks)
+    
+    with col4:
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("##### Nächste Aufgabe")
+
+    if next_task:
+        # ✅ Kästchen zum selbst abhaken
+        done = st.checkbox(
+            "Erledigt?",
+            value=next_task.get("done", False),
+            key="next_task_done"
+        )
+
+        if done and not next_task.get("done", False):
+            next_task["done"] = True
+            dm = DataManager()
+            tasks = dm.load_user_data("tasks.json", initial_value=[])
+            for t in tasks:
+                if t.get("title") == next_task.get("title") and t.get("due") == next_task.get("due"):
+                    t["done"] = True
+            dm.save_user_data("tasks.json", tasks)
+
+        st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
+
+        if st.button("Jetzt starten"):
+            st.session_state.selected_task = next_task
+            st.session_state.page = "Timer"
+            st.rerun()
+    else:
+        st.info("Keine Aufgaben vorhanden.")
+
+>>>>>>> f6967ae (s)
     st.markdown("</div>", unsafe_allow_html=True)

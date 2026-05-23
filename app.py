@@ -24,6 +24,15 @@ import html
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 from pages.home_page import show_home_page, show_sidebar_nav
+from pages.timer_page import show_timer_page
+
+# ...
+if st.session_state.page == "Home":
+    show_home_page()
+elif st.session_state.page == "Timer":
+    show_timer_page()
+# ...
+
 
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
@@ -205,5 +214,3 @@ elif st.session_state.page == "Prüfungen":
     show_exams_page()
 elif st.session_state.page == "Team":
     show_team_page()
-
-
