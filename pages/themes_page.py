@@ -67,21 +67,22 @@ def show_theme_switcher():
     """Zeigt die Theme-Buttons an"""
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        if st.button("🌸 Cozy"):
+        if st.button("🌸 Cozy", key="theme_btn_cozy"):
             st.session_state.theme = "Cozy"
             st.rerun()
     with col2:
-        if st.button("⚡ Focus"):
+        if st.button("⚡ Focus", key="theme_btn_focus"):
             st.session_state.theme = "Focus"
             st.rerun()
     with col3:
-        if st.button("🌞 Energy"):
+        if st.button("🌞 Energy", key="theme_btn_energy"):
             st.session_state.theme = "Energy"
             st.rerun()
     with col4:
-        if st.button("📚 Minimal"):
+        if st.button("📚 Minimal", key="theme_btn_minimal"):
             st.session_state.theme = "Minimal"
             st.rerun()
+
 
 button_colors = {
     "Cozy": "#ec4899",     # pink
