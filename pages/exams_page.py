@@ -123,3 +123,31 @@ def show_exams_page():
                 dm.save_user_data(exams, "exams.json")
                 st.success("Prüfung gelöscht.")
                 st.rerun()
+        # ---------------- LISTE ----------------
+    st.markdown("---")
+    st.markdown("### Alle deine Prüfungen")
+
+    # --- SUCHFELD + SORTIERUNG ---
+    search_query = st.text_input("🔍 Prüfung suchen (Titel, Fach, Datum)", "")
+
+    try:
+        exams = sorted(exams, key=lambda x: datetime.fromisoformat(x["date"]))
+    except:
+        pass
+
+    if search_query.strip():
+        q = search_query.lower()
+        exams = [
+            e for e in exams
+            if q in e["title"].lower()
+            or q in e["subject"].lower()
+            or q in e["date"].lower()
+        ]
+
+    if not exams:
+        st.info("Keine Prüfungen gefunden.")
+        return
+
+    for i, e in enumerate(exams):
+        ...
+
