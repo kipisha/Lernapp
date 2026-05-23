@@ -80,7 +80,7 @@ def _render_exam_card(entry, colors):
 def show_preview_top_on_tasks(dm, colors):
     tasks = dm.load_user_data("tasks.json", initial_value=[]) or []
     exams = dm.load_user_data("exams.json", initial_value=[]) or []
-    sample_task = tasks[0] if tasks else {"title":"Mathe Hausaufgaben","due":"13. Mai 2024, 15:00","duration_min":90,"subject":"Mathematik","notes":"Kapitel 5 & 6 lösen","tag":"Hausaufgaben"}
+    sample_task = tasks[0] if tasks else {"title":"Mathe Hausaufgaben","due":"13. Mai 2024","duration_min":90,"subject":"Mathematik","notes":"Kapitel 5 & 6 lösen","tag":"Hausaufgaben"}
     sample_exam = exams[0] if exams else {"title":"Deutsch Prüfung","date":"17. Mai 2024","time":"10:30 - 12:00","subject":"Deutsch","topics":["Zusammenfassung schreiben","Textanalyse","Grammatik"],"progress":60,"notes":"Alte Prüfungen lösen!"}
 
     c1, c2 = st.columns([1,1], gap="large")
@@ -98,8 +98,6 @@ def show_tasks_page():
     apply_theme()
     colors = get_theme_colors() or {}
     primary = colors.get("primary", "#0f172a")
-    card_bg = colors.get("card", "#ffffff")
-    text_color = colors.get("text", "#111827")
 
     st.markdown(f"<h3 style='color:{primary};margin-bottom:6px;'>AUFGABEN</h3>", unsafe_allow_html=True)
 
@@ -110,7 +108,7 @@ def show_tasks_page():
     with st.form("task_form"):
         title = st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
         due_date = st.date_input("Fälligkeitsdatum", key="task_due_date", value=datetime.utcnow().date())
-    
+
         duration = st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
         subject = st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
         tag = st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
@@ -119,18 +117,8 @@ def show_tasks_page():
         submitted = st.form_submit_button("Speichern")
 
     if submitted:
-        # Konvertiere Datum/Uhrzeit in JSON-kompatible Strings
-        if due_date:
-            if due_time:
-                due_datetime = datetime.combine(due_date, due_time)
-                due_str = due_datetime.isoformat()
-                time_str = due_time.strftime("%H:%M")
-            else:
-                due_str = due_date.isoformat()
-                time_str = ""
-        else:
-            due_str = ""
-            time_str = ""
+        due_str = due_date.isoformat() if due_date else ""
+        time_str = ""
 
         record = {
             "title": title.strip(),
