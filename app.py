@@ -9,6 +9,7 @@ from pages.weekly_page import show_weekly_page
 from pages.tasks_page import show_tasks_page
 from team.team_page import show_team_page
 from pages.exams_page import show_exams_page
+from pages.point_system_page import show_point_system_page
 
 from functions.week_helpers import show_weekly_view
 from functions.productivity_helpers import show_productivity_view
@@ -218,5 +219,10 @@ elif st.session_state.page == "Prüfungen":
     show_exams_page()
 elif st.session_state.page == "Team":
     show_team_page()
+<<<<<<< HEAD
 
+=======
+elif st.session_state.page == "Punktesystem":
+    show_point_system_page()
+>>>>>>> 756a535 (punkte)
 
