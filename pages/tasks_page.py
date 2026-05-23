@@ -1,179 +1,120 @@
 import streamlit as st
 from pages.themes_page import get_theme_colors, apply_theme
 from utils.data_manager import DataManager
-from datetime import datetime
+from datetime import datetime, time, timedelta
 
-# --- Vorschau-Karten (oben) ---
-def _render_task_card(entry, colors):
-    title = entry.get("title", "Mathe Hausaufgaben")
-    badge = entry.get("tag", "Hausaufgaben")
-    due = entry.get("due", "")
-    duration = entry.get("duration_min", "")
-    subject = entry.get("subject", "")
-    notes = entry.get("notes", "")
+def _time_options(start_hour=6, end_hour=22, step_minutes=15):
+    opts = []
+    t = time(hour=start_hour, minute=0)
+    current = datetime.combine(datetime.utcnow().date(), t)
+    end = datetime.combine(datetime.utcnow().date(), time(hour=end_hour, minute=0))
+    while current <= end:
+        opts.append(current.time().strftime("%H:%M"))
+        current += timedelta(minutes=step_minutes)
+    return opts
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown(
-        f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">'
-        f'<img src="https://via.placeholder.com/40/9bf0c7/ffffff" style="border-radius:8px"/>'
-        f'<div><strong>{title}</strong></div>'
-        f'<div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fällig am:</strong> {due}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Dauer:</strong> {duration} min</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div style="display:flex;gap:12px;margin-top:12px;">'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
-        f'<button style="padding:8px 14px;border-radius:10px;border:1px solid {colors.get("primary")};background:white;color:{colors.get("primary")};font-weight:600">Als erledigt markieren</button>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def _render_exam_card(entry, colors):
-    title = entry.get("title", "Deutsch Prüfung")
-    badge = "Prüfung"
-    date = entry.get("date", "")
-    time = entry.get("time", "")
-    subject = entry.get("subject", "")
-    topics = entry.get("topics", []) or []
-    progress = entry.get("progress", 0)
-    notes = entry.get("notes", "")
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown(
-        f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">'
-        f'<img src="https://via.placeholder.com/40/ffb4b4/ffffff" style="border-radius:8px"/>'
-        f'<div><strong>{title}</strong></div>'
-        f'<div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Datum:</strong> {date}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Uhrzeit:</strong> {time}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
-    if topics:
-        st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Themen:</strong></div>', unsafe_allow_html=True)
-        for top in topics:
-            st.markdown(f'<div style="margin-left:18px;color:#374151">• {top}</div>', unsafe_allow_html=True)
-    # Fortschrittsbalken
-    st.markdown(
-        f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">'
-        f'<div style="width:160px;height:10px;background:#f3f4f6;border-radius:8px;overflow:hidden;">'
-        f'<div style="width:{int(progress)}%;height:100%;background:linear-gradient(90deg,{colors.get("primary")},{colors.get("secondary")})"></div>'
-        f'</div><div style="color:#6b7280">{int(progress)}%</div></div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div style="display:flex;gap:12px;margin-top:12px;">'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #fb7185;background:white;color:#fb7185;font-weight:600">Als erledigt markieren</button>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def show_preview_top_on_tasks(dm, colors):
-    tasks = dm.load_user_data("tasks.json", initial_value=[]) or []
-    exams = dm.load_user_data("exams.json", initial_value=[]) or []
-    sample_task = tasks[0] if tasks else {"title":"Mathe Hausaufgaben","due":"13. Mai 2024, 15:00","duration_min":90,"subject":"Mathematik","notes":"Kapitel 5 & 6 lösen","tag":"Hausaufgaben"}
-    sample_exam = exams[0] if exams else {"title":"Deutsch Prüfung","date":"17. Mai 2024","time":"10:30 - 12:00","subject":"Deutsch","topics":["Zusammenfassung schreiben","Textanalyse","Grammatik"],"progress":60,"notes":"Alte Prüfungen lösen!"}
-
-    c1, c2 = st.columns([1,1], gap="large")
-    with c1:
-        _render_task_card(sample_task, colors)
-    with c2:
-        _render_exam_card(sample_exam, colors)
-# --- Ende Vorschau-Karten ---
-
-def show_tasks_page():
-    """Formular zum Anlegen, Speichern und Rückgängig machen von Aufgaben."""
+def show_exams_page():
+    """Formular zum Anlegen, Speichern und Rückgängig machen von Prüfungen."""
     if "theme" not in st.session_state:
         st.session_state.theme = "Cozy"
 
     apply_theme()
     colors = get_theme_colors() or {}
-    primary = colors.get("primary", "#0f172a")
+    primary = colors.get("primary", "#7c3aed")
     card_bg = colors.get("card", "#ffffff")
     text_color = colors.get("text", "#111827")
 
-    st.markdown(f"<h3 style='color:{primary};margin-bottom:6px;'>AUFGABEN</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color:{primary};margin-bottom:6px;'>PRÜFUNGEN</h3>", unsafe_allow_html=True)
 
     dm = DataManager()
-    tasks = dm.load_user_data("tasks.json", initial_value=[])
+    exams = dm.load_user_data("exams.json", initial_value=[])
+
+    time_choices = _time_options()
 
     # Eingabeformular
-    with st.form("task_form"):
-        title = st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
-        # date_input liefert ein datetime.date (Standard: heute)
-        due_date = st.date_input("Fälligkeitsdatum", key="task_due_date", value=datetime.utcnow().date())
-        has_time = st.checkbox("Uhrzeit angeben", key="task_has_time")
-        # time_input liefert ein datetime.time (Standard: jetzt), nur anzeigen, wenn gewünscht
-        due_time = st.time_input("Uhrzeit", key="task_due_time", value=datetime.utcnow().time()) if has_time else None
+    with st.form("exam_form"):
+        title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
+        exam_date = st.date_input("Datum", key="exam_date", value=datetime.utcnow().date())
+        has_time = st.checkbox("Uhrzeit angeben", key="exam_has_time")
+        if has_time:
+            col1, col2 = st.columns(2)
+            with col1:
+                start_time = st.selectbox("Startzeit", [""] + time_choices, key="exam_start_time", index=0)
+            with col2:
+                end_time = st.selectbox("Endzeit (optional)", [""] + time_choices, key="exam_end_time", index=0)
+        else:
+            start_time = ""
+            end_time = ""
 
-        duration = st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
-        subject = st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
-        tag = st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
-        notes = st.text_area("Notizen", key="task_notes", height=80, placeholder="Details / Aufgabenbeschreibung")
+        subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
+        topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
+        progress = st.slider("Fortschritt (%)", min_value=0, max_value=100, value=0, key="exam_progress")
+        notes = st.text_area("Notizen", key="exam_notes", height=80, placeholder="z. B. Alte Prüfungen lösen")
 
         submitted = st.form_submit_button("Speichern")
 
     if submitted:
-        # Konvertiere Datum/Uhrzeit in JSON-kompatible Strings
-        if due_date:
-            if due_time:
-                due_datetime = datetime.combine(due_date, due_time)
-                due_str = due_datetime.isoformat()
-                time_str = due_time.strftime("%H:%M")
+        # Themen-Liste erzeugen
+        topics = [s.strip() for s in (topics_input or "").splitlines() if s.strip()]
+
+        # Datum / Zeit in JSON-kompatible Strings konvertieren
+        date_str = exam_date.isoformat() if exam_date else ""
+        if has_time and start_time:
+            if end_time:
+                time_str = f"{start_time} - {end_time}"
             else:
-                due_str = due_date.isoformat()
-                time_str = ""
+                time_str = start_time
         else:
-            due_str = ""
             time_str = ""
+
+        # Optional einfache Validierung: Endzeit darf nicht vor Startzeit liegen
+        if has_time and start_time and end_time:
+            fmt = "%H:%M"
+            try:
+                start_dt = datetime.strptime(start_time, fmt)
+                end_dt = datetime.strptime(end_time, fmt)
+                if end_dt <= start_dt:
+                    st.warning("Endzeit muss nach der Startzeit liegen. Bitte anpassen.")
+                    # nicht speichern, Rückkehr
+                    st.stop()
+            except Exception:
+                pass
 
         record = {
             "title": title.strip(),
-            "due": due_str,
+            "date": date_str,
             "time": time_str,
-            "duration_min": int(duration or 0),
             "subject": subject.strip(),
-            "tag": tag.strip(),
+            "topics": topics,
+            "progress": int(progress or 0),
             "notes": notes.strip(),
             "created_at": datetime.utcnow().isoformat(),
         }
 
-        # Backup vor dem Schreiben (für Undo)
-        st.session_state["tasks_backup"] = tasks.copy() if isinstance(tasks, list) else list(tasks)
-        new_tasks = DataManager.append_record(tasks, record)
-        dm.save_user_data(new_tasks, "tasks.json")
-        st.success("Aufgabe gespeichert. Du kannst die letzte Änderung rückgängig machen.")
+        st.session_state["exams_backup"] = exams.copy() if isinstance(exams, list) else list(exams)
+        new_exams = DataManager.append_record(exams, record)
+        dm.save_user_data(new_exams, "exams.json")
+        st.success("Prüfung gespeichert. Du kannst die letzte Änderung rückgängig machen.")
+        exams = new_exams
 
-        # Aktualisiere lokale variable nach Save
-        tasks = new_tasks
-
-    # Rückgängig-Funktionalität
-    if "tasks_backup" in st.session_state:
-        if st.button("Letzte Änderung rückgängig machen", key="undo_task"):
-            backup = st.session_state.pop("tasks_backup")
-            dm.save_user_data(backup, "tasks.json")
+    if "exams_backup" in st.session_state:
+        if st.button("Letzte Änderung rückgängig machen", key="undo_exam"):
+            backup = st.session_state.pop("exams_backup")
+            dm.save_user_data(backup, "exams.json")
             st.experimental_rerun()
 
     st.markdown("---")
-    st.markdown("### Deine gespeicherten Aufgaben")
-    if not tasks:
-        st.info("Noch keine Aufgaben vorhanden.")
+    st.markdown("### Deine gespeicherten Prüfungen")
+    if not exams:
+        st.info("Noch keine Prüfungen vorhanden.")
     else:
-        for i, t in enumerate(tasks):
-            with st.expander(f"{t.get('title','(ohne Titel)')} — {t.get('due','')}", expanded=False):
-                st.write(f"**Fach:** {t.get('subject','')}")
-                st.write(f"**Dauer:** {t.get('duration_min','')} min")
-                st.write(f"**Tag:** {t.get('tag','')}")
-                st.write(f"**Uhrzeit:** {t.get('time','')}")
-                st.write(f"**Notizen:** {t.get('notes','')}")
-                st.write(f"**Erstellt:** {t.get('created_at','')}")
+        for i, e in enumerate(exams):
+            with st.expander(f"{e.get('title','(ohne Titel)')} — {e.get('date','')}", expanded=False):
+                st.write(f"**Fach:** {e.get('subject','')}")
+                st.write(f"**Uhrzeit:** {e.get('time','')}")
+                st.write("**Themen:**")
+                for top in e.get("topics", []):
+                    st.write(f"- {top}")
+                st.write(f"**Fortschritt:** {e.get('progress',0)}%")
+                st.write(f"**Notizen:** {e.get('notes','')}")
+                st.write(f"**Erstellt:** {e.get('created_at','')}")
