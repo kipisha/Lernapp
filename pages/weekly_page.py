@@ -177,5 +177,3 @@ def show_weekly_page():
             st.info("Keine Prüfungen gefunden. Gut geplant!")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Theme switcher unterhalb
-    show_theme_switcher()
