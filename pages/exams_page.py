@@ -18,20 +18,36 @@ def show_exams_page():
 
     # ---------------- FORMULAR ----------------
     with st.form("exam_form"):
+        st.markdown("### Neue Prüfung hinzufügen")
+
+        # Titel
         title = st.text_input("Titel", placeholder="z. B. Deutsch Prüfung")
+
+        # Fach direkt unter Titel
+        subject = st.text_input("Fach", placeholder="z. B. Deutsch")
+
+        # Datum
         exam_date = st.date_input("Datum", value=datetime.utcnow().date())
 
+        # Zeit
         col1, col2 = st.columns(2)
         with col1:
             start_time = st.time_input("Startzeit", value=datetime.utcnow().time())
         with col2:
             end_time = st.time_input("Endzeit", value=(datetime.utcnow() + timedelta(hours=1)).time())
 
-        subject = st.text_input("Fach", placeholder="z. B. Deutsch")
-        topics_input = st.text_area("Themen (jede Zeile ein Thema)", height=80)
-        notes = st.text_area("Notizen", height=80)
+        # Themen
+        topics_input = st.text_area(
+            "Themen (jede Zeile ein Thema)",
+            height=80,
+            placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik"
+        )
 
-        # Lernziel
+        # Notizen
+        notes = st.text_area("Notizen", height=80, placeholder="z. B. Alte Prüfungen lösen")
+
+        # Lernziel & Fortschritt
+        st.markdown("### Lernfortschritt")
         study_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=180)
         study_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=0)
 
