@@ -372,5 +372,9 @@ def show_home_page():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+if st.button("Jetzt starten", key="start_next_task"):
+    st.session_state.selected_task = next_task
+    st.session_state.page = "Timer"
+    st.rerun()
 
 

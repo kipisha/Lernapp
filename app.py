@@ -27,16 +27,9 @@ from utils.login_manager import LoginManager
 from pages.home_page import show_home_page, show_sidebar_nav
 from pages.timer_page import show_timer_page
 
-# ...
-if st.session_state.page == "Home":
-    show_home_page()
-elif st.session_state.page == "Timer":
-    show_timer_page()
-# ...
 
 
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+
 
 st.set_page_config(page_title="Lernapp", page_icon=":material/home:")
 st.markdown("""
@@ -222,3 +215,12 @@ elif st.session_state.page == "Team":
 elif st.session_state.page == "Punktesystem":
     show_point_system_page()
 
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+# ...
+if st.session_state.page == "Home":
+    show_home_page()
+elif st.session_state.page == "Timer":
+    show_timer_page()
+# ...
