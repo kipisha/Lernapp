@@ -185,7 +185,7 @@ class DataManager:
             raise ValueError("DataManager: record_dict must be a dictionary")
 
         if 'timestamp' not in record_dict:
-            record_dict = {**record_dict, 'timestamp': _ch_now()}
+            record_dict = {**record_dict, 'timestamp': _ch_now().isoformat()}
 
         if isinstance(data, pd.DataFrame):
             return pd.concat([data, pd.DataFrame([record_dict])], ignore_index=True)
