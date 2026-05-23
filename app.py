@@ -28,6 +28,19 @@ from pages.home_page import show_home_page, show_sidebar_nav
 from pages.timer_page import show_timer_page
 
 
+# ---------------------------------------------------------
+# ------------------------- LOGIN --------------------------
+# ---------------------------------------------------------
+
+data_manager = DataManager(
+    fs_protocol='webdav',
+    fs_root_folder="lernapp"
+)
+login_manager = LoginManager(data_manager)
+login_manager.login_register()
+if "username" not in st.session_state or st.session_state.username is None:
+    st.stop()
+
 # ...
 if "page" not in st.session_state:
     st.session_state.page = "Home"
@@ -186,18 +199,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ---------------------------------------------------------
-# ------------------------- LOGIN --------------------------
-# ---------------------------------------------------------
-
-data_manager = DataManager(
-    fs_protocol='webdav',
-    fs_root_folder="lernapp"
-)
-login_manager = LoginManager(data_manager)
-login_manager.login_register()
-if "username" not in st.session_state or st.session_state.username is None:
-    st.stop()
 
 
 # Session State initialisieren
