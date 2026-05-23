@@ -159,6 +159,7 @@ def show_tasks_page():
         # --- LÖSCHEN BUTTON ---
         if st.button(f"🗑️ Aufgabe löschen", key=f"delete_{i}"):
             tasks.pop(i)
-            dm.save_user_data(tasks, "tasks.json")
-            st.success("Aufgabe gelöscht.")
-            st.experimental_rerun()
+    dm.save_user_data(tasks, "tasks.json")
+    st.success("Aufgabe gelöscht.")
+    st.rerun()
+
