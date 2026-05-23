@@ -79,7 +79,7 @@ def show_exams_page():
             dm.save_user_data(backup, "exams.json")
             st.experimental_rerun()
 
-        st.markdown("---")
+            st.markdown("---")
     st.markdown("### Alle deine Prüfungen")
 
     if not exams:
@@ -87,11 +87,18 @@ def show_exams_page():
     else:
         for i, e in enumerate(exams):
 
-            # Titelzeile + Delete-Button NEBENAN
+            # Fortschritt automatisch berechnen
+            goal = e.get("study_goal_min", 0)
+            done = e.get("study_done_min", 0)
+            progress = int((done / goal) * 100) if goal > 0 else 0
+
+            # Titel + Löschen Button
             cols = st.columns([6, 1])
             with cols[0]:
                 st.markdown(
-                    f"**{e.get('title','(ohne Titel)')}** — {e.get('date','')}"
+                    f"<h4 style='margin:0;'>{e.get('title','(ohne Titel)')}</h4>"
+                    f"<span style='color:#6b7280;'>{e.get('date','')}</span>",
+                    unsafe_allow_html=True
                 )
             with cols[1]:
                 if st.button("🗑️", key=f"delete_exam_{i}"):
@@ -100,13 +107,48 @@ def show_exams_page():
                     st.success("Prüfung gelöscht.")
                     st.rerun()
 
-            # Details im Expander
-            with st.expander("Details anzeigen"):
-                st.write(f"**Fach:** {e.get('subject','')}")
-                st.write(f"**Uhrzeit:** {e.get('time','')}")
-                st.write("**Themen:**")
-                for top in e.get("topics", []):
-                    st.write(f"- {top}")
-                st.write(f"**Fortschritt:** {e.get('progress',0)}%")
-                st.write(f"**Notizen:** {e.get('notes','')}")
-                st.write(f"**Erstellt:** {e.get('created_at','')}")
+            # Karte wie im Screenshot
+            st.markdown(
+                "<div class='card' style='margin-top:10px;'>",
+                unsafe_allow_html=True
+            )
+
+            st.markdown(f"**Fach:** {e.get('subject','')}")
+            st.markdown(f"**Uhrzeit:** {e.get('time','')}")
+
+            st.markdown("**Themen:**")
+            for top in e.get("topics", []):
+                st.markdown(f"- {top}")
+
+            # Fortschrittsbalken
+            st.markdown("**Fortschritt:**")
+            st.progress(progress / 100)
+            st.markdown(f"{progress}%")
+
+            # Notizen
+            st.markdown(f"**Notizen:** {e.get('notes','')}")
+
+            # Lernfortschritt aktualisieren
+            st.markdown("### Lernfortschritt aktualisieren")
+            new_done = st.number_input(
+                "Bereits gelernt (Minuten)",
+                min_value=0,
+                value=done,
+                key=f"learned_{i}"
+            )
+            new_goal = st.number_input(
+                "Lernziel (Minuten)",
+                min_value=0,
+                value=goal,
+                key=f"goal_{i}"
+            )
+
+            if st.button("Speichern", key=f"save_progress_{i}"):
+                e["study_done_min"] = new_done
+                e["study_goal_min"] = new_goal
+                dm.save_user_data(exams, "exams.json")
+                st.success("Lernfortschritt aktualisiert.")
+                st.rerun()
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
