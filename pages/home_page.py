@@ -7,26 +7,37 @@ def show_sidebar_nav():
     colors = get_theme_colors()
     
     # --- DYNAMIC SIDEBAR NAVIGATION STYLING ---
-    st.markdown(f"""
-        <style>
-        .nav-button {{
-            background: linear-gradient(135deg, {colors['primary']} 0%, {colors['secondary']} 100%);
-            color: white;
-            border-radius: 12px;
-            border: none;
-            padding: 12px 20px;
-            font-weight: bold;
-            width: 100%;
-            margin-bottom: 8px;
-            transition: 0.3s;
-            cursor: pointer;
-        }}
-        .nav-button:hover {{
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }}
-        </style>
-    """, unsafe_allow_html=True)
+    st.markdown("""
+<style>
+.motivation-box {
+    background: white;
+    border-radius: 12px;
+    width: 110px;        /* feste Breite */
+    height: 110px;       /* feste Höhe */
+    padding: 10px;
+    margin: 0 auto;      /* zentriert */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.motivation-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.motivation-text {
+    font-size: 10px;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.2;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
     # --- SIDEBAR NAVIGATION ---
     with st.sidebar:
@@ -167,6 +178,8 @@ def show_home_page():
             <div class="motivation-text">„{motivation}“</div>
         </div>
     """, unsafe_allow_html=True)
+
+
 
 
 
