@@ -59,6 +59,26 @@ def show_sidebar_nav():
             st.session_state.username = None
             st.rerun()
 
+import random
+from datetime import date
+
+MOTIVATION_LIST = [
+    "Disziplin heute, Stolz morgen.",
+    "Auch kleine Schritte bringen dich ans Ziel.",
+    "Du bist stärker als deine Ausreden.",
+    "Jeder Tag ist eine neue Chance.",
+    "Erfolg beginnt im Kopf.",
+    "Mach es für dein zukünftiges Ich.",
+    "Wenn du aufgibst, wird es nie passieren.",
+    "Heute ist ein guter Tag, um anzufangen.",
+    "Du wächst an deinen Herausforderungen.",
+    "Konstanz schlägt Talent."
+]
+
+def get_daily_motivation():
+    today = date.today().toordinal()
+    random.seed(today)
+    return random.choice(MOTIVATION_LIST)
 
 def show_home_page():
     """Rendert den Hauptinhalt der Startseite im Zentrum"""
@@ -108,9 +128,13 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with col3:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("#### Motivation für dich")
-        st.info("„Disziplin heute, Stolz morgen.\"")
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("#### Motivation für dich")
+
+    motivation = get_daily_motivation()
+    st.info(f"„{motivation}“")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
     # --- TASKS & EXAMS ---
     col4, col5, col6 = st.columns(3)
@@ -128,9 +152,13 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with col6:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Motivation für dich")
-        st.markdown("🏁", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("##### Motivation für dich")
+
+    motivation = get_daily_motivation()
+    st.success(f"„{motivation}“")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
     # --- WEEK OVERVIEW ---
     st.markdown("<div class='card'>", unsafe_allow_html=True)
