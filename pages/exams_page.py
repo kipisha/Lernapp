@@ -30,26 +30,22 @@ def show_exams_page():
     exams = dm.load_user_data("exams.json", initial_value=[])
 
     # Eingabeformular
-    with st.form("exam_form"):
-        title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
-        exam_date = st.date_input("Datum", key="exam_date", value=datetime.utcnow().date())
-        has_time = st.checkbox("Uhrzeit angeben", key="exam_has_time")
-        if has_time:
-            col1, col2 = st.columns(2)
-            with col1:
-                start_time = st.time_input("Startzeit", key="exam_start_time", value=datetime.utcnow().time())
-            with col2:
-                end_time = st.time_input("Endzeit (optional)", key="exam_end_time", value=datetime.utcnow().time())
-        else:
-            start_time = None
-            end_time = None
+with st.form("exam_form"):
+    title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
+    exam_date = st.date_input("Datum", key="exam_date", value=datetime.utcnow().date())
 
-        subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
-        topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
-        progress = st.slider("Fortschritt (%)", min_value=0, max_value=100, value=0, key="exam_progress")
-        notes = st.text_area("Notizen", key="exam_notes", height=80, placeholder="z. B. Alte Prüfungen lösen")
+    col1, col2 = st.columns(2)
+    with col1:
+        start_time = st.time_input("Startzeit", key="exam_start_time", value=datetime.utcnow().time())
+    with col2:
+        end_time = st.time_input("Endzeit (optional)", key="exam_end_time", value=datetime.utcnow().time())
 
-        submitted = st.form_submit_button("Speichern")
+    subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
+    topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
+    progress = st.slider("Fortschritt (%)", min_value=0, max_value=100, value=0, key="exam_progress")
+    notes = st.text_area("Notizen", key="exam_notes", height=80, placeholder="z. B. Alte Prüfungen lösen")
+
+    submitted = st.form_submit_button("Speichern")
 
     if submitted:
         topics = [s.strip() for s in (topics_input or "").splitlines() if s.strip()]

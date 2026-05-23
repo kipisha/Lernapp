@@ -109,12 +109,8 @@ def show_tasks_page():
     # Eingabeformular
     with st.form("task_form"):
         title = st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
-        # date_input liefert ein datetime.date (Standard: heute)
         due_date = st.date_input("Fälligkeitsdatum", key="task_due_date", value=datetime.utcnow().date())
-        has_time = st.checkbox("Uhrzeit angeben", key="task_has_time")
-        # time_input liefert ein datetime.time (Standard: jetzt), nur anzeigen, wenn gewünscht
-        due_time = st.time_input("Uhrzeit", key="task_due_time", value=datetime.utcnow().time()) if has_time else None
-
+    
         duration = st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
         subject = st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
         tag = st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
