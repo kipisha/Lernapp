@@ -29,8 +29,6 @@ def show_exams_page():
     dm = DataManager()
     exams = dm.load_user_data("exams.json", initial_value=[])
 
-    time_choices = _time_options()
-
     # Eingabeformular
     with st.form("exam_form"):
         title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
@@ -39,12 +37,12 @@ def show_exams_page():
         if has_time:
             col1, col2 = st.columns(2)
             with col1:
-                start_time = st.selectbox("Startzeit", [""] + time_choices, key="exam_start_time", index=0)
+                start_time = st.time_input("Startzeit", key="exam_start_time", value=datetime.utcnow().time())
             with col2:
-                end_time = st.selectbox("Endzeit (optional)", [""] + time_choices, key="exam_end_time", index=0)
+                end_time = st.time_input("Endzeit (optional)", key="exam_end_time", value=datetime.utcnow().time())
         else:
-            start_time = ""
-            end_time = ""
+            start_time = None
+            end_time = None
 
         subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
         topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
@@ -54,31 +52,24 @@ def show_exams_page():
         submitted = st.form_submit_button("Speichern")
 
     if submitted:
-        # Themen-Liste erzeugen
         topics = [s.strip() for s in (topics_input or "").splitlines() if s.strip()]
-
-        # Datum / Zeit in JSON-kompatible Strings konvertieren
         date_str = exam_date.isoformat() if exam_date else ""
+
         if has_time and start_time:
-            if end_time:
-                time_str = f"{start_time} - {end_time}"
-            else:
-                time_str = start_time
+            # start_time/end_time sind datetime.time → formen Strings
+            start_str = start_time.strftime("%H:%M")
+            end_str = end_time.strftime("%H:%M") if end_time else ""
+            time_str = f"{start_str} - {end_str}" if end_str else start_str
         else:
             time_str = ""
 
-        # Optional einfache Validierung: Endzeit darf nicht vor Startzeit liegen
+        # Validierung: Endzeit nach Startzeit (falls beide gesetzt)
         if has_time and start_time and end_time:
-            fmt = "%H:%M"
-            try:
-                start_dt = datetime.strptime(start_time, fmt)
-                end_dt = datetime.strptime(end_time, fmt)
-                if end_dt <= start_dt:
-                    st.warning("Endzeit muss nach der Startzeit liegen. Bitte anpassen.")
-                    # nicht speichern, Rückkehr
-                    st.stop()
-            except Exception:
-                pass
+            start_dt = datetime.combine(datetime.utcnow().date(), start_time)
+            end_dt = datetime.combine(datetime.utcnow().date(), end_time)
+            if end_dt <= start_dt:
+                st.warning("Endzeit muss nach der Startzeit liegen. Bitte anpassen.")
+                st.stop()
 
         record = {
             "title": title.strip(),
