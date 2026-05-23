@@ -1,6 +1,28 @@
 import streamlit as st
 from datetime import datetime, timedelta
 from pages.themes_page import get_theme_colors, apply_theme, show_theme_switcher
+from utils.data_manager import DataManager
+from datetime import datetime
+
+def load_tasks():
+    dm = DataManager()
+    return dm.load_user_data("tasks.json", initial_value=[])
+
+def load_exams():
+    dm = DataManager()
+    return dm.load_user_data("exams.json", initial_value=[])
+
+def get_next_task(tasks):
+    if not tasks:
+        return None
+    tasks_sorted = sorted(tasks, key=lambda t: t.get("due", "9999-12-31"))
+    return tasks_sorted[0]
+
+def get_next_exam(exams):
+    if not exams:
+        return None
+    exams_sorted = sorted(exams, key=lambda e: e.get("date", "9999-12-31"))
+    return exams_sorted[0]
 
 def show_sidebar_nav():
     """Rendert ausschließlich die Sidebar-Navigation auf der linken Seite"""
@@ -158,18 +180,28 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
     with col2:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("#### Deine Übersicht")
-        st.markdown(
-            """
-            <div style='display:flex;gap:24px;justify-content:center;'>
-                <div style='text-align:center;'><div style='font-size:24px;'>📅</div><b>3</b><br><span style='font-size:12px;'>Aufgaben</span></div>
-                <div style='text-align:center;'><div style='font-size:24px;'>📚</div><b>1</b><br><span style='font-size:12px;'>Prüfung</span></div>
-                <div style='text-align:center;'><div style='font-size:24px;'>⭐</div><b>5</b><br><span style='font-size:12px;'>Stufe</span></div>
-                <div style='text-align:center;'><div style='font-size:24px;'>🏆</div><b>120</b><br><span style='font-size:12px;'>Punkte</span></div>
-            </div>
-            """, unsafe_allow_html=True
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("#### Deine Übersicht")
+
+    tasks = load_tasks()
+    exams = load_exams()
+
+    task_count = len(tasks)
+    exam_count = len(exams)
+
+    st.markdown(
+        f"""
+        <div style='display:flex;gap:24px;justify-content:center;'>
+            <div style='text-align:center;'><div style='font-size:24px;'>📅</div><b>{task_count}</b><br><span style='font-size:12px;'>Aufgaben</span></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>📚</div><b>{exam_count}</b><br><span style='font-size:12px;'>Prüfungen</span></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>⭐</div><b>5</b><br><span style='font-size:12px;'>Stufe</span></div>
+            <div style='text-align:center;'><div style='font-size:24px;'>🏆</div><b>120</b><br><span style='font-size:12px;'>Punkte</span></div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 
@@ -179,18 +211,34 @@ def show_home_page():
 
     # --- TASKS & EXAMS ---
     col4, col5, col6 = st.columns(3)
+    next_task = get_next_task(tasks)
+
     with col4:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Nächste Aufgabe")
-        st.success("Mathe Hausaufgaben\n\nBis morgen, 15:00")
+    st.markdown("##### Nächste Aufgabe")
+
+    if next_task:
+        st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
         st.button("Jetzt starten")
-        st.markdown("</div>", unsafe_allow_html=True)
+    else:
+        st.info("Keine Aufgaben vorhanden.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    next_exam = get_next_exam(exams)
+
     with col5:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("##### Nächste Prüfung")
-        st.warning("Deutsch Prüfung\n\nFreitag, 17. Mai\n\nIn 3 Tagen")
+    st.markdown("##### Nächste Prüfung")
+
+    if next_exam:
+        st.warning(f"{next_exam.get('title','')}\n\nDatum: {next_exam.get('date','')}")
         st.button("Prüfung ansehen")
-        st.markdown("</div>", unsafe_allow_html=True)
+    else:
+        st.info("Keine Prüfungen vorhanden.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
     with col6:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("##### Motivation für dich")

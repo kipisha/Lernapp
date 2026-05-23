@@ -142,24 +142,32 @@ def show_tasks_page():
 
 
     st.markdown("---")
-    st.markdown("### Deine gespeicherten Aufgaben")
+    st.markdown("### Alle deine Aufgaben")
+
     if not tasks:
         st.info("Noch keine Aufgaben vorhanden.")
     else:
         for i, t in enumerate(tasks):
-            with st.expander(f"{t.get('title','(ohne Titel)')} — {t.get('due','')}", expanded=False):
 
+            # Titelzeile + Delete-Button NEBENAN
+            cols = st.columns([6, 1])
+            with cols[0]:
+                st.markdown(
+                    f"**{t.get('title','(ohne Titel)')}** — {t.get('due','')}"
+                )
+            with cols[1]:
+                if st.button("🗑️", key=f"delete_{i}"):
+                    tasks.pop(i)
+                    dm.save_user_data(tasks, "tasks.json")
+                    st.success("Aufgabe gelöscht.")
+                    st.rerun()
+
+            # Details im Expander
+            with st.expander("Details anzeigen"):
                 st.write(f"**Fach:** {t.get('subject','')}")
-        st.write(f"**Dauer:** {t.get('duration_min','')} min")
-        st.write(f"**Tag:** {t.get('tag','')}")
-        st.write(f"**Uhrzeit:** {t.get('time','')}")
-        st.write(f"**Notizen:** {t.get('notes','')}")
-        st.write(f"**Erstellt:** {t.get('created_at','')}")
-
-        # --- LÖSCHEN BUTTON ---
-        if st.button(f"🗑️ Aufgabe löschen", key=f"delete_{i}"):
-            tasks.pop(i)
-    dm.save_user_data(tasks, "tasks.json")
-    st.success("Aufgabe gelöscht.")
-    st.rerun()
+                st.write(f"**Dauer:** {t.get('duration_min','')} min")
+                st.write(f"**Tag:** {t.get('tag','')}")
+                st.write(f"**Uhrzeit:** {t.get('time','')}")
+                st.write(f"**Notizen:** {t.get('notes','')}")
+                st.write(f"**Erstellt:** {t.get('created_at','')}")
 
