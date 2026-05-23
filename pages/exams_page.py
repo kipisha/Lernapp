@@ -1,7 +1,17 @@
 import streamlit as st
 from pages.themes_page import get_theme_colors, apply_theme
 from utils.data_manager import DataManager
-from datetime import datetime
+from datetime import datetime, time, timedelta
+
+def _time_options(start_hour=6, end_hour=22, step_minutes=15):
+    opts = []
+    t = time(hour=start_hour, minute=0)
+    current = datetime.combine(datetime.utcnow().date(), t)
+    end = datetime.combine(datetime.utcnow().date(), time(hour=end_hour, minute=0))
+    while current <= end:
+        opts.append(current.time().strftime("%H:%M"))
+        current += timedelta(minutes=step_minutes)
+    return opts
 
 def show_exams_page():
     """Formular zum Anlegen, Speichern und Rückgängig machen von Prüfungen."""
@@ -19,28 +29,65 @@ def show_exams_page():
     dm = DataManager()
     exams = dm.load_user_data("exams.json", initial_value=[])
 
+    time_choices = _time_options()
+
     # Eingabeformular
     with st.form("exam_form"):
-        st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
-        st.text_input("Datum", key="exam_date", placeholder="TT.MM.JJJJ oder 2024-05-17")
-        st.text_input("Uhrzeit (z. B. 10:30 - 12:00)", key="exam_time", placeholder="10:30 - 12:00")
-        st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
-        st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
+        title = st.text_input("Titel", key="exam_title", placeholder="z. B. Deutsch Prüfung")
+        exam_date = st.date_input("Datum", key="exam_date", value=datetime.utcnow().date())
+        has_time = st.checkbox("Uhrzeit angeben", key="exam_has_time")
+        if has_time:
+            col1, col2 = st.columns(2)
+            with col1:
+                start_time = st.selectbox("Startzeit", [""] + time_choices, key="exam_start_time", index=0)
+            with col2:
+                end_time = st.selectbox("Endzeit (optional)", [""] + time_choices, key="exam_end_time", index=0)
+        else:
+            start_time = ""
+            end_time = ""
+
+        subject = st.text_input("Fach", key="exam_subject", placeholder="z. B. Deutsch")
+        topics_input = st.text_area("Themen (jede Zeile ein Thema)", key="exam_topics", height=80, placeholder="Zusammenfassung schreiben\nTextanalyse\nGrammatik")
         progress = st.slider("Fortschritt (%)", min_value=0, max_value=100, value=0, key="exam_progress")
-        st.text_area("Notizen", key="exam_notes", height=80, placeholder="z. B. Alte Prüfungen lösen")
+        notes = st.text_area("Notizen", key="exam_notes", height=80, placeholder="z. B. Alte Prüfungen lösen")
 
         submitted = st.form_submit_button("Speichern")
 
     if submitted:
-        topics = [s.strip() for s in st.session_state.get("exam_topics","").splitlines() if s.strip()]
+        # Themen-Liste erzeugen
+        topics = [s.strip() for s in (topics_input or "").splitlines() if s.strip()]
+
+        # Datum / Zeit in JSON-kompatible Strings konvertieren
+        date_str = exam_date.isoformat() if exam_date else ""
+        if has_time and start_time:
+            if end_time:
+                time_str = f"{start_time} - {end_time}"
+            else:
+                time_str = start_time
+        else:
+            time_str = ""
+
+        # Optional einfache Validierung: Endzeit darf nicht vor Startzeit liegen
+        if has_time and start_time and end_time:
+            fmt = "%H:%M"
+            try:
+                start_dt = datetime.strptime(start_time, fmt)
+                end_dt = datetime.strptime(end_time, fmt)
+                if end_dt <= start_dt:
+                    st.warning("Endzeit muss nach der Startzeit liegen. Bitte anpassen.")
+                    # nicht speichern, Rückkehr
+                    st.stop()
+            except Exception:
+                pass
+
         record = {
-            "title": st.session_state.get("exam_title","").strip(),
-            "date": st.session_state.get("exam_date","").strip(),
-            "time": st.session_state.get("exam_time","").strip(),
-            "subject": st.session_state.get("exam_subject","").strip(),
+            "title": title.strip(),
+            "date": date_str,
+            "time": time_str,
+            "subject": subject.strip(),
             "topics": topics,
-            "progress": int(st.session_state.get("exam_progress",0) or 0),
-            "notes": st.session_state.get("exam_notes","").strip(),
+            "progress": int(progress or 0),
+            "notes": notes.strip(),
             "created_at": datetime.utcnow().isoformat(),
         }
 

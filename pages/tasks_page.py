@@ -13,12 +13,25 @@ def _render_task_card(entry, colors):
     notes = entry.get("notes", "")
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown(f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="https://via.placeholder.com/40/9bf0c7/ffffff" style="border-radius:8px"/><div><strong>{title}</strong></div><div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div></div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">'
+        f'<img src="https://via.placeholder.com/40/9bf0c7/ffffff" style="border-radius:8px"/>'
+        f'<div><strong>{title}</strong></div>'
+        f'<div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fällig am:</strong> {due}</div>', unsafe_allow_html=True)
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Dauer:</strong> {duration} min</div>', unsafe_allow_html=True)
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown('<div style="display:flex;gap:12px;margin-top:12px;"><button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button><button style="padding:8px 14px;border-radius:10px;border:1px solid {0};background:white;color:{0};font-weight:600">Als erledigt markieren</button></div>'.format(colors.get("primary")), unsafe_allow_html=True)
+    st.markdown(
+        '<div style="display:flex;gap:12px;margin-top:12px;">'
+        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
+        f'<button style="padding:8px 14px;border-radius:10px;border:1px solid {colors.get("primary")};background:white;color:{colors.get("primary")};font-weight:600">Als erledigt markieren</button>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown('</div>', unsafe_allow_html=True)
 
 def _render_exam_card(entry, colors):
@@ -32,7 +45,14 @@ def _render_exam_card(entry, colors):
     notes = entry.get("notes", "")
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown(f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><img src="https://via.placeholder.com/40/ffb4b4/ffffff" style="border-radius:8px"/><div><strong>{title}</strong></div><div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div></div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">'
+        f'<img src="https://via.placeholder.com/40/ffb4b4/ffffff" style="border-radius:8px"/>'
+        f'<div><strong>{title}</strong></div>'
+        f'<div style="margin-left:auto;padding:6px 10px;border-radius:12px;background:linear-gradient(90deg,{colors.get("secondary")},{colors.get("primary")});color:#fff;font-weight:600;font-size:12px">{badge}</div>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Datum:</strong> {date}</div>', unsafe_allow_html=True)
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Uhrzeit:</strong> {time}</div>', unsafe_allow_html=True)
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
@@ -41,9 +61,21 @@ def _render_exam_card(entry, colors):
         for top in topics:
             st.markdown(f'<div style="margin-left:18px;color:#374151">• {top}</div>', unsafe_allow_html=True)
     # Fortschrittsbalken
-    st.markdown(f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;"><div style="width:160px;height:10px;background:#f3f4f6;border-radius:8px;overflow:hidden;"><div style="width:{int(progress)}%;height:100%;background:linear-gradient(90deg,{colors.get("primary")},{colors.get("secondary")})"></div></div><div style="color:#6b7280">{int(progress)}%</div></div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">'
+        f'<div style="width:160px;height:10px;background:#f3f4f6;border-radius:8px;overflow:hidden;">'
+        f'<div style="width:{int(progress)}%;height:100%;background:linear-gradient(90deg,{colors.get("primary")},{colors.get("secondary")})"></div>'
+        f'</div><div style="color:#6b7280">{int(progress)}%</div></div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown('<div style="display:flex;gap:12px;margin-top:12px;"><button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button><button style="padding:8px 14px;border-radius:10px;border:1px solid #fb7185;background:white;color:#fb7185;font-weight:600">Als erledigt markieren</button></div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div style="display:flex;gap:12px;margin-top:12px;">'
+        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
+        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #fb7185;background:white;color:#fb7185;font-weight:600">Als erledigt markieren</button>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown('</div>', unsafe_allow_html=True)
 
 def show_preview_top_on_tasks(dm, colors):
@@ -77,25 +109,42 @@ def show_tasks_page():
 
     # Eingabeformular
     with st.form("task_form"):
-        st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
-        st.text_input("Fälligkeitsdatum", key="task_due", placeholder="TT.MM.JJJJ oder 2024-05-13")
-        st.text_input("Uhrzeit", key="task_time", placeholder="z. B. 15:00")
-        st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
-        st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
-        st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
-        st.text_area("Notizen", key="task_notes", height=80, placeholder="Details / Aufgabenbeschreibung")
+        title = st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
+        # date_input liefert ein datetime.date (Standard: heute)
+        due_date = st.date_input("Fälligkeitsdatum", key="task_due_date", value=datetime.utcnow().date())
+        has_time = st.checkbox("Uhrzeit angeben", key="task_has_time")
+        # time_input liefert ein datetime.time (Standard: jetzt), nur anzeigen, wenn gewünscht
+        due_time = st.time_input("Uhrzeit", key="task_due_time", value=datetime.utcnow().time()) if has_time else None
+
+        duration = st.number_input("Dauer (Minuten)", key="task_duration", min_value=0, step=5)
+        subject = st.text_input("Fach", key="task_subject", placeholder="z. B. Mathematik")
+        tag = st.text_input("Tag/Kategorie", key="task_tag", placeholder="z. B. Hausaufgaben")
+        notes = st.text_area("Notizen", key="task_notes", height=80, placeholder="Details / Aufgabenbeschreibung")
 
         submitted = st.form_submit_button("Speichern")
 
     if submitted:
+        # Konvertiere Datum/Uhrzeit in JSON-kompatible Strings
+        if due_date:
+            if due_time:
+                due_datetime = datetime.combine(due_date, due_time)
+                due_str = due_datetime.isoformat()
+                time_str = due_time.strftime("%H:%M")
+            else:
+                due_str = due_date.isoformat()
+                time_str = ""
+        else:
+            due_str = ""
+            time_str = ""
+
         record = {
-            "title": st.session_state.get("task_title", "").strip(),
-            "due": st.session_state.get("task_due", "").strip(),
-            "time": st.session_state.get("task_time", "").strip(),
-            "duration_min": int(st.session_state.get("task_duration", 0) or 0),
-            "subject": st.session_state.get("task_subject", "").strip(),
-            "tag": st.session_state.get("task_tag", "").strip(),
-            "notes": st.session_state.get("task_notes", "").strip(),
+            "title": title.strip(),
+            "due": due_str,
+            "time": time_str,
+            "duration_min": int(duration or 0),
+            "subject": subject.strip(),
+            "tag": tag.strip(),
+            "notes": notes.strip(),
             "created_at": datetime.utcnow().isoformat(),
         }
 
