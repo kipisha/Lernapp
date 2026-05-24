@@ -3,9 +3,17 @@ from pages.themes_page import get_theme_colors, apply_theme
 from utils.data_manager import DataManager
 from datetime import datetime
 
-# --- Vorschau-Karten (oben) ---
-def _render_task_card(entry, colors):
-    title = entry.get("title", "Mathe Hausaufgaben")
+# --- Krisensicherer Abgleich zum Erledigen von Aufgaben ---
+def _mark_task_done_by_index(tasks, index, dm):
+    tasks[index]["done"] = True
+    tasks[index]["done_at"] = datetime.utcnow().isoformat()
+    dm.save_user_data(tasks, "tasks.json")
+    st.success("Aufgabe als erledigt markiert und Punkte kassiert! 🎉")
+    st.rerun()
+
+# --- Echte, funktionale Vorschau-Karten (oben) ---
+def _render_task_card(entry, index, tasks, dm, colors):
+    title = entry.get("title", "Keine Aufgabe")
     badge = entry.get("tag", "Hausaufgaben")
     due = entry.get("due", "")
     duration = entry.get("duration_min", "")
@@ -21,21 +29,21 @@ def _render_task_card(entry, colors):
         f'</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fällig am:</strong> {due}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Dauer:</strong> {duration} min</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div style="display:flex;gap:12px;margin-top:12px;">'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
-        f'<button style="padding:8px 14px;border-radius:10px;border:1px solid {colors.get("primary")};background:white;color:{colors.get("primary")};font-weight:600">Als erledigt markieren</button>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Fällig am:</strong> {due}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Dauer:</strong> {duration} min</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
+    if notes:
+        st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
+    
+    # Echte Streamlit-Buttons statt totem HTML
+    c_btn1, c_btn2 = st.columns(2)
+    with c_btn1:
+        if st.button("Als erledigt markieren", key=f"preview_done_task_{index}", use_container_width=True):
+            _mark_task_done_by_index(tasks, index, dm)
     st.markdown('</div>', unsafe_allow_html=True)
 
 def _render_exam_card(entry, colors):
-    title = entry.get("title", "Deutsch Prüfung")
+    title = entry.get("title", "Keine Prüfung")
     badge = "Prüfung"
     date = entry.get("date", "")
     time = entry.get("time", "")
@@ -53,45 +61,48 @@ def _render_exam_card(entry, colors):
         f'</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Datum:</strong> {date}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Uhrzeit:</strong> {time}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Datum:</strong> {date}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Uhrzeit:</strong> {time}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Fach:</strong> {subject}</div>', unsafe_allow_html=True)
     if topics:
-        st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Themen:</strong></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Themen:</strong></div>', unsafe_allow_html=True)
         for top in topics:
             st.markdown(f'<div style="margin-left:18px;color:#374151">• {top}</div>', unsafe_allow_html=True)
     st.markdown(
-        f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">'
+        f'<div style="display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:8px;">'
         f'<div style="width:160px;height:10px;background:#f3f4f6;border-radius:8px;overflow:hidden;">'
         f'<div style="width:{int(progress)}%;height:100%;background:linear-gradient(90deg,{colors.get("primary")},{colors.get("secondary")})"></div>'
         f'</div><div style="color:#6b7280">{int(progress)}%</div></div>',
         unsafe_allow_html=True,
     )
-    st.markdown(f'<div style="color:#6b7280;margin:6px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div style="display:flex;gap:12px;margin-top:12px;">'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #e5e7eb;background:transparent">Bearbeiten</button>'
-        '<button style="padding:8px 14px;border-radius:10px;border:1px solid #fb7185;background:white;color:#fb7185;font-weight:600">Als erledigt markieren</button>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
+    if notes:
+        st.markdown(f'<div style="color:#6b7280;margin:4px 0;"><strong>Notizen:</strong> {notes}</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 def show_preview_top_on_tasks(dm, colors):
     tasks = dm.load_user_data("tasks.json", initial_value=[]) or []
     exams = dm.load_user_data("exams.json", initial_value=[]) or []
-    sample_task = tasks[0] if tasks else {"title":"Mathe Hausaufgaben","due":"13. Mai 2024","duration_min":90,"subject":"Mathematik","notes":"Kapitel 5 & 6 lösen","tag":"Hausaufgaben"}
-    sample_exam = exams[0] if exams else {"title":"Deutsch Prüfung","date":"17. Mai 2024","time":"10:30 - 12:00","subject":"Deutsch","topics":["Zusammenfassung schreiben","Textanalyse","Grammatik"],"progress":60,"notes":"Alte Prüfungen lösen!"}
+    
+    # Dynamisch die erste OFFENE Aufgabe suchen, anstatt statischer Dummies
+    todo_tasks = [(idx, t) for idx, t in enumerate(tasks) if not t.get("done", False)]
+    todo_exams = [e for e in exams if not e.get("done", False)]
 
     c1, c2 = st.columns([1,1], gap="large")
     with c1:
-        _render_task_card(sample_task, colors)
+        st.markdown("##### Nächste anstehende Aufgabe")
+        if todo_tasks:
+            _render_task_card(todo_tasks[0][1], todo_tasks[0][0], tasks, dm, colors)
+        else:
+            st.info("Super! Keine offenen Aufgaben mehr. 🎉")
     with c2:
-        _render_exam_card(sample_exam, colors)
-# --- Ende Vorschau-Karten ---
+        st.markdown("##### Nächste anstehende Prüfung")
+        if todo_exams:
+            _render_exam_card(todo_exams[0], colors)
+        else:
+            st.info("Aktuell stehen keine Prüfungen an. ☕")
 
+# --- Hauptseite ---
 def show_tasks_page():
-    """Formular zum Anlegen, Speichern und Rückgängig machen von Aufgaben."""
     if "theme" not in st.session_state:
         st.session_state.theme = "Cozy"
 
@@ -103,6 +114,10 @@ def show_tasks_page():
 
     dm = DataManager()
     tasks = dm.load_user_data("tasks.json", initial_value=[])
+
+    # Rendert die dynamischen Vorschau-Karten oben
+    show_preview_top_on_tasks(dm, colors)
+    st.markdown("---")
 
     # Eingabeformular
     with st.form("task_form"):
@@ -119,28 +134,26 @@ def show_tasks_page():
 
     if submitted:
         due_str = due_date.isoformat() if due_date else ""
-        time_str = ""
 
         record = {
             "title": title.strip(),
             "due": due_str,
-            "time": time_str,
+            "time": "",
             "duration_min": int(duration or 0),
             "subject": subject.strip(),
             "tag": tag.strip(),
             "notes": notes.strip(),
             "created_at": datetime.utcnow().isoformat(),
+            "done": False,        # WICHTIG FÜR DIE HOME-SEITE
+            "points": 20,         # WICHTIG FÜR DAS PUNKTESYSTEM
+            "checklist": ["Aufgaben lesen", "Lösen", "Kontrollieren"]
         }
 
-        # Backup vor dem Schreiben (für Undo)
         st.session_state["tasks_backup"] = tasks.copy() if isinstance(tasks, list) else list(tasks)
         new_tasks = DataManager.append_record(tasks, record)
         dm.save_user_data(new_tasks, "tasks.json")
-        st.success("Aufgabe gespeichert. Du kannst die letzte Änderung rückgängig machen.")
-
-        # Aktualisiere lokale variable nach Save
-        tasks = new_tasks
-
+        st.success("Aufgabe erfolgreich gespeichert!")
+        st.rerun() # Sofort neu laden, damit die Liste aktuell ist
 
     st.markdown("---")
     st.markdown("### Alle deine Aufgaben")
@@ -149,12 +162,13 @@ def show_tasks_page():
         st.info("Noch keine Aufgaben vorhanden.")
     else:
         for i, t in enumerate(tasks):
-
-            # Titelzeile + Delete-Button NEBENAN
+            # Status-Icon bestimmen
+            status_icon = "✅" if t.get("done", False) else "⏳"
+            
             cols = st.columns([6, 1])
             with cols[0]:
                 st.markdown(
-                    f"**{t.get('title','(ohne Titel)')}** — {t.get('due','')}"
+                    f"{status_icon} **{t.get('title','(ohne Titel)')}** — {t.get('due','')}"
                 )
             with cols[1]:
                 if st.button("🗑️", key=f"delete_{i}"):
@@ -165,10 +179,16 @@ def show_tasks_page():
 
             # Details im Expander
             with st.expander("Details anzeigen"):
+                st.write(f"**Status:** {'Erledigt' if t.get('done', False) else 'Offen'}")
                 st.write(f"**Fach:** {t.get('subject','')}")
                 st.write(f"**Dauer:** {t.get('duration_min','')} min")
                 st.write(f"**Tag:** {t.get('tag','')}")
-                st.write(f"**Uhrzeit:** {t.get('time','')}")
                 st.write(f"**Notizen:** {t.get('notes','')}")
-                st.write(f"**Erstellt:** {t.get('created_at','')}")
+                
+                # Wenn offen, zeige auch hier einen Erledigt-Button an
+                if not t.get("done", False):
+                    if st.button("Als erledigt markieren", key=f"list_done_task_{i}"):
+                        _mark_task_done_by_index(tasks, i, dm)
 
+if __name__ == "__main__":
+    show_tasks_page()
