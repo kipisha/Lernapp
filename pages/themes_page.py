@@ -80,32 +80,58 @@ def apply_theme():
             background-image: linear-gradient(90deg, {colors['primary']} 0%, {colors['secondary']} 100%);
         }}
         
-        /* --- DYNAMISCHE BUTTON-FÄRBUNG (Streamlit Standard-Buttons) --- */
-        /* Normale Primär- und Sekundärbuttons in Streamlit ansprechen */
+        /* --- DYNAMISCHE BUTTON-FÄRBUNG (Für absolut alle Buttons inkl. Tages-Pills) --- */
+        
+        /* 1. Fängt alle Standard-, Primär- und Sekundärbuttons über Streamlits interne Test-IDs ab */
+        button[data-testid="stBaseButton-secondary"], 
+        button[data-testid="stBaseButton-primary"],
+        button[data-testid="stBaseButton-tertiary"],
         div.stButton > button {{
             background-color: {btn_color} !important;
             color: white !important;
             border: 1px solid {btn_color} !important;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            border-radius: 10px !important;
+            transition: all 0.25s ease-in-out !important;
+            white-space: pre-wrap !important; /* Wichtig für die Zeilenumbrüche in deinen Tages-Pills! */
+            height: auto !important;
+            min-height: 45px;
         }}
         
-        /* Hover-Effekt: Button wird beim Drüberfahren leicht transparent oder dunkler */
+        /* 2. Hover-Effekt für alle Buttons (beim Drüberfahren mit der Maus) */
+        button[data-testid="stBaseButton-secondary"]:hover, 
+        button[data-testid="stBaseButton-primary"]:hover,
+        button[data-testid="stBaseButton-tertiary"]:hover,
         div.stButton > button:hover {{
-            background-color: {btn_color}ee !important;
+            background-color: {btn_color}dd !important; /* Leicht transparent aufgeweckt */
             border-color: {btn_color} !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
             transform: translateY(-1px);
         }}
         
-        /* Fokus-Effekt (Klick-Zustand) */
-        div.stButton > button:focus:not(:active) {{
+        /* 3. Focus- & Aktiv-Zustand überschreiben, um das lila Aufblinken zu verhindern */
+        button[data-testid="stBaseButton-secondary"]:focus, 
+        button[data-testid="stBaseButton-primary"]:focus,
+        button[data-testid="stBaseButton-tertiary"]:focus,
+        div.stButton > button:focus {{
+            border-color: {btn_color} !important;
+            background-color: {btn_color} !important;
+            color: white !important;
+            box-shadow: 0 0 0 0.2rem {btn_color}44 !important; /* Dezent glühender Rahmen in Theme-Farbe */
+        }}
+        
+        button[data-testid="stBaseButton-secondary"]:active, 
+        button[data-testid="stBaseButton-primary"]:active,
+        button[data-testid="stBaseButton-tertiary"]:active,
+        div.stButton > button:active {{
+            background-color: {btn_color}bb !important;
             border-color: {btn_color} !important;
             color: white !important;
         }}
-        div.stButton > button:active {{
-            background-color: {btn_color}cc !important;
-            border-color: {btn_color} !important;
+        
+        /* Fix für Textfarben im Inneren der Buttons */
+        button p {{
+            color: white !important;
         }}
         </style>
     """, unsafe_allow_html=True)
