@@ -1,6 +1,15 @@
 import streamlit as st
+
 if "theme" not in st.session_state:
     st.session_state["theme"] = "Cozy"
+
+# Zuordnung der Button-Farben passend zum jeweiligen Mood
+button_colors = {
+    "Cozy": "#E26DBF",     # Dein primäres Cozy-Pink
+    "Focus": "#337b1d",    # Dein Focus-Grün
+    "Energy": "#fca311",   # Dein Energy-Orange/Gelb
+    "Minimal": "#000000"   # Dein Minimal-Schwarz
+}
 
 def get_theme_colors():
     """Gibt die Farben des aktuellen Themes zurück"""
@@ -40,16 +49,24 @@ def get_theme_colors():
     
     return themes.get(st.session_state.theme, themes["Cozy"])
 
+def get_button_color():
+    """Gibt die spezifische Button-Farbe für das aktuelle Theme zurück"""
+    return button_colors.get(st.session_state.theme, "#4b5563")
+
 def apply_theme():
-    """Wendet die Theme-Styles an"""
+    """Wendet die Theme-Styles an inklusive dynamischer Button-Färbung"""
     colors = get_theme_colors()
+    btn_color = get_button_color()
     
     st.markdown(f"""
         <style>
+        /* App-Hintergrund */
         .stApp {{
             background: {colors['background']} !important;
             color: {colors['text']};
         }}
+        
+        /* Karten-Styling */
         .card {{
             background: {colors['card']};
             border-radius: 18px;
@@ -57,8 +74,38 @@ def apply_theme():
             padding: 24px;
             margin-bottom: 24px;
         }}
+        
+        /* Fortschrittsbalken */
         .stProgress > div > div > div > div {{
             background-image: linear-gradient(90deg, {colors['primary']} 0%, {colors['secondary']} 100%);
+        }}
+        
+        /* --- DYNAMISCHE BUTTON-FÄRBUNG (Streamlit Standard-Buttons) --- */
+        /* Normale Primär- und Sekundärbuttons in Streamlit ansprechen */
+        div.stButton > button {{
+            background-color: {btn_color} !important;
+            color: white !important;
+            border: 1px solid {btn_color} !important;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }}
+        
+        /* Hover-Effekt: Button wird beim Drüberfahren leicht transparent oder dunkler */
+        div.stButton > button:hover {{
+            background-color: {btn_color}ee !important;
+            border-color: {btn_color} !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }}
+        
+        /* Fokus-Effekt (Klick-Zustand) */
+        div.stButton > button:focus:not(:active) {{
+            border-color: {btn_color} !important;
+            color: white !important;
+        }}
+        div.stButton > button:active {{
+            background-color: {btn_color}cc !important;
+            border-color: {btn_color} !important;
         }}
         </style>
     """, unsafe_allow_html=True)
@@ -82,15 +129,3 @@ def show_theme_switcher():
         if st.button("📚 Minimal", key="theme_btn_minimal"):
             st.session_state.theme = "Minimal"
             st.rerun()
-
-
-button_colors = {
-    "Cozy": "#ec4899",     # pink
-    "Focus": "#22c55e",    # grün
-    "Energy": "#facc15",   # gelb
-    "Minimal": "#4b5563"   # bleibt neutral
-}
-
-def get_button_color():
-    return button_colors.get(st.session_state.theme, "#4b5563")
-
