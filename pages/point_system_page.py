@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import random
 from utils.data_manager import DataManager
 from pages.themes_page import get_theme_colors, apply_theme
 
@@ -54,28 +53,38 @@ def calc_level_and_progress(total_points: int):
         "points_to_next": points_to_next
     }
 
-def load_points_data():
+def calculate_live_points():
+    """ Berechnet die echten Punkte live aus den Benutzerdateien """
     dm = DataManager()
-    history = dm.load_user_data("points_history.json", initial_value=[])
+    tasks = dm.load_user_data("tasks.json", initial_value=[])
+    exams = dm.load_user_data("exams.json", initial_value=[])
     
-    if not history:
-        today = datetime.now()
-        base_points = 50
-        history = []
-        for i in range(7, -1, -1):
-            day = today - timedelta(days=i)
-            base_points += random.choice([10, 15, 20, 25])
-            history.append({
-                "date": day.strftime("%Y-%m-%d"),
-                "points": base_points
-            })
+    # Punkte zählen: Erledigte Aufgaben bringen ihre Punkte (Default 20), Prüfungen bringen 50
+    task_points = sum(int(t.get("points", 20)) for t in tasks if t.get("done", False))
+    exam_points = sum(int(e.get("points", 50)) for e in exams if e.get("done", False))
+    
+    return task_points + exam_points
+
+def generate_live_history(total_points):
+    """ Generiert einen Verlaufschart basierend auf dem echten aktuellen Punktestand """
+    today = datetime.now()
+    history = []
+    
+    # Wir simulieren eine Wachstumskurve hin zum echten aktuellen Punktestand des Nutzers
+    step = total_points / 7 if total_points > 0 else 0
+    for i in range(7, -1, -1):
+        day = today - timedelta(days=i)
+        simulated_points = int(total_points - (i * step))
+        history.append({
+            "date": day.strftime("%Y-%m-%d"),
+            "points": max(0, simulated_points)
+        })
     return history
 
 def show_point_system_page():
     colors = get_theme_colors()
     apply_theme()
     
-    # --- GAMING STYLES (CSS Injection) ---
     st.markdown(f"""
     <style>
     .hero-banner {{
@@ -123,12 +132,12 @@ def show_point_system_page():
     </style>
     """, unsafe_allow_html=True)
 
-    # Daten laden
-    history_data = load_points_data()
-    total_points = history_data[-1]["points"] if history_data else 185
+    # JETZT KOMPLETT DYNAMISCH: Echte Punkte live berechnen
+    total_points = calculate_live_points()
     lvl_info = calc_level_and_progress(total_points)
+    history_data = generate_live_history(total_points)
     
-    # --- HERO HERO BANNER ---
+    # --- HERO BANNER ---
     st.markdown(f"""
     <div class="hero-banner">
         <span style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; opacity: 0.8;">Spieler-Profil</span>
@@ -152,7 +161,6 @@ def show_point_system_page():
     </div>
     """, unsafe_allow_html=True)
 
-    # Layout Splitting
     left_col, right_col = st.columns([2, 1])
     
     with left_col:
@@ -160,7 +168,6 @@ def show_point_system_page():
         st.markdown('<div class="game-card">', unsafe_allow_html=True)
         st.markdown(f"### ⚡ Nächstes Level-Up")
         
-        # Schönerer Custom Progress-Bar
         prog_percent = int(lvl_info['progress_fraction'] * 100)
         st.markdown(f"""
         <div style="width: 100%; background-color: #e5e7eb; border-radius: 10px; margin: 12px 0 6px 0;">
@@ -181,13 +188,13 @@ def show_point_system_page():
         # --- CHART CARD ---
         st.markdown('<div class="game-card">', unsafe_allow_html=True)
         st.markdown("### 📈 EP-Verlauf & Fortschritt")
-        if history_data:
+        if total_points > 0:
             df = pd.DataFrame(history_data)
             df['date'] = pd.to_datetime(df['date'])
             df = df.sort_values('date')
             st.line_chart(df.set_index('date')['points'])
         else:
-            st.info("Noch kein Aktivitäten-Log vorhanden. Schließe Quests ab, um Punkte aufzuzeichnen!")
+            st.info("Noch keine Erfahrungspunkte vorhanden. Erledige Aufgaben auf der Startseite, um dein Punktekonto zu füllen!")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with right_col:
@@ -201,7 +208,6 @@ def show_point_system_page():
             clean_name = name.split("— ")[1]
             
             if total_points >= thresh:
-                # Freigeschaltetes Level
                 st.markdown(f"""
                 <div class="reward-item reward-unlocked">
                     <div>
@@ -212,7 +218,6 @@ def show_point_system_page():
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                # Gesperrtes Level
                 st.markdown(f"""
                 <div class="reward-item reward-locked">
                     <div>
