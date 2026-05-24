@@ -8,20 +8,20 @@ from pages.themes_page import get_theme_colors, apply_theme
 # --- LEVEL DESIGN CONFIGURATION ---
 LEVEL_THRESHOLDS = [0, 100, 250, 500, 1000, 2000]
 LEVEL_NAMES = {
-    1: "Bronze — Starter",
-    2: "Silber — Fortgeschrittenen",
-    3: "Gold — Profi",
-    4: "Platin — Experten",
-    5: "Diamond — Champion",
-    6: "Legend — Legende"
+    1: "Bronze — Weltenbummler",
+    2: "Silber — Code-Ritter",
+    3: "Gold — Wissens-Meister",
+    4: "Platin — Denk-Titan",
+    5: "Diamond — Elite-Champion",
+    6: "Legend — Unsterbliche Legende"
 }
 REWARDS = {
-    1: "Starter-Badge",
-    2: "Fortgeschrittenen-Badge",
-    3: "Profi-Badge",
-    4: "Experten-Badge",
-    5: "Champion-Badge",
-    6: "Legende-Badge"
+    1: "🥉 Starter-Badge",
+    2: "🥈 Fortgeschrittenen-Badge",
+    3: "🥇 Profi-Badge",
+    4: "🔮 Experten-Badge",
+    5: "💎 Champion-Badge",
+    6: "👑 Legenden-Krone"
 }
 
 def calc_level_and_progress(total_points: int):
@@ -54,31 +54,17 @@ def calc_level_and_progress(total_points: int):
         "points_to_next": points_to_next
     }
 
-def unlocked_rewards(total_points: int):
-    unlocked = []
-    for i, thresh in enumerate(LEVEL_THRESHOLDS):
-        lvl = i + 1
-        if total_points >= thresh:
-            unlocked.append({
-                "level": lvl,
-                "name": LEVEL_NAMES.get(lvl, f"Level {lvl}"),
-                "reward": REWARDS.get(lvl, "")
-            })
-    return unlocked
-
 def load_points_data():
     dm = DataManager()
-    # Versucht die echten Verlaufdaten zu laden
     history = dm.load_user_data("points_history.json", initial_value=[])
     
-    # FALLBACK: Wenn die Datei leer ist, erstellen wir Testdaten für das Diagramm
     if not history:
         today = datetime.now()
         base_points = 50
         history = []
         for i in range(7, -1, -1):
             day = today - timedelta(days=i)
-            base_points += random.choice([0, 15, 20, 30])
+            base_points += random.choice([10, 15, 20, 25])
             history.append({
                 "date": day.strftime("%Y-%m-%d"),
                 "points": base_points
@@ -89,54 +75,155 @@ def show_point_system_page():
     colors = get_theme_colors()
     apply_theme()
     
-    # HINWEIS: show_theme_switcher() wurde hier entfernt, 
-    # da es bereits auf der Home-Page existiert und den Fehler verursacht hat!
+    # --- GAMING STYLES (CSS Injection) ---
+    st.markdown(f"""
+    <style>
+    .hero-banner {{
+        background: linear-gradient(135deg, {colors.get('primary', '#7c3aed')} 0%, #4c1d95 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+        margin-bottom: 25px;
+        text-align: center;
+    }}
+    .game-card {{
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        margin-bottom: 20px;
+        border: 1px solid #f3f4f6;
+    }}
+    .reward-item {{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        background: #f9fafb;
+    }}
+    .reward-unlocked {{
+        background: #ecfdf5;
+        border-left: 5px solid #10b981;
+    }}
+    .reward-locked {{
+        background: #f3f4f6;
+        opacity: 0.6;
+        border-left: 5px solid #9ca3af;
+    }}
+    .badge-pill {{
+        background: rgba(255,255,255,0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
 
-    # Hier ermitteln wir die Gesamtpunkte aus den echten Daten oder dem Fallback
+    # Daten laden
     history_data = load_points_data()
-    total_points = history_data[-1]["points"] if history_data else 160
-    
+    total_points = history_data[-1]["points"] if history_data else 185
     lvl_info = calc_level_and_progress(total_points)
     
-    st.title("⭐ Punkte & Level-System")
+    # --- HERO HERO BANNER ---
+    st.markdown(f"""
+    <div class="hero-banner">
+        <span style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; opacity: 0.8;">Spieler-Profil</span>
+        <h1 style="margin: 5px 0 15px 0; color: white; font-size: 40px;">👑 {st.session_state.get('username','Held')}</h1>
+        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
+            <div>
+                <div style="font-size: 13px; opacity: 0.7;">AKTUELLES LEVEL</div>
+                <div style="font-size: 24px; font-weight: bold;">LVL {lvl_info['level']}</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255,255,255,0.3); height: 40px;"></div>
+            <div>
+                <div style="font-size: 13px; opacity: 0.7;">SCORE</div>
+                <div style="font-size: 24px; font-weight: bold;">{total_points} EXP</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255,255,255,0.3); height: 40px;"></div>
+            <div>
+                <div style="font-size: 13px; opacity: 0.7;">RANKING</div>
+                <div style="font-size: 24px; font-weight: bold;">{lvl_info['level_name'].split('— ')[1]}</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Layout Splitting
+    left_col, right_col = st.columns([2, 1])
     
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown(f"### Aktueller Stand")
-        st.subheader(f"Punkte gesamt: {total_points} P")
+    with left_col:
+        # --- PROGRESS CARD ---
+        st.markdown('<div class="game-card">', unsafe_allow_html=True)
+        st.markdown(f"### ⚡ Nächstes Level-Up")
         
-        st.markdown(f"**Level: {lvl_info['level']} — {lvl_info['level_name'].split('—')[0]}**")
-        st.markdown(f"Belohnung freigeschaltet: *{lvl_info['reward']}*")
+        # Schönerer Custom Progress-Bar
+        prog_percent = int(lvl_info['progress_fraction'] * 100)
+        st.markdown(f"""
+        <div style="width: 100%; background-color: #e5e7eb; border-radius: 10px; margin: 12px 0 6px 0;">
+            <div style="width: {prog_percent}%; background: linear-gradient(90deg, #10b981, #34d399); height: 16px; border-radius: 10px; text-align: center; color: white; font-size: 11px; font-weight: bold; line-height: 16px;">
+                {prog_percent}%
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("**Fortschritt zum nächsten Level**")
-        st.progress(lvl_info['progress_fraction'])
-        st.caption(f"{total_points} / {lvl_info['next_threshold']} P ({int(lvl_info['progress_fraction']*100)}%) — noch {lvl_info['points_to_next']} P bis Level {lvl_info['level'] + 1}")
+        st.markdown(f"""
+        <div style="display: flex; justify-content: space-between; font-size: 14px; color: #4b5563;">
+            <span><b>{total_points}</b> / {lvl_info['next_threshold']} EXP</span>
+            <span>Noch <b>{lvl_info['points_to_next']} EXP</b> bis Level {lvl_info['level'] + 1}</span>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        st.markdown("---")
-        st.markdown("### 📈 Dein Punkteverlauf")
-        
+        # --- CHART CARD ---
+        st.markdown('<div class="game-card">', unsafe_allow_html=True)
+        st.markdown("### 📈 EP-Verlauf & Fortschritt")
         if history_data:
             df = pd.DataFrame(history_data)
             df['date'] = pd.to_datetime(df['date'])
             df = df.sort_values('date')
-            
-            # Zeigt das Liniendiagramm mit dem Verlauf an
             st.line_chart(df.set_index('date')['points'])
         else:
-            st.info("Keine Verlaufdaten gefunden.")
+            st.info("Noch kein Aktivitäten-Log vorhanden. Schließe Quests ab, um Punkte aufzuzeichnen!")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        st.markdown("### Deine freigeschalteten Belohnungen")
-        rewards_list = unlocked_rewards(total_points)
-        for r in rewards_list:
-            st.markdown(f"• **Level {r['level']}:** {r['reward']}")
-            
-        st.markdown("---")
-        st.markdown("### Belohnungs-Übersicht")
+    with right_col:
+        # --- QUESTS & REWARDS LOG ---
+        st.markdown('<div class="game-card" style="padding-bottom: 10px;">', unsafe_allow_html=True)
+        st.markdown("### ⚔️ Quest-Erfolge")
+        
         for lvl, name in LEVEL_NAMES.items():
             thresh = LEVEL_THRESHOLDS[lvl-1]
-            st.markdown(f"• {name} (ab {thresh} P): {REWARDS[lvl]}")
+            badge = REWARDS[lvl]
+            clean_name = name.split("— ")[1]
+            
+            if total_points >= thresh:
+                # Freigeschaltetes Level
+                st.markdown(f"""
+                <div class="reward-item reward-unlocked">
+                    <div>
+                        <span style="font-size: 12px; font-weight: bold; color: #065f46;">LVL {lvl} • {clean_name}</span><br>
+                        <span style="font-size: 14px; color: #111827;">{badge}</span>
+                    </div>
+                    <span class="badge-pill" style="background: #d1fae5; color: #065f46;">✅ Bereit</span>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                # Gesperrtes Level
+                st.markdown(f"""
+                <div class="reward-item reward-locked">
+                    <div>
+                        <span style="font-size: 12px; font-weight: bold; color: #374151;">LVL {lvl} • ???</span><br>
+                        <span style="font-size: 14px; color: #6b7280;">{badge.split(" ")[0]} Ab {thresh} EXP</span>
+                    </div>
+                    <span class="badge-pill" style="background: #e5e7eb; color: #4b5563;">🔒 Locked</span>
+                </div>
+                """, unsafe_allow_html=True)
+                
+        st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     show_point_system_page()
