@@ -106,6 +106,7 @@ def show_tasks_page():
 
     # Eingabeformular
     with st.form("task_form"):
+        st.markdown("### Neue Aufgabe hinzufügen")
         title = st.text_input("Titel", key="task_title", placeholder="z. B. Mathe Hausaufgaben")
         due_date = st.date_input("Fälligkeitsdatum", key="task_due_date", value=datetime.utcnow().date())
 
