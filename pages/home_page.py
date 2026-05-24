@@ -191,7 +191,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Sidebar (keine Änderung nötig) ---
+# --- Sidebar ---
 def show_sidebar_nav():
     colors = get_theme_colors()
     with st.sidebar:
@@ -242,28 +242,38 @@ def show_home_page():
         unsafe_allow_html=True
     )
 
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col1:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("#### Tagesfortschritt")
-        st.progress(0.7)
-        st.markdown(f"<span style='color:{colors['primary']};font-size:32px;font-weight:bold;'>70%</span>", unsafe_allow_html=True)
-        st.caption("Super gemacht! Weiter so! 💪")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("#### Deine Übersicht")
+    # --- DYNAMISCHE FORTSCHRITTSBERECHNUNG ---
     tasks = load_tasks()
     exams = load_exams()
-    task_count = len([t for t in tasks if not t.get("done", False)])
-    exam_count = len([e for e in exams if not e.get("done", False)])
+    
+    done_tasks = sum(1 for t in tasks if t.get("done", False))
+    done_exams = sum(1 for e in exams if e.get("done", False))
+    
+    total_items = len(tasks) + len(exams)
+    total_done = done_tasks + done_exams
+    
+    fortschritt_prozent = int((total_done / total_items) * 100) if total_items > 0 else 0
+
+    # --- TAGESFORTSCHRITT (Erstreckt sich über die volle Breite) ---
+    st.markdown("<div class='card' style='margin-bottom: 24px;'>", unsafe_allow_html=True)
+    st.markdown("#### Tagesfortschritt")
+    st.progress(fortschritt_prozent / 100.0)
+    st.markdown(f"<span style='color:{colors['primary']};font-size:32px;font-weight:bold;'>{fortschritt_prozent}%</span>", unsafe_allow_html=True)
+    st.caption("Super gemacht! Weiter so! 💪")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # --- ÜBERSICHT MIT NOCH GRÖSSEREN EMOJIS (56px) ---
+    st.markdown("#### Deine Übersicht")
+    task_count_todo = len([t for t in tasks if not t.get("done", False)])
+    exam_count_todo = len([e for e in exams if not e.get("done", False)])
 
     st.markdown(
         f"""
-        <div style='display:flex;gap:24px;justify-content:center;'>
-            <div style='text-align:center;'><div style='font-size:24px;'>📅</div><b>{task_count}</b><br><span style='font-size:12px;'>Aufgaben</span></div>
-            <div style='text-align:center;'><div style='font-size:24px;'>📚</div><b>{exam_count}</b><br><span style='font-size:12px;'>Prüfungen</span></div>
-            <div style='text-align:center;'><div style='font-size:24px;'>⭐</div><b>5</b><br><span style='font-size:12px;'>Stufe</span></div>
-            <div style='text-align:center;'><div style='font-size:24px;'>🏆</div><b>120</b><br><span style='font-size:12px;'>Punkte</span></div>
+        <div style='display:flex;gap:40px;justify-content:center;margin-top:12px;margin-bottom:24px;'>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>📅</div><b style='font-size:16px;'>{task_count_todo}</b><br><span style='font-size:12px;color:#374151;'>Aufgaben</span></div>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>📚</div><b style='font-size:16px;'>{exam_count_todo}</b><br><span style='font-size:12px;color:#374151;'>Prüfungen</span></div>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>⭐</div><b style='font-size:16px;'>5</b><br><span style='font-size:12px;color:#374151;'>Stufe</span></div>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>🏆</div><b style='font-size:16px;'>120</b><br><span style='font-size:12px;color:#374151;'>Punkte</span></div>
         </div>
         """,
         unsafe_allow_html=True
@@ -323,55 +333,15 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --- WEEK OVERVIEW ---
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("<div class='card' style='margin-top: 24px;'>", unsafe_allow_html=True)
     st.markdown("#### Deine Woche auf einen Blick")
     days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-    today = datetime.now()
+    today_dt = datetime.now()
     cols = st.columns(7)
     for i, col in enumerate(cols):
         with col:
             st.markdown(f"**{days[i]}**")
-            st.markdown(f"{(today + timedelta(days=i)).day}")
+            st.markdown(f"{(today_dt + timedelta(days=i)).day}")
             st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
     st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True) 
-    with col4:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("##### Nächste Aufgabe")
-
-    if next_task:
-
-        # Checkbox zum Abhaken
-        done = st.checkbox(
-            "Erledigt?",
-            value=next_task.get("done", False),
-            key=f"done_{next_task.get('title')}"
-        )
-
-        # Speichern wenn abgehakt
-        if done and not next_task.get("done", False):
-            next_task["done"] = True
-            dm = DataManager()
-            tasks = dm.load_user_data("tasks.json", initial_value=[])
-            for t in tasks:
-                if t.get("title") == next_task.get("title") and t.get("due") == next_task.get("due"):
-                    t["done"] = True
-            dm.save_user_data("tasks.json", tasks)
-
-        # Aufgabe anzeigen
-        st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
-
-        # Start-Button (mit key!)
-        if st.button("Jetzt starten", key="start_next_task"):
-            st.session_state.selected_task = next_task
-            st.session_state.page = "Timer"
-            st.rerun()
-
-    else:
-        st.info("Keine Aufgaben vorhanden.")
-
     st.markdown("</div>", unsafe_allow_html=True)
-
-
-
-
