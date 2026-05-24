@@ -16,12 +16,23 @@ def show_exams_page():
     dm = DataManager()
     exams = dm.load_user_data("exams.json", initial_value=[])
 
+    # Optionen für das Dropdown-Menü (10-Minuten-Intervalle von 0 bis 300 Minuten)
+    minuten_optionen = [i for i in range(0, 301, 10)]
+
+    # Helper, um den passenden Index für einen Minutenwert im Dropdown zu finden
+    def get_index(wert):
+        # Falls der gespeicherte Wert kein 10er-Schritt ist, runden wir ihn ab
+        gerundeter_wert = (wert // 10) * 10
+        if gerundeter_wert in minuten_optionen:
+            return minuten_optionen.index(gerundeter_wert)
+        return 0
+
     # ---------------- FORMULAR ----------------
     with st.form("exam_form"):
         st.markdown("### Neue Prüfung hinzufügen")
 
-        title = st.text_input("Titel", placeholder="z. B. Deutsch Prüfung")
-        subject = st.text_input("Fach", placeholder="z. B. Deutsch")
+        title = st.text_input("Titel", placeholder="z. B. Deutsch Prüfung", key="exam_title")
+        subject = st.text_input("Fach", placeholder="z. B. Deutsch", key="exam_subject")
 
         exam_date = st.date_input("Datum", value=datetime.utcnow().date())
 
@@ -31,12 +42,24 @@ def show_exams_page():
         with col2:
             end_time = st.time_input("Endzeit", value=(datetime.utcnow() + timedelta(hours=1)).time())
 
-        topics_input = st.text_area("Themen (jede Zeile ein Thema)", height=80)
-        notes = st.text_area("Notizen", height=80)
+        topics_input = st.text_area("Themen (jede Zeile ein Thema)", height=80, key="exam_topics")
+        notes = st.text_area("Notizen", height=80, key="exam_notes")
 
         st.markdown("### Lernfortschritt")
-        study_goal = st.number_input("Lernziel (Minuten)", min_value=0, value=0)
-        study_done = st.number_input("Bereits gelernt (Minuten)", min_value=0, value=0)
+        
+        # Dropdowns statt st.number_input
+        study_goal = st.selectbox(
+            "Lernziel (Minuten)",
+            options=minuten_optionen,
+            index=0,
+            key="study_goal_form"
+        )
+        study_done = st.selectbox(
+            "Bereits gelernt (Minuten)",
+            options=minuten_optionen,
+            index=0,
+            key="study_done_form"
+        )
 
         submitted = st.form_submit_button("Speichern")
 
@@ -63,8 +86,8 @@ def show_exams_page():
         exams.append(record)
         dm.save_user_data(exams, "exams.json")
 
-        # Nur Formularfelder löschen – NICHT die ganze Session!
-        for key in ["exam_title", "exam_subject", "exam_topics", "exam_notes", "study_goal", "study_done"]:
+        # Formularfelder leeren
+        for key in ["exam_title", "exam_subject", "exam_topics", "exam_notes", "study_goal_form", "study_done_form"]:
             if key in st.session_state:
                 del st.session_state[key]
 
@@ -99,14 +122,12 @@ def show_exams_page():
         return
 
     for i, e in enumerate(exams):
-
         goal = e.get("study_goal_min", 0)
         done = e.get("study_done_min", 0)
         progress = int((done / goal) * 100) if goal > 0 else 0
 
         # Kompakte Kopfzeile
         with st.expander(f"{e['title']} — {e['subject']} — {e['date']}"):
-
             st.markdown(f"**Uhrzeit:** {e['time']}")
 
             st.markdown("**Themen:**")
@@ -117,32 +138,39 @@ def show_exams_page():
             st.markdown(e["notes"])
 
             st.markdown("**Fortschritt:**")
-            st.progress(progress / 100)
+            st.progress(min(1.0, progress / 100))
             st.markdown(f"{progress}%")
 
             st.markdown("### Lernfortschritt aktualisieren")
-            new_done = st.number_input(
+            
+            # Dropdowns auch in der Detailansicht der Liste
+            new_done = st.selectbox(
                 "Bereits gelernt (Minuten)",
-                min_value=0,
-                value=done,
-                key=f"done_{i}"
+                options=minuten_optionen,
+                index=get_index(done),
+                key=f"done_select_{i}"
             )
-            new_goal = st.number_input(
+            new_goal = st.selectbox(
                 "Lernziel (Minuten)",
-                min_value=0,
-                value=goal,
-                key=f"goal_{i}"
+                options=minuten_optionen,
+                index=get_index(goal),
+                key=f"goal_select_{i}"
             )
 
-            if st.button("Speichern", key=f"save_{i}"):
-                e["study_done_min"] = new_done
-                e["study_goal_min"] = new_goal
-                dm.save_user_data(exams, "exams.json")
-                st.success("Fortschritt aktualisiert.")
-                st.rerun()
+            col_btn1, col_btn2 = st.columns([1, 4])
+            with col_btn1:
+                if st.button("Speichern", key=f"save_{i}"):
+                    e["study_done_min"] = new_done
+                    e["study_goal_min"] = new_goal
+                    dm.save_user_data(exams, "exams.json")
+                    st.success("Fortschritt aktualisiert.")
+                    st.rerun()
+            with col_btn2:
+                if st.button("🗑️ Löschen", key=f"delete_{i}"):
+                    exams.pop(i)
+                    dm.save_user_data(exams, "exams.json")
+                    st.success("Prüfung gelöscht.")
+                    st.rerun()
 
-            if st.button("🗑️ Löschen", key=f"delete_{i}"):
-                exams.pop(i)
-                dm.save_user_data(exams, "exams.json")
-                st.success("Prüfung gelöscht.")
-                st.rerun()
+if __name__ == "__main__":
+    show_exams_page()
