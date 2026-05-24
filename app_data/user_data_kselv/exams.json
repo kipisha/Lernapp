@@ -10,7 +10,9 @@
         "notes": "lol",
         "study_goal_min": 180,
         "study_done_min": 0,
-        "created_at": "2026-05-23T14:38:00.097095"
+        "created_at": "2026-05-23T14:38:00.097095",
+        "done": true,
+        "done_at": "2026-05-24T08:58:19.720279"
     },
     {
         "title": "aufatzs",
