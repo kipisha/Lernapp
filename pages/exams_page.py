@@ -21,7 +21,6 @@ def show_exams_page():
 
     # Helper, um den passenden Index für einen Minutenwert im Dropdown zu finden
     def get_index(wert):
-        # Falls der gespeicherte Wert kein 10er-Schritt ist, runden wir ihn ab
         gerundeter_wert = (wert // 10) * 10
         if gerundeter_wert in minuten_optionen:
             return minuten_optionen.index(gerundeter_wert)
@@ -47,19 +46,8 @@ def show_exams_page():
 
         st.markdown("### Lernfortschritt")
         
-        # Dropdowns statt st.number_input
-        study_goal = st.selectbox(
-            "Lernziel (Minuten)",
-            options=minuten_optionen,
-            index=0,
-            key="study_goal_form"
-        )
-        study_done = st.selectbox(
-            "Bereits gelernt (Minuten)",
-            options=minuten_optionen,
-            index=0,
-            key="study_done_form"
-        )
+        study_goal = st.selectbox("Lernziel (Minuten)", options=minuten_optionen, index=0, key="study_goal_form")
+        study_done = st.selectbox("Bereits gelernt (Minuten)", options=minuten_optionen, index=0, key="study_done_form")
 
         submitted = st.form_submit_button("Speichern")
 
@@ -71,6 +59,9 @@ def show_exams_page():
         end_str = end_time.strftime("%H:%M")
         time_str = f"{start_str} – {end_str}"
 
+        # Fortschritt für die Home-Seite berechnen
+        calculated_progress = int((study_done / study_goal) * 100) if study_goal > 0 else 0
+
         record = {
             "title": title,
             "date": date_str,
@@ -80,13 +71,14 @@ def show_exams_page():
             "notes": notes,
             "study_goal_min": study_goal,
             "study_done_min": study_done,
+            "progress": calculated_progress,  # <--- HIER REINGESCHRIEBEN FÜR HOME_PAGE
             "created_at": datetime.utcnow().isoformat(),
+            "done": False
         }
 
         exams.append(record)
         dm.save_user_data(exams, "exams.json")
 
-        # Formularfelder leeren
         for key in ["exam_title", "exam_subject", "exam_topics", "exam_notes", "study_goal_form", "study_done_form"]:
             if key in st.session_state:
                 del st.session_state[key]
@@ -98,23 +90,18 @@ def show_exams_page():
     st.markdown("---")
     st.markdown("### Alle deine Prüfungen")
 
-    # --- SUCHFELD ---
     search_query = st.text_input("🔍 Prüfung suchen (Titel, Fach, Datum)", "")
 
-    # --- SORTIERUNG NACH DATUM ---
     try:
         exams = sorted(exams, key=lambda x: datetime.fromisoformat(x["date"]))
     except:
         pass
 
-    # --- FILTER ---
     if search_query.strip():
         q = search_query.lower()
         exams = [
             e for e in exams
-            if q in e["title"].lower()
-            or q in e["subject"].lower()
-            or q in e["date"].lower()
+            if q in e["title"].lower() or q in e["subject"].lower() or q in e["date"].lower()
         ]
 
     if not exams:
@@ -126,7 +113,6 @@ def show_exams_page():
         done = e.get("study_done_min", 0)
         progress = int((done / goal) * 100) if goal > 0 else 0
 
-        # Kompakte Kopfzeile
         with st.expander(f"{e['title']} — {e['subject']} — {e['date']}"):
             st.markdown(f"**Uhrzeit:** {e['time']}")
 
@@ -143,25 +129,17 @@ def show_exams_page():
 
             st.markdown("### Lernfortschritt aktualisieren")
             
-            # Dropdowns auch in der Detailansicht der Liste
-            new_done = st.selectbox(
-                "Bereits gelernt (Minuten)",
-                options=minuten_optionen,
-                index=get_index(done),
-                key=f"done_select_{i}"
-            )
-            new_goal = st.selectbox(
-                "Lernziel (Minuten)",
-                options=minuten_optionen,
-                index=get_index(goal),
-                key=f"goal_select_{i}"
-            )
+            new_done = st.selectbox("Bereits gelernt (Minuten)", options=minuten_optionen, index=get_index(done), key=f"done_select_{i}")
+            new_goal = st.selectbox("Lernziel (Minuten)", options=minuten_optionen, index=get_index(goal), key=f"goal_select_{i}")
 
             col_btn1, col_btn2 = st.columns([1, 4])
             with col_btn1:
                 if st.button("Speichern", key=f"save_{i}"):
                     e["study_done_min"] = new_done
                     e["study_goal_min"] = new_goal
+                    # Fortschritt aktualisieren, damit es auf der Home-Page ankommt
+                    e["progress"] = int((new_done / new_goal) * 100) if new_goal > 0 else 0
+                    
                     dm.save_user_data(exams, "exams.json")
                     st.success("Fortschritt aktualisiert.")
                     st.rerun()
