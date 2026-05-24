@@ -68,6 +68,7 @@ def mark_exam_done(exam):
     updated = _find_and_update(exams, exam, lambda e: {**e, "done": True, "done_at": datetime.utcnow().isoformat()})
     if updated:
         dm.save_user_data(exams, "exams.json")
+        st.session_state.exams = exams
         return True
     return False
 
@@ -249,8 +250,8 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("#### Deine Übersicht")
-    tasks = load_tasks()
-    exams = load_exams()
+    tasks = st.session_state.tasks
+    exams = st.session_state.exams
     task_count = len([t for t in tasks if not t.get("done", False)])
     exam_count = len([e for e in exams if not e.get("done", False)])
 
@@ -354,6 +355,7 @@ def show_home_page():
                 if t.get("title") == next_task.get("title") and t.get("due") == next_task.get("due"):
                     t["done"] = True
             dm.save_user_data(tasks, "tasks.json")
+            st.session_state.tasks = tasks
 
         # Aufgabe anzeigen
         st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
@@ -364,11 +366,12 @@ def show_home_page():
             st.session_state.page = "Timer"
             st.rerun()
 
-    else:
-        st.info("Keine Aufgaben vorhanden.")
 
-    st.markdown("</div>", unsafe_allow_html=True)
+dm = DataManager()
 
+if "tasks" not in st.session_state:
+    st.session_state.tasks = dm.load_user_data("tasks.json") or []
 
-
+if "exams" not in st.session_state:
+    st.session_state.exams = dm.load_user_data("exams.json") or []
 
