@@ -12,7 +12,7 @@
         "study_done_min": 0,
         "created_at": "2026-05-23T14:38:00.097095",
         "done": true,
-        "done_at": "2026-05-24T08:58:19.720279"
+        "done_at": "2026-05-24T09:10:57.680785"
     },
     {
         "title": "aufatzs",
@@ -50,5 +50,16 @@
         "study_goal_min": 0,
         "study_done_min": 0,
         "created_at": "2026-05-23T14:40:53.713315"
+    },
+    {
+        "title": "lol",
+        "date": "2026-05-24",
+        "time": "09:10 \u2013 10:10",
+        "subject": "Mathe ",
+        "topics": [],
+        "notes": "",
+        "study_goal_min": 444,
+        "study_done_min": 53,
+        "created_at": "2026-05-24T09:10:37.346945"
     }
 ]

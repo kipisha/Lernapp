@@ -118,15 +118,14 @@ def render_task_detail(task, colors):
         st.checkbox(item, value=ch, key=f"task_chk_{task.get('timestamp','')}_{i}")
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
-    if st.button("Bearbeiten", key="edit_task"):
-        st.info("Bearbeiten: noch nicht implementiert")
+    
     if st.button("Als erledigt markieren", key="done_task"):
         ok = mark_task_done(task)
         if ok:
             st.success("Aufgabe als erledigt markiert")
             st.session_state.selected = None
-            st.experimental_rerun()
-        else:
+            st.rerun()
+    else:
             st.error("Konnte Aufgabe nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
@@ -170,15 +169,13 @@ def render_exam_detail(exam, colors):
         st.markdown(f"<div style='color:#444'>{notes}</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
-    if st.button("Bearbeiten", key="edit_exam"):
-        st.info("Bearbeiten: noch nicht implementiert")
     if st.button("Als erledigt markieren", key="done_exam"):
         ok = mark_exam_done(exam)
         if ok:
             st.success("Prüfung als erledigt markiert")
             st.session_state.selected = None
-            st.experimental_rerun()
-        else:
+            st.rerun()
+    else:
             st.error("Konnte Prüfung nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
