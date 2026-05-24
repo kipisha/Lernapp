@@ -353,7 +353,7 @@ def show_home_page():
             for t in tasks:
                 if t.get("title") == next_task.get("title") and t.get("due") == next_task.get("due"):
                     t["done"] = True
-            dm.save_user_data("tasks.json", tasks)
+            dm.save_user_data(tasks, "tasks.json")
 
         # Aufgabe anzeigen
         st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
