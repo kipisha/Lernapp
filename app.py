@@ -220,7 +220,7 @@ elif st.session_state.page == "Prüfungen":
     show_exams_page()
 elif st.session_state.page == "Team":
     show_team_page()
-elif st.session_state.page == "Punktesystem":
+elif st.session_state.page == "Punkte":
     show_point_system_page()
 
 

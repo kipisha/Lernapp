@@ -186,5 +186,5 @@ def show_point_system_page():
             "level_info": lvl_info
         })
 
-if __name__ == "__main__":
+
     show_point_system_page()
