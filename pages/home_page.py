@@ -68,7 +68,6 @@ def mark_exam_done(exam):
     updated = _find_and_update(exams, exam, lambda e: {**e, "done": True, "done_at": datetime.utcnow().isoformat()})
     if updated:
         dm.save_user_data(exams, "exams.json")
-        st.session_state.exams = exams
         return True
     return False
 
@@ -119,14 +118,15 @@ def render_task_detail(task, colors):
         st.checkbox(item, value=ch, key=f"task_chk_{task.get('timestamp','')}_{i}")
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
-    
+    if st.button("Bearbeiten", key="edit_task"):
+        st.info("Bearbeiten: noch nicht implementiert")
     if st.button("Als erledigt markieren", key="done_task"):
         ok = mark_task_done(task)
         if ok:
             st.success("Aufgabe als erledigt markiert")
             st.session_state.selected = None
-            st.rerun()
-    else:
+            st.experimental_rerun()
+        else:
             st.error("Konnte Aufgabe nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
@@ -170,13 +170,15 @@ def render_exam_detail(exam, colors):
         st.markdown(f"<div style='color:#444'>{notes}</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
+    if st.button("Bearbeiten", key="edit_exam"):
+        st.info("Bearbeiten: noch nicht implementiert")
     if st.button("Als erledigt markieren", key="done_exam"):
         ok = mark_exam_done(exam)
         if ok:
             st.success("Prüfung als erledigt markiert")
             st.session_state.selected = None
-            st.rerun()
-    else:
+            st.experimental_rerun()
+        else:
             st.error("Konnte Prüfung nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
@@ -250,8 +252,8 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("#### Deine Übersicht")
-    tasks = st.session_state.tasks
-    exams = st.session_state.exams
+    tasks = load_tasks()
+    exams = load_exams()
     task_count = len([t for t in tasks if not t.get("done", False)])
     exam_count = len([e for e in exams if not e.get("done", False)])
 
@@ -297,7 +299,8 @@ def show_home_page():
                 st.session_state.selected = {'type':'task','item': copy.deepcopy(next_task)}
                 st.rerun()
         else:
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.info("Keine Aufgaben vorhanden.")
+        st.markdown("</div>", unsafe_allow_html=True)
 
     next_exam = get_next_exam(exams)
     with col5:
@@ -319,19 +322,31 @@ def show_home_page():
         st.success(f"„{motivation}“")
         st.markdown("</div>", unsafe_allow_html=True)
 
-   
+    # --- WEEK OVERVIEW ---
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("#### Deine Woche auf einen Blick")
+    days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    today = datetime.now()
+    cols = st.columns(7)
+    for i, col in enumerate(cols):
+        with col:
+            st.markdown(f"**{days[i]}**")
+            st.markdown(f"{(today + timedelta(days=i)).day}")
+            st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
+    st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True) 
+    with col4:
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("##### Nächste Aufgabe")
+
+    if next_task:
 
         # Checkbox zum Abhaken
-        if next_task is not None:
-
-            done = st.checkbox(
-        "Erledigt?",
-        value=next_task.get("done", False),
-        key=f"done_{next_task.get('title', 'task')}"
-    )
-        else:
-            st.info("Keine Aufgaben vorhanden.")
-
+        done = st.checkbox(
+            "Erledigt?",
+            value=next_task.get("done", False),
+            key=f"done_{next_task.get('title')}"
+        )
 
         # Speichern wenn abgehakt
         if done and not next_task.get("done", False):
@@ -341,12 +356,10 @@ def show_home_page():
             for t in tasks:
                 if t.get("title") == next_task.get("title") and t.get("due") == next_task.get("due"):
                     t["done"] = True
-            dm.save_user_data(tasks, "tasks.json")
-            st.session_state.tasks = tasks
+            dm.save_user_data("tasks.json", tasks)
 
         # Aufgabe anzeigen
         st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
-        
 
         # Start-Button (mit key!)
         if st.button("Jetzt starten", key="start_next_task"):
@@ -354,12 +367,11 @@ def show_home_page():
             st.session_state.page = "Timer"
             st.rerun()
 
+    else:
+        st.info("Keine Aufgaben vorhanden.")
 
-dm = DataManager()
+    st.markdown("</div>", unsafe_allow_html=True)
 
-if "tasks" not in st.session_state:
-    st.session_state.tasks = dm.load_user_data("tasks.json") or []
 
-if "exams" not in st.session_state:
-    st.session_state.exams = dm.load_user_data("exams.json") or []
+
 
