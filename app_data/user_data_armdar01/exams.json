@@ -11,7 +11,9 @@
         "progress": 20,
         "notes": "",
         "created_at": "2026-05-23T06:24:14.224131",
-        "timestamp": "2026-05-23T08:24:14"
+        "timestamp": "2026-05-23T08:24:14",
+        "done": true,
+        "done_at": "2026-05-24T10:59:01.354320"
     },
     {
         "title": "GKS",
@@ -26,6 +28,8 @@
         "notes": "",
         "study_goal_min": 40,
         "study_done_min": 30,
-        "created_at": "2026-05-24T10:55:51.763541"
+        "created_at": "2026-05-24T10:55:51.763541",
+        "done": true,
+        "done_at": "2026-05-24T10:59:09.849301"
     }
 ]
