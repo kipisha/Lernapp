@@ -297,8 +297,7 @@ def show_home_page():
                 st.session_state.selected = {'type':'task','item': copy.deepcopy(next_task)}
                 st.rerun()
         else:
-            st.info("Keine Aufgaben vorhanden.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
     next_exam = get_next_exam(exams)
     with col5:
@@ -320,31 +319,19 @@ def show_home_page():
         st.success(f"„{motivation}“")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- WEEK OVERVIEW ---
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("#### Deine Woche auf einen Blick")
-    days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-    today = datetime.now()
-    cols = st.columns(7)
-    for i, col in enumerate(cols):
-        with col:
-            st.markdown(f"**{days[i]}**")
-            st.markdown(f"{(today + timedelta(days=i)).day}")
-            st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
-    st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True) 
-    with col4:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("##### Nächste Aufgabe")
-
-    if next_task:
+   
 
         # Checkbox zum Abhaken
-        done = st.checkbox(
-            "Erledigt?",
-            value=next_task.get("done", False),
-            key=f"done_{next_task.get('title')}"
-        )
+        if next_task is not None:
+
+            done = st.checkbox(
+        "Erledigt?",
+        value=next_task.get("done", False),
+        key=f"done_{next_task.get('title', 'task')}"
+    )
+        else:
+            st.info("Keine Aufgaben vorhanden.")
+
 
         # Speichern wenn abgehakt
         if done and not next_task.get("done", False):
@@ -359,6 +346,7 @@ def show_home_page():
 
         # Aufgabe anzeigen
         st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
+        
 
         # Start-Button (mit key!)
         if st.button("Jetzt starten", key="start_next_task"):
