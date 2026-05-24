@@ -54,19 +54,19 @@ def get_button_color():
     return button_colors.get(st.session_state.theme, "#4b5563")
 
 def apply_theme():
-    """Wendet die Theme-Styles an inklusive dynamischer Button-Färbung"""
+    """Wendet die Theme-Styles an inklusive präziser Button-Umfärbung"""
     colors = get_theme_colors()
     btn_color = get_button_color()
     
     st.markdown(f"""
         <style>
-        /* App-Hintergrund */
+        /* 1. App-Hintergrund bleibt absolut unangetastet */
         .stApp {{
             background: {colors['background']} !important;
             color: {colors['text']};
         }}
         
-        /* Karten-Styling */
+        /* 2. Karten-Styling */
         .card {{
             background: {colors['card']};
             border-radius: 18px;
@@ -75,63 +75,51 @@ def apply_theme():
             margin-bottom: 24px;
         }}
         
-        /* Fortschrittsbalken */
+        /* 3. Fortschrittsbalken */
         .stProgress > div > div > div > div {{
             background-image: linear-gradient(90deg, {colors['primary']} 0%, {colors['secondary']} 100%);
         }}
         
-        /* --- DYNAMISCHE BUTTON-FÄRBUNG (Für absolut alle Buttons inkl. Tages-Pills) --- */
+        /* --- 4. PRÄZISER SELEKTOR NUR FÜR KLICKBARE SCHALTFLÄCHEN --- */
+        /* Wir sprechen ausschließlich Elemente an, die Streamlit explizit als interaktive Buttons deklariert */
         
-        /* 1. Fängt alle Standard-, Primär- und Sekundärbuttons über Streamlits interne Test-IDs ab */
-        button[data-testid="stBaseButton-secondary"], 
+        div.stButton > button,
+        button[data-testid="stBaseButton-secondary"],
         button[data-testid="stBaseButton-primary"],
-        button[data-testid="stBaseButton-tertiary"],
-        div.stButton > button {{
+        button[data-testid="stBaseButton-tertiary"] {{
             background-color: {btn_color} !important;
             color: white !important;
             border: 1px solid {btn_color} !important;
             border-radius: 10px !important;
-            transition: all 0.25s ease-in-out !important;
-            white-space: pre-wrap !important; /* Wichtig für die Zeilenumbrüche in deinen Tages-Pills! */
-            height: auto !important;
-            min-height: 45px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out !important;
         }}
         
-        /* 2. Hover-Effekt für alle Buttons (beim Drüberfahren mit der Maus) */
-        button[data-testid="stBaseButton-secondary"]:hover, 
-        button[data-testid="stBaseButton-primary"]:hover,
-        button[data-testid="stBaseButton-tertiary"]:hover,
-        div.stButton > button:hover {{
-            background-color: {btn_color}dd !important; /* Leicht transparent aufgeweckt */
+        /* Hover-Effekt nur für diese echten Buttons */
+        div.stButton > button:hover,
+        button[data-testid="stBaseButton-secondary"]:hover,
+        button[data-testid="stBaseButton-primary"]:hover {{
+            background-color: {btn_color}dd !important;
             border-color: {btn_color} !important;
             color: white !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
-            transform: translateY(-1px);
         }}
         
-        /* 3. Focus- & Aktiv-Zustand überschreiben, um das lila Aufblinken zu verhindern */
-        button[data-testid="stBaseButton-secondary"]:focus, 
-        button[data-testid="stBaseButton-primary"]:focus,
-        button[data-testid="stBaseButton-tertiary"]:focus,
-        div.stButton > button:focus {{
+        /* Fokus/Klick-Zustand für diese echten Buttons */
+        div.stButton > button:focus,
+        button[data-testid="stBaseButton-secondary"]:focus,
+        button[data-testid="stBaseButton-primary"]:focus {{
             border-color: {btn_color} !important;
             background-color: {btn_color} !important;
             color: white !important;
-            box-shadow: 0 0 0 0.2rem {btn_color}44 !important; /* Dezent glühender Rahmen in Theme-Farbe */
+            box-shadow: 0 0 0 0.2rem {btn_color}33 !important;
         }}
         
-        button[data-testid="stBaseButton-secondary"]:active, 
-        button[data-testid="stBaseButton-primary"]:active,
-        button[data-testid="stBaseButton-tertiary"]:active,
-        div.stButton > button:active {{
-            background-color: {btn_color}bb !important;
-            border-color: {btn_color} !important;
+        /* Text im Inneren der echten Buttons erzwingen */
+        div.stButton > button p,
+        button[data-testid="stBaseButton-secondary"] p,
+        button[data-testid="stBaseButton-primary"] p {{
             color: white !important;
-        }}
-        
-        /* Fix für Textfarben im Inneren der Buttons */
-        button p {{
-            color: white !important;
+            font-weight: 600 !important;
         }}
         </style>
     """, unsafe_allow_html=True)
