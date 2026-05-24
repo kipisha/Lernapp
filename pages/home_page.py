@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import datetime, timedelta, date
 from pages.themes_page import get_theme_colors, apply_theme, show_theme_switcher
 from utils.data_manager import DataManager
+from pages.point_system_page import calc_level_and_progress
 import random
 import copy
 
@@ -14,7 +15,7 @@ def load_exams():
     dm = DataManager()
     return dm.load_user_data("exams.json", initial_value=[])
 
-# ignore tasks/exams that have been marked done
+# Aufgaben ignorieren, die bereits erledigt sind
 def get_next_task(tasks):
     if not tasks:
         return None
@@ -36,19 +37,15 @@ def get_next_exam(exams):
 # --- Persist changes ---
 def _find_and_update(list_data, item, update_fn):
     """
-    Find an item in list_data matching by 'timestamp' and 'title', apply update_fn on it.
-    Returns True if an item was updated.
+    Findet ein Element in list_data passend nach Titel und Erstellungsdatum oder Fälligkeit,
+    um es krisensicher im JSON zu aktualisieren.
     """
     for i, entry in enumerate(list_data):
-        if entry.get("timestamp") and item.get("timestamp"):
-            same = entry.get("timestamp") == item.get("timestamp") and entry.get("title") == item.get("title")
-        else:
-            # fallback: match by title + created_at if possible
-            same = entry.get("title") == item.get("title") and (
-                (entry.get("created_at") and item.get("created_at") and entry.get("created_at") == item.get("created_at"))
-                or True
-            )
-        if same:
+        same_title = entry.get("title") == item.get("title")
+        same_created = entry.get("created_at") == item.get("created_at") if entry.get("created_at") else True
+        same_due = (entry.get("due") == item.get("due")) or (entry.get("date") == item.get("date"))
+        
+        if same_title and (same_created or same_due):
             list_data[i] = update_fn(entry)
             return True
     return False
@@ -93,10 +90,10 @@ def get_daily_motivation():
 # --- Detail renderers ---
 def render_task_detail(task, colors):
     st.markdown("<div class='detail-card'>", unsafe_allow_html=True)
-    st.markdown(f"<div style='display:flex;justify-content:space-between;align-items:center;'>"
-                f"<h3 style='margin:0'>{task.get('title','Untitled')}</h3>"
-                f"<span style='background:#eef9f1;padding:6px;border-radius:8px;color:#2e8b57;font-weight:600;'>Aufgabe</span>"
-                f"</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='display:flex;justify-content:space-between;align-items:center;'>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='margin:0'>{task.get('title','Untitled')}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<span style='background:#eef9f1;padding:6px;border-radius:8px;color:#2e8b57;font-weight:600;'>Aufgabe</span>", unsafe_allow_html=True)
+    st.markdown(f"</div>", unsafe_allow_html=True)
 
     st.markdown(f"<div style='margin-top:8px;color:#666'>{task.get('subject','')}</div>", unsafe_allow_html=True)
     st.markdown("<hr/>", unsafe_allow_html=True)
@@ -105,7 +102,7 @@ def render_task_detail(task, colors):
     duration = task.get("duration_min", task.get("duration", "—"))
     notes = task.get("notes", "")
     st.markdown(f"<b>Fällig am</b><br><div style='color:#333'>{due}</div>", unsafe_allow_html=True)
-    st.markdown(f"<b>Dauer</b><br><div style='color:#333'>{duration}</div>", unsafe_allow_html=True)
+    st.markdown(f"<b>Dauer</b><br><div style='color:#333'>{duration} Minuten</div>", unsafe_allow_html=True)
     if notes:
         st.markdown("<b>Notizen</b>", unsafe_allow_html=True)
         st.markdown(f"<div style='color:#444'>{notes}</div>", unsafe_allow_html=True)
@@ -115,17 +112,15 @@ def render_task_detail(task, colors):
     checked = task.get("checked", [False] * len(checklist))
     for i, item in enumerate(checklist):
         ch = checked[i] if i < len(checked) else False
-        st.checkbox(item, value=ch, key=f"task_chk_{task.get('timestamp','')}_{i}")
+        st.checkbox(item, value=ch, key=f"task_chk_{task.get('created_at', task.get('timestamp',''))}_{i}")
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
-    if st.button("Bearbeiten", key="edit_task"):
-        st.info("Bearbeiten: noch nicht implementiert")
     if st.button("Als erledigt markieren", key="done_task"):
         ok = mark_task_done(task)
         if ok:
             st.success("Aufgabe als erledigt markiert")
             st.session_state.selected = None
-            st.rerun()  # Korrigiert von st.experimental_rerun()
+            st.rerun()  # Behebt st.experimental_rerun()
         else:
             st.error("Konnte Aufgabe nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -133,10 +128,10 @@ def render_task_detail(task, colors):
 
 def render_exam_detail(exam, colors):
     st.markdown("<div class='detail-card'>", unsafe_allow_html=True)
-    st.markdown(f"<div style='display:flex;justify-content:space-between;align-items:center;'>"
-                f"<h3 style='margin:0'>{exam.get('title','Untitled')}</h3>"
-                f"<span style='background:#fff0f3;padding:6px;border-radius:8px;color:#c0392b;font-weight:600;'>Prüfung</span>"
-                f"</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='display:flex;justify-content:space-between;align-items:center;'>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='margin:0'>{exam.get('title','Untitled')}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<span style='background:#fff0f3;padding:6px;border-radius:8px;color:#c0392b;font-weight:600;'>Prüfung</span>", unsafe_allow_html=True)
+    st.markdown(f"</div>", unsafe_allow_html=True)
 
     date_str = exam.get("date", "—")
     time_str = exam.get("time", exam.get("time", "—"))
@@ -170,14 +165,12 @@ def render_exam_detail(exam, colors):
         st.markdown(f"<div style='color:#444'>{notes}</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
-    if st.button("Bearbeiten", key="edit_exam"):
-        st.info("Bearbeiten: noch nicht implementiert")
     if st.button("Als erledigt markieren", key="done_exam"):
         ok = mark_exam_done(exam)
         if ok:
             st.success("Prüfung als erledigt markiert")
             st.session_state.selected = None
-            st.rerun()  # Korrigiert von st.experimental_rerun()
+            st.rerun()  # Behebt st.experimental_rerun()
         else:
             st.error("Konnte Prüfung nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -205,7 +198,7 @@ def show_sidebar_nav():
             ("👥 Team", "Team"),
         ]
         for label, page in nav_items:
-            if st.button(label, use_container_width=True):
+            if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):
                 st.session_state.page = page
                 st.rerun()
         st.markdown("---")
@@ -216,7 +209,7 @@ def show_sidebar_nav():
             "</div>",
             unsafe_allow_html=True
         )
-        if st.button("Logout", use_container_width=True):
+        if st.button("Logout", use_container_width=True, key="logout_sidebar"):
             st.session_state.username = None
             st.rerun()
 
@@ -229,7 +222,12 @@ def show_home_page():
 
     colors = get_theme_colors()
     apply_theme()
-    show_theme_switcher()
+    
+    # Verhindert DuplicateKey Error, falls show_theme_switcher() schon woanders geladen wird
+    try:
+        show_theme_switcher()
+    except Exception:
+        pass
 
     st.markdown(
         f"""
@@ -242,10 +240,19 @@ def show_home_page():
         unsafe_allow_html=True
     )
 
-    # --- DYNAMISCHE FORTSCHRITTSBERECHNUNG ---
+    # --- DATEN LADEN ---
     tasks = load_tasks()
     exams = load_exams()
     
+    # --- DYNAMISCHE PUNKTE- & LEVELBERECHNUNG ---
+    # Berechnet Punkte dynamisch (z.B. 20 Punkte pro erledigter Aufgabe / Prüfung)
+    total_points = sum(int(t.get("points", 20)) for t in tasks if t.get("done", False)) + sum(int(e.get("points", 50)) for e in exams if e.get("done", False))
+    
+    # Nutzt deine Logik aus der point_system_page.py
+    level_data = calc_level_and_progress(total_points)
+    aktuelle_stufe = level_data.get("level", 1)
+
+    # --- DYNAMISCHE TAGESFORTSCHRITT-BERECHNUNG ---
     done_tasks = sum(1 for t in tasks if t.get("done", False))
     done_exams = sum(1 for e in exams if e.get("done", False))
     
@@ -254,7 +261,7 @@ def show_home_page():
     
     fortschritt_prozent = int((total_done / total_items) * 100) if total_items > 0 else 0
 
-    # --- TAGESFORTSCHRITT (Volle Breite bündig) ---
+    # --- TAGESFORTSCHRITT ANZEIGEN ---
     st.markdown("<div class='card' style='margin-bottom: 24px;'>", unsafe_allow_html=True)
     st.markdown("#### Tagesfortschritt")
     st.progress(fortschritt_prozent / 100.0)
@@ -262,7 +269,7 @@ def show_home_page():
     st.caption("Super gemacht! Weiter so! 💪")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- ÜBERSICHT MIT GROSSEN EMOJIS (56px) ---
+    # --- ÜBERSICHT MIT DYNAMISCHEN BADGES ---
     st.markdown("#### Deine Übersicht")
     task_count_todo = len([t for t in tasks if not t.get("done", False)])
     exam_count_todo = len([e for e in exams if not e.get("done", False)])
@@ -272,14 +279,14 @@ def show_home_page():
         <div style='display:flex;gap:40px;justify-content:center;margin-top:12px;margin-bottom:24px;'>
             <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>📅</div><b style='font-size:16px;'>{task_count_todo}</b><br><span style='font-size:12px;color:#374151;'>Aufgaben</span></div>
             <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>📚</div><b style='font-size:16px;'>{exam_count_todo}</b><br><span style='font-size:12px;color:#374151;'>Prüfungen</span></div>
-            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>⭐</div><b style='font-size:16px;'>5</b><br><span style='font-size:12px;color:#374151;'>Stufe</span></div>
-            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>🏆</div><b style='font-size:16px;'>120</b><br><span style='font-size:12px;color:#374151;'>Punkte</span></div>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>⭐</div><b style='font-size:16px;'>{aktuelle_stufe}</b><br><span style='font-size:12px;color:#374151;'>Stufe</span></div>
+            <div style='text-align:center;'><div style='font-size:56px;margin-bottom:6px;'>🏆</div><b style='font-size:16px;'>{total_points}</b><br><span style='font-size:12px;color:#374151;'>Punkte</span></div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    # If an item is selected, render its detail view
+    # Falls ein Element zur Detailansicht ausgewählt wurde
     if st.session_state.selected:
         sel = st.session_state.selected
         st.markdown("<div class='card'>", unsafe_allow_html=True)
@@ -296,7 +303,7 @@ def show_home_page():
         st.markdown("</div>", unsafe_allow_html=True)
         return
 
-    # --- TASKS & EXAMS (Karten) ---
+    # --- KARTEN-SEKTION (Nächste Aufgabe / Prüfung) ---
     col4, col5, col6 = st.columns(3)
     next_task = get_next_task(tasks)
 
@@ -304,7 +311,7 @@ def show_home_page():
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("##### Nächste Aufgabe")
         if next_task:
-            st.success(f"{next_task.get('title','')}\n\nFällig am: {next_task.get('due','')}")
+            st.success(f"**{next_task.get('title','')}**\n\nFällig am: {next_task.get('due','')}")
             if st.button("Jetzt starten", key="start_now"):
                 st.session_state.selected = {'type':'task','item': copy.deepcopy(next_task)}
                 st.rerun()
@@ -317,7 +324,7 @@ def show_home_page():
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("##### Nächste Prüfung")
         if next_exam:
-            st.warning(f"{next_exam.get('title','')}\n\nDatum: {next_exam.get('date','')}")
+            st.warning(f"**{next_exam.get('title','')}**\n\nDatum: {next_exam.get('date','')}")
             if st.button("Prüfung ansehen", key="view_exam"):
                 st.session_state.selected = {'type':'exam','item': copy.deepcopy(next_exam)}
                 st.rerun()
@@ -332,16 +339,30 @@ def show_home_page():
         st.success(f"„{motivation}“")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- WEEK OVERVIEW ---
+    # --- DYNAMISCHE WOCHENÜBERSICHT ---
     st.markdown("<div class='card' style='margin-top: 24px;'>", unsafe_allow_html=True)
     st.markdown("#### Deine Woche auf einen Blick")
     days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-    today_dt = datetime.now()
+    
+    # Aktuellen Montag als Startpunkt ermitteln
+    today_date = date.today()
+    monday_date = today_date - timedelta(days=today_date.weekday())
+    
     cols = st.columns(7)
     for i, col in enumerate(cols):
+        current_day = monday_date + timedelta(days=i)
+        day_str = current_day.isoformat()
+        
+        # Holen aller Aufgaben und Prüfungen für diesen Wochentag
+        day_items = [t for t in tasks if t.get("due") == day_str] + [e for e in exams if e.get("date") == day_str]
+        day_done = sum(1 for item in day_items if item.get("done", False))
+        
+        # Berechnen des Erledigungsgrades für diesen Wochentag
+        day_progress = (day_done / len(day_items)) if len(day_items) > 0 else 0.0
+        
         with col:
             st.markdown(f"**{days[i]}**")
-            st.markdown(f"{(today_dt + timedelta(days=i)).day}")
-            st.progress([0.7, 0.3, 0.5, 0.8, 0.6, 0.2, 0.1][i])
-    st.markdown(f"<div style='text-align:right;'><a href='#' style='color:{colors['primary']};text-decoration:underline;'>Zur Wochenübersicht</a></div>", unsafe_allow_html=True)
+            st.markdown(f"{current_day.day}.{current_day.month}.")
+            st.progress(day_progress)
+            
     st.markdown("</div>", unsafe_allow_html=True)
