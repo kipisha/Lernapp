@@ -4,6 +4,8 @@
         "date": "2026-05-27",
         "priority": "Hoch",
         "points": 3,
-        "description": ""
+        "description": "",
+        "done": true,
+        "done_at": "2026-05-24T06:12:35.326559"
     }
 ]
