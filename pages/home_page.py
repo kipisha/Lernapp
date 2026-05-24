@@ -125,7 +125,7 @@ def render_task_detail(task, colors):
         if ok:
             st.success("Aufgabe als erledigt markiert")
             st.session_state.selected = None
-            st.experimental_rerun()
+            st.rerun()  # Korrigiert von st.experimental_rerun()
         else:
             st.error("Konnte Aufgabe nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -177,7 +177,7 @@ def render_exam_detail(exam, colors):
         if ok:
             st.success("Prüfung als erledigt markiert")
             st.session_state.selected = None
-            st.experimental_rerun()
+            st.rerun()  # Korrigiert von st.experimental_rerun()
         else:
             st.error("Konnte Prüfung nicht als erledigt markieren")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -254,7 +254,7 @@ def show_home_page():
     
     fortschritt_prozent = int((total_done / total_items) * 100) if total_items > 0 else 0
 
-    # --- TAGESFORTSCHRITT (Erstreckt sich über die volle Breite) ---
+    # --- TAGESFORTSCHRITT (Volle Breite bündig) ---
     st.markdown("<div class='card' style='margin-bottom: 24px;'>", unsafe_allow_html=True)
     st.markdown("#### Tagesfortschritt")
     st.progress(fortschritt_prozent / 100.0)
@@ -262,7 +262,7 @@ def show_home_page():
     st.caption("Super gemacht! Weiter so! 💪")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- ÜBERSICHT MIT NOCH GRÖSSEREN EMOJIS (56px) ---
+    # --- ÜBERSICHT MIT GROSSEN EMOJIS (56px) ---
     st.markdown("#### Deine Übersicht")
     task_count_todo = len([t for t in tasks if not t.get("done", False)])
     exam_count_todo = len([e for e in exams if not e.get("done", False)])
