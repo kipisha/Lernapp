@@ -45,8 +45,7 @@ if "username" not in st.session_state or st.session_state.username is None:
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-if st.session_state.page == "Home":
-    show_home_page()
+
 elif st.session_state.page == "Timer":
     show_timer_page()
 # ...
@@ -224,6 +223,5 @@ elif st.session_state.page == "Team":
 elif st.session_state.page == "Punktesystem":
     show_point_system_page()
 
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+
 
