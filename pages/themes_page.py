@@ -67,7 +67,7 @@ def show_theme_switcher():
     """Zeigt die Theme-Buttons an"""
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        if st.button("🌸 Cozy", key="theme_btn_cozyy"):
+        if st.button("🌸 Cozy", key="theme_btn_cozy"):
             st.session_state.theme = "Cozy"
             st.rerun()
     with col2:

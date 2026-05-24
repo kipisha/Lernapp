@@ -209,7 +209,6 @@ if "theme" not in st.session_state:
 
 # immer Sidebar anzeigen
 show_sidebar_nav()
-st.button("🌸 Cozy", key="theme_btn_cozy_sidebar")
 
 if st.session_state.page == "Home":
     show_home_page()
