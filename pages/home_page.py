@@ -201,14 +201,7 @@ def show_sidebar_nav():
             if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):
                 st.session_state.page = page
                 st.rerun()
-        st.markdown("---")
-        st.markdown(
-            "<div style='background:#fff7f0;padding:10px;border-radius:12px;display:flex;align-items:center;'>"
-            "<span style='font-size:24px;'>🔥</span>"
-            "<div style='margin-left:10px;'><b>7 Tage Streak</b><br><span style='font-size:12px;color:#b0aeb8;'>Weiter so! 🔥</span></div>"
-            "</div>",
-            unsafe_allow_html=True
-        )
+     
         if st.button("Logout", use_container_width=True, key="logout_sidebar"):
             st.session_state.username = None
             st.rerun()
