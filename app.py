@@ -16,7 +16,8 @@ import html
 
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
-from pages.home_page import show_home_page, show_sidebar_nav
+
+from pages.home_page import show_home_page, show_sidebar_nav, show_profile_sidebar_button
 
 
 # ---------------------------------------------------------
@@ -28,9 +29,14 @@ data_manager = DataManager(
     fs_root_folder="lernapp"
 )
 login_manager = LoginManager(data_manager)
+
+show_profile_sidebar_button()
+
 login_manager.login_register()
 if "username" not in st.session_state or st.session_state.username is None:
     st.stop()
+
+show_sidebar_nav()
 
 # ...
 if "page" not in st.session_state:
@@ -193,8 +199,6 @@ if "page" not in st.session_state:
 if "theme" not in st.session_state:
     st.session_state.theme = "default"
 
-# immer Sidebar anzeigen
-show_sidebar_nav()
 
 if st.session_state.page == "Home":
     show_home_page()

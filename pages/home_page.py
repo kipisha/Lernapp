@@ -185,6 +185,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Sidebar ---
+
+def show_profile_sidebar_button():
+    if st.session_state.get("authentication_status") is True:
+        with st.sidebar:
+            if st.button("👤 Profil", use_container_width=True, key="nav_btn_Profil"):
+                st.session_state.page = "Profil"
+                st.rerun()
+
+            st.markdown(
+                "<div style='margin: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.1);'></div>",
+                unsafe_allow_html=True,
+            )
+
+    
 def show_sidebar_nav():
     colors = get_theme_colors()
     with st.sidebar:
@@ -196,7 +210,6 @@ def show_sidebar_nav():
             ("📚 Prüfungen", "Prüfungen"),
             ("⭐ Punkte", "Punkte"),
             ("👥 Team", "Team"),
-            ("👤 Profil", "Profil"),
         ]
         for label, page in nav_items:
             if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):
