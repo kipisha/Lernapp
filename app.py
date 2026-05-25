@@ -37,6 +37,9 @@ show_sidebar_nav()
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
+# ---------------------------------------------------------
+# 4.2 Benutzeroberfläche und visuelles Design (CSS)
+# ---------------------------------------------------------
 
 st.set_page_config(page_title="lernapp", page_icon=":material/home:")
 st.markdown("""
