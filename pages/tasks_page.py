@@ -45,6 +45,7 @@ def show_tasks_page():
         else:
             due_str = due_date.isoformat() if due_date else ""
 
+            checklist = ["Aufgabe lesen", "Lösen", "Kontrollieren"]
             record = {
                 "title": title.strip(),
                 "due": due_str,
@@ -56,7 +57,8 @@ def show_tasks_page():
                 "created_at": datetime.utcnow().isoformat(),
                 "done": False,        # Synchronisation mit der Home-Seite
                 "points": 20,         # Belohnungssystem
-                "checklist": ["Aufgabe lesen", "Lösen", "Kontrollieren"]
+                "checklist": checklist,
+                "checked": [False, False, False]
             }
 
             # Backup erstellen und speichern

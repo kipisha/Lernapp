@@ -36,16 +36,16 @@ def get_next_exam(exams):
 
 # --- Persist changes ---
 def _find_and_update(list_data, item, update_fn):
-    """
-    Findet ein Element in list_data passend nach Titel und Erstellungsdatum oder Fälligkeit,
-    um es krisensicher im JSON zu aktualisieren.
-    """
+    task_id = item.get("created_at") or item.get("timestamp")
     for i, entry in enumerate(list_data):
-        same_title = entry.get("title") == item.get("title")
-        same_created = entry.get("created_at") == item.get("created_at") if entry.get("created_at") else True
-        same_due = (entry.get("due") == item.get("due")) or (entry.get("date") == item.get("date"))
-        
-        if same_title and (same_created or same_due):
+        if task_id:
+            same_id = (entry.get("created_at") == task_id) or (entry.get("timestamp") == task_id)
+        else:
+            same_title = entry.get("title") == item.get("title")
+            same_due = (entry.get("due") == item.get("due")) or (entry.get("date") == item.get("date"))
+            same_id = same_title and same_due
+
+        if same_id:
             list_data[i] = update_fn(entry)
             return True
     return False
@@ -68,6 +68,16 @@ def mark_exam_done(exam):
         return True
     return False
 
+# --- Task Checklist speichern ---
+def save_task_checklist(task, checked_states):
+    dm = DataManager()
+    tasks = dm.load_user_data("tasks.json", initial_value=[])
+    updated = _find_and_update(tasks, task, lambda e: {**e, "checked": checked_states})
+    if updated:
+        dm.save_user_data(tasks, "tasks.json")
+        return True
+    return False
+
 # --- Motivation ---
 MOTIVATION_LIST = [
     "Disziplin heute, Stolz morgen.",
@@ -86,6 +96,16 @@ def get_daily_motivation():
     today = date.today().toordinal()
     random.seed(today)
     return random.choice(MOTIVATION_LIST)
+
+# --- Checkliste-Werte speichern ---
+def save_task_checklist(task, checked_states):
+    dm = DataManager()
+    tasks = dm.load_user_data("tasks.json", initial_value=[])
+    updated = _find_and_update(tasks, task, lambda e: {**e, "checked": checked_states})
+    if updated:
+        dm.save_user_data(tasks, "tasks.json")
+        return True
+    return False
 
 # --- Detail renderers ---
 def render_task_detail(task, colors):
@@ -110,9 +130,18 @@ def render_task_detail(task, colors):
     st.markdown("<b>Checkliste</b>", unsafe_allow_html=True)
     checklist = task.get("checklist", ["Aufgaben lesen", "Lösen", "Kontrollieren"])
     checked = task.get("checked", [False] * len(checklist))
+    new_checked = []
     for i, item in enumerate(checklist):
+        key = f"task_chk_{task.get('created_at', task.get('timestamp',''))}_{i}"
         ch = checked[i] if i < len(checked) else False
-        st.checkbox(item, value=ch, key=f"task_chk_{task.get('created_at', task.get('timestamp',''))}_{i}")
+        new_val = st.checkbox(item, value=ch, key=key)
+        new_checked.append(new_val)
+
+    if new_checked != checked:
+        ok = save_task_checklist(task, new_checked)
+        if ok:
+            task["checked"] = new_checked
+            st.success("Checkliste gespeichert")
 
     st.markdown("<div style='display:flex;gap:12px;margin-top:12px;'>", unsafe_allow_html=True)
     if st.button("Als erledigt markieren", key="done_task"):
