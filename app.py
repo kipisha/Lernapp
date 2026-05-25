@@ -92,7 +92,7 @@ html, body, .stApp {
 
 
 # ---------------------------------------------------------
-# ------------------------- CSS ----------------------------
+# Erweiterte CSS‑Gestaltung (Buttons, Themes, Layout)
 # ---------------------------------------------------------
 
 st.markdown(f"""
@@ -183,7 +183,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-
+# ---------------------------------------------------------
+# Seitenrouting und App‑Struktur
+# ---------------------------------------------------------
 
 # Session State initialisieren
 if "page" not in st.session_state:
