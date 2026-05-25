@@ -1,8 +1,0 @@
-[server]
-enableWebsocketCompression = false
-enableXsrfProtection = false
-enableCORS = true
-
-
-[global]
-disableWebDav = true
