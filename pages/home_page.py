@@ -83,9 +83,9 @@ MOTIVATION_LIST = [
 ]
 
 def get_daily_motivation():
-    today = date.today().toordinal()
-    random.seed(today)
-    return random.choice(MOTIVATION_LIST)
+    if "daily_motivation" not in st.session_state:
+        st.session_state.daily_motivation = random.choice(MOTIVATION_LIST)
+    return st.session_state.daily_motivation
 
 # --- Checkliste-Werte speichern ---
 def save_task_checklist(task, checked_states):
