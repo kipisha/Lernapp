@@ -1,18 +1,19 @@
 import streamlit as st
 
+# Falls noch kein Theme gesetzt ist, wird standardmäßig "Cozy" gewählt
 if "theme" not in st.session_state:
     st.session_state["theme"] = "Cozy"
 
-# Zuordnung der Button-Farben passend zum jeweiligen Mood
+# Zuordnung der spezifischen Button-Farben passend zum jeweiligen Mood
 button_colors = {
-    "Cozy": "#E26DBF",     # Dein primäres Cozy-Pink
-    "Focus": "#337b1d",    # Dein Focus-Grün
-    "Energy": "#fca311",   # Dein Energy-Orange/Gelb
-    "Minimal": "#000000"   # Dein Minimal-Schwarz
+    "Cozy": "#E26DBF",     # Cozy-Pink
+    "Focus": "#337b1d",    # Focus-Grün
+    "Energy": "#fca311",   # Energy-Orange/Gelb
+    "Minimal": "#000000"   # Minimal-Schwarz
 }
 
 def get_theme_colors():
-    """Gibt die Farben des aktuellen Themes zurück"""
+    """Gibt die Farbpalette des aktuellen Themes zurück"""
     if "theme" not in st.session_state:
         st.session_state.theme = "Cozy"
     
@@ -36,7 +37,7 @@ def get_theme_colors():
             "secondary": "#38bdf8",
             "background": "#fef9c3",
             "card": "#fffbea",
-            "text": "#22223b"
+            "text": "#22233b"
         },
         "Minimal": {
             "primary": "#000000",
@@ -60,7 +61,7 @@ def apply_theme():
     
     st.markdown(f"""
         <style>
-        /* 1. App-Hintergrund bleibt absolut unangetastet */
+        /* 1. App-Hintergrund */
         .stApp {{
             background: {colors['background']} !important;
             color: {colors['text']};
@@ -80,52 +81,70 @@ def apply_theme():
             background-image: linear-gradient(90deg, {colors['primary']} 0%, {colors['secondary']} 100%);
         }}
         
-        /* --- 4. PRÄZISER SELEKTOR NUR FÜR KLICKBARE SCHALTFLÄCHEN --- */
-        /* Wir sprechen ausschließlich Elemente an, die Streamlit explizit als interaktive Buttons deklariert */
+        /* --- 4. DER RADIKALE BUTTON-RESET (Entfernt Verläufe und lila Styles) --- */
         
+        /* Dieser Selektor greift JEDEN echten Button in der App und der Sidebar an */
         div.stButton > button,
         button[data-testid="stBaseButton-secondary"],
         button[data-testid="stBaseButton-primary"],
-        button[data-testid="stBaseButton-tertiary"] {{
+        button[data-testid="stBaseButton-tertiary"],
+        [data-testid="stSidebar"] button,
+        [data-testid="column"] button {{
+            background-image: none !important; /* Killt den lila-blauen Farbverlauf! */
             background-color: {btn_color} !important;
             color: white !important;
             border: 1px solid {btn_color} !important;
             border-radius: 10px !important;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out !important;
+            transition: all 0.2s ease-in-out !important;
         }}
         
-        /* Hover-Effekt nur für diese echten Buttons */
+        /* Hover-Effekt für alle Buttons */
         div.stButton > button:hover,
         button[data-testid="stBaseButton-secondary"]:hover,
-        button[data-testid="stBaseButton-primary"]:hover {{
+        button[data-testid="stBaseButton-primary"]:hover,
+        [data-testid="stSidebar"] button:hover,
+        [data-testid="column"] button:hover {{
+            background-image: none !important;
             background-color: {btn_color}dd !important;
             border-color: {btn_color} !important;
             color: white !important;
         }}
         
-        /* Fokus/Klick-Zustand für diese echten Buttons */
+        /* Fokus/Klick-Zustand */
         div.stButton > button:focus,
         button[data-testid="stBaseButton-secondary"]:focus,
-        button[data-testid="stBaseButton-primary"]:focus {{
+        button[data-testid="stBaseButton-primary"]:focus,
+        [data-testid="stSidebar"] button:focus,
+        [data-testid="column"] button:focus {{
+            background-image: none !important;
             border-color: {btn_color} !important;
             background-color: {btn_color} !important;
             color: white !important;
             box-shadow: 0 0 0 0.2rem {btn_color}33 !important;
         }}
         
-        /* Text im Inneren der echten Buttons erzwingen */
+        /* Text im Inneren der Buttons weiß und fett machen */
         div.stButton > button p,
         button[data-testid="stBaseButton-secondary"] p,
-        button[data-testid="stBaseButton-primary"] p {{
+        button[data-testid="stBaseButton-primary"] p,
+        [data-testid="stSidebar"] button p,
+        [data-testid="column"] button p {{
             color: white !important;
             font-weight: 600 !important;
+        }}
+        
+        /* --- 5. FALLBACK FÜR CUSTOM-SIDEBAR-MENÜS --- */
+        /* Falls du 'streamlit_option_menu' oder HTML in der Sidebar nutzt */
+        .nav-link.active {{
+            background-image: none !important;
+            background-color: {btn_color} !important;
         }}
         </style>
     """, unsafe_allow_html=True)
 
 def show_theme_switcher():
-    """Zeigt die Theme-Buttons an"""
+    """Zeigt die Theme-Auswahl-Buttons an"""
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         if st.button("🌸 Cozy", key="theme_btn_cozy"):
