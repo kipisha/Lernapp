@@ -27,7 +27,6 @@ from utils.login_manager import LoginManager
 from pages.home_page import show_home_page, show_sidebar_nav
 
 
-
 # ---------------------------------------------------------
 # ------------------------- LOGIN --------------------------
 # ---------------------------------------------------------
@@ -45,10 +44,6 @@ if "username" not in st.session_state or st.session_state.username is None:
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-
-
-
-# ...
 
 st.set_page_config(page_title="smartplan", page_icon=":material/home:")
 st.markdown("""
