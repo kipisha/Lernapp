@@ -85,7 +85,7 @@ Die App motivierender und interaktiver machen.
 
 ### Aufgaben
 - Punktesystem hinzufügen
-- Punkte beim Abschließen von Aufgaben vergeben
+- Punkte beim Abschliessen von Aufgaben vergeben
 - Level-System entwickeln
 - Fortschritt und XP anzeigen
 - Erste Gamer-Ansicht gestalten

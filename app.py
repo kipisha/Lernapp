@@ -50,7 +50,7 @@ html, body, .stApp {
     background: linear-gradient(135deg, #dbeafe, #fce7f3);
     background-attachment: fixed;}
 
-/* Entfernt ALLE weißen Balken */
+/* Entfernt ALLE weissen Balken */
 .stAppViewContainer, .main, .block-container {
     background: transparent !important;}
 
@@ -206,6 +206,3 @@ elif st.session_state.page == "Punkte":
     show_point_system_page()
 elif st.session_state.page == "Profil":
     show_profile_page()
-
-
-

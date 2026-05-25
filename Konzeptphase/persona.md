@@ -143,7 +143,7 @@
 ## 12. Tick / Eigenheiten
 - Denkt „Ich merke mir das schon“ → vergisst es aber  
 - Macht viele Screenshots, sortiert sie nie  
-- Lernt erst, wenn der Druck groß wird  
+- Lernt erst, wenn der Druck gross wird  
 - Redet mit sich selbst beim Lernen („Okay Lara, Fokus…“)  
 - Belohnt sich nach Prüfungen mit Bubble Tea  
 
