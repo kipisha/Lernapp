@@ -4,7 +4,7 @@ import streamlit as st
 from pages.home_page import show_home_page
 from pages.weekly_page import show_weekly_page
 from pages.tasks_page import show_tasks_page
-from team.team_page import show_team_page
+from pages.team_page import show_team_page
 from pages.exams_page import show_exams_page
 from pages.point_system_page import show_point_system_page
 from pages.profile_page import show_profile_page
