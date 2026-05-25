@@ -196,6 +196,7 @@ def show_sidebar_nav():
             ("📚 Prüfungen", "Prüfungen"),
             ("⭐ Punkte", "Punkte"),
             ("👥 Team", "Team"),
+            ("👤 Profil", "Profil"),
         ]
         for label, page in nav_items:
             if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):

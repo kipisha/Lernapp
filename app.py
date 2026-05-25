@@ -7,6 +7,7 @@ from pages.tasks_page import show_tasks_page
 from team.team_page import show_team_page
 from pages.exams_page import show_exams_page
 from pages.point_system_page import show_point_system_page
+from pages.profile_page import show_profile_page
 
 
 from utils.data_manager import DataManager
@@ -208,6 +209,8 @@ elif st.session_state.page == "Team":
     show_team_page()
 elif st.session_state.page == "Punkte":
     show_point_system_page()
+elif st.session_state.page == "Profil":
+    show_profile_page()
 
 
 
