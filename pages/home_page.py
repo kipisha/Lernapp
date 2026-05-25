@@ -68,16 +68,6 @@ def mark_exam_done(exam):
         return True
     return False
 
-# --- Task Checklist speichern ---
-def save_task_checklist(task, checked_states):
-    dm = DataManager()
-    tasks = dm.load_user_data("tasks.json", initial_value=[])
-    updated = _find_and_update(tasks, task, lambda e: {**e, "checked": checked_states})
-    if updated:
-        dm.save_user_data(tasks, "tasks.json")
-        return True
-    return False
-
 # --- Motivation ---
 MOTIVATION_LIST = [
     "Disziplin heute, Stolz morgen.",
