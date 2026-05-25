@@ -10,11 +10,9 @@ import copy
 def load_data(filename):
     return DataManager().load_user_data(filename, initial_value=[])
 
-
 def save_done(item, filename):
     dm = DataManager()
     data = load_data(filename)
-
     updated = _find_and_update(
         data,
         item,
@@ -24,28 +22,21 @@ def save_done(item, filename):
             "done_at": datetime.utcnow().isoformat()
         }
     )
-
     if updated:
         dm.save_user_data(data, filename)
-
     return updated
-
 
 def load_tasks():
     return load_data("tasks.json")
 
-
 def load_exams():
     return load_data("exams.json")
-
 
 def mark_task_done(task):
     return save_done(task, "tasks.json")
 
-
 def mark_exam_done(exam):
     return save_done(exam, "exams.json")
-
 
 # Aufgaben ignorieren, die bereits erledigt sind
 def get_next_item(items, date_key):
@@ -91,7 +82,6 @@ MOTIVATION_LIST = [
     "Du wächst an deinen Herausforderungen.",
     "Konstanz schlägt Talent."
 ]
-
 def get_daily_motivation():
     if "daily_motivation" not in st.session_state:
         st.session_state.daily_motivation = random.choice(MOTIVATION_LIST)
@@ -114,7 +104,6 @@ def render_task_detail(task, colors):
     st.markdown(f"<h3 style='margin:0'>{task.get('title','Untitled')}</h3>", unsafe_allow_html=True)
     st.markdown(f"<span style='background:#eef9f1;padding:6px;border-radius:8px;color:#2e8b57;font-weight:600;'>Aufgabe</span>", unsafe_allow_html=True)
     st.markdown(f"</div>", unsafe_allow_html=True)
-
     st.markdown(f"<div style='margin-top:8px;color:#666'>{task.get('subject','')}</div>", unsafe_allow_html=True)
     st.markdown("<hr/>", unsafe_allow_html=True)
 
@@ -136,7 +125,7 @@ def render_task_detail(task, colors):
         ch = checked[i] if i < len(checked) else False
         new_val = st.checkbox(item, value=ch, key=key)
         new_checked.append(new_val)
-
+        
     if new_checked != checked:
         ok = save_task_checklist(task, new_checked)
         if ok:
@@ -188,7 +177,6 @@ def render_exam_detail(exam, colors):
     st.markdown("<b>Fortschritt</b>", unsafe_allow_html=True)
     st.progress(p)
     st.markdown(f"<div style='text-align:right;color:#666'>{int(p*100)}%</div>", unsafe_allow_html=True)
-
     if notes:
         st.markdown("<b>Notizen</b>", unsafe_allow_html=True)
         st.markdown(f"<div style='color:#444'>{notes}</div>", unsafe_allow_html=True)
@@ -214,7 +202,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Sidebar ---
-
 def show_profile_sidebar_button():
     if st.session_state.get("authentication_status") is True:
         with st.sidebar:
@@ -227,7 +214,6 @@ def show_profile_sidebar_button():
                 unsafe_allow_html=True,
             )
 
-    
 def show_sidebar_nav():
     with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
@@ -243,7 +229,6 @@ def show_sidebar_nav():
             if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):
                 st.session_state.page = page
                 st.rerun()
-
 
 # --- Main page ---
 def show_home_page():
