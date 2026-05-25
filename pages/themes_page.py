@@ -20,7 +20,7 @@ def get_theme_colors():
     themes = {
         "Cozy": {
             "primary": "#E26DBF",
-            "secondary": "#bf60df",
+            "secondary": "#c652ec",
             "background": "#ffe6f6",
             "card": "#fffadc",
             "text": "#000000"
