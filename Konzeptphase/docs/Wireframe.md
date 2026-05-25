@@ -1,11 +1,3 @@
 ## 1. Wireframe
 
-![Wireframe](/docs/images/Wireframe.jpg)
-
-
-
-
-
-
-
-
+![Wireframe](../Konzeptphase/images/Wireframe.jpg)
