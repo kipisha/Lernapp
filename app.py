@@ -1,7 +1,4 @@
 import streamlit as st
-import pandas as pd
-import altair as alt
-from datetime import datetime, timedelta
 
 # Pages
 from pages.home_page import show_home_page
@@ -11,15 +8,9 @@ from team.team_page import show_team_page
 from pages.exams_page import show_exams_page
 from pages.point_system_page import show_point_system_page
 
-from functions.week_helpers import show_weekly_view
-from functions.productivity_helpers import show_productivity_view
-import html
 
 from utils.data_manager import DataManager
 
-from datetime import datetime, timedelta
-from functions.week_helpers import show_weekly_view
-from functions.productivity_helpers import show_productivity_view
 import html
 
 from utils.data_manager import DataManager
