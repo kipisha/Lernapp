@@ -26,10 +26,10 @@ def get_theme_colors():
             "text": "#000000"
         },
         "Focus": {
-            "primary": "#337b1d",
-            "secondary": "#f1ba53",
+            "primary": "#5aa852",
+            "secondary": "#8fe5ff",
             "background": "#d4f0cc",
-            "card": "#508662",
+            "card": "#82C4EF",
             "text": "#000000"
         },
         "Energy": {
@@ -41,9 +41,9 @@ def get_theme_colors():
         },
         "Minimal": {
             "primary": "#000000",
-            "secondary": "#1f2937",
-            "background": "#fff9ec",
-            "card": "#f5f5f5",
+            "secondary": "#a2a4a7",
+            "background": "#ffffff",
+            "card": "#dadada",
             "text": "#222"
         }
     }
