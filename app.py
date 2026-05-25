@@ -16,7 +16,7 @@ import html
 from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
-from pages.home_page import show_home_page, show_sidebar_nav, show_profile_sidebar_button
+from pages.home_page import show_home_page, show_profile_sidebar_button, show_sidebar_nav
 
 # ---------------------------------------------------------
 # ------------------------- LOGIN --------------------------
@@ -29,7 +29,6 @@ data_manager = DataManager(
 login_manager = LoginManager(data_manager)
 
 show_profile_sidebar_button()
-
 login_manager.login_register()
 if "username" not in st.session_state or st.session_state.username is None:
     st.stop()
