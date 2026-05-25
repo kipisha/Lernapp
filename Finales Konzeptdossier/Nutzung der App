@@ -1,0 +1,85 @@
+# 📘 Projektbeschreibung: Nutzung der App *smartplan*
+
+Die App *smartplan* unterstützt Nutzer dabei, ihre Lernorganisation übersichtlich und motivierend zu gestalten. Sie kombiniert Aufgaben‑ und Prüfungsverwaltung mit einem ansprechenden Punktesystem, das den Lernfortschritt sichtbar macht. Die folgende Beschreibung erklärt die wichtigsten Funktionen der App verständlich und strukturiert.
+
+---
+
+## 1. Dashboard & Theme‑Auswahl
+
+Beim Öffnen der App gelangt der Nutzer direkt auf das Dashboard.  
+Im oberen Bereich stehen **vier Themes** zur Verfügung, die mit einem Klick ausgewählt werden können.  
+Diese Themes passen die **Stimmung und den Hintergrund** der App an. Je nach persönlicher Tagesform kann der Nutzer so zwischen ruhigen, fokussierten oder energiegeladenen Designs wechseln.
+
+Unterhalb der Themes zeigt das Dashboard eine kompakte Übersicht über:
+
+- anstehende **Aufgaben**,  
+- anstehende **Prüfungen**,  
+- den **Tagesfortschritt**,  
+- sowie eine **Wochenübersicht**, die zeigt, wie viel bereits erledigt wurde.
+
+---
+
+## 2. Aufgabenverwaltung
+
+Auf der Aufgabenseite können neue Aufgaben erstellt werden.  
+Folgende Angaben sind möglich:
+
+- Titel  
+- Fälligkeitsdatum  
+- Dauer in Minuten  
+- Fach  
+- Kategorie  
+- Notizen  
+
+Erstellte Aufgaben erscheinen anschließend im Dashboard und können dort oder in der Aufgabenliste als **erledigt markiert** werden.  
+Beim Abhaken wird der Fortschritt automatisch aktualisiert.
+
+---
+
+## 3. Prüfungsverwaltung & Lernzeit‑Tracking
+
+Für Prüfungen gibt es eine eigene Eingabemaske.  
+Hier können Nutzer:
+
+- das **Fach**,  
+- das **Prüfungsdatum**,  
+- sowie eine geplante **Lernzeit in Minuten** eintragen.
+
+Während der Prüfungsvorbereitung kann der Nutzer über einen **Schieberegler (Slider)** die tatsächlich investierten Minuten eintragen.  
+Die App berechnet daraus automatisch:
+
+- den Lernfortschritt,  
+- die Produktivität,  
+- und aktualisiert die Wochenstatistik.
+
+Prüfungen können ebenfalls direkt im Dashboard als erledigt markiert werden.
+
+---
+
+## 4. Wochenfortschritt & Übersicht
+
+Im unteren Bereich des Dashboards befindet sich eine **Wochenübersicht**, die zeigt:
+
+- wie viele Aufgaben und Prüfungen geplant waren,  
+- wie viele davon erledigt wurden,  
+- und wie hoch der prozentuale Wochenfortschritt ist.
+
+Diese Darstellung ermöglicht eine schnelle Einschätzung der eigenen Lernleistung über die Woche hinweg.
+
+---
+
+## 5. Punktesystem & Level‑Mechanik (Gamification)
+
+Ein zentrales Element der App ist das integrierte **Punktesystem**:
+
+- Für erledigte Aufgaben und Lernminuten werden **Erfahrungspunkte (XP)** vergeben.  
+- Mit steigender XP‑Zahl steigt der Nutzer im **Level** auf.  
+- Neue Level schalten **Badges, Titel und Fortschrittsstufen** frei.  
+- Eine Grafik zeigt den **EP‑Verlauf** über die Zeit.
+
+Dieses System sorgt für zusätzliche Motivation und macht den Lernfortschritt sichtbar.
+
+
+
+
+

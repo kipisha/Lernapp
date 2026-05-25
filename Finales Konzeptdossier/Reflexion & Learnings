@@ -1,0 +1,9 @@
+## 🧠 Persönliche Reflexion & Learnings
+
+*Rückblick auf die technischen und persönlichen Erkenntnisse während der eigentlichen Entwicklungsphase.*
+
+Wir haben gelernt, wie effizient sich mit Streamlit funktionale Benutzeroberflächen in Python erstellen lassen. Die reaktive Natur des Frameworks, bei der der Code bei jeder Interaktion automatisch neu ausgeführt wird, hat die Umsetzung des Punktesystems sehr erleichtert. Genau dieses Verhalten stellte uns jedoch beim State-Management vor eine große Hürde. Wir mussten lernen, wie man Daten wie den Punktestand und die Aufgabenlisten über `st.session_state` temporär im Speicher hält, damit sie nicht bei jedem Klick wieder gelöscht werden.
+
+Zu Beginn des Projekts neigte der Code dazu, sehr lang und unübersichtlich zu werden. Dies führte dazu, dass bei fast jeder kleinen Änderung sofort neue Fehlermeldungen auftraten. Als wichtiges technisches Learning haben wir das Projekt daher in mehrere separate Dateien aufgeteilt. Diese Multi-File-Struktur trennt nun Logik, UI-Komponenten und Datenverwaltung sauber voneinander, was die Wartbarkeit drastisch erhöht und die Fehleranfälligkeit reduziert hat.
+
+Ein essenzielles persönliches Learning war der Umgang mit Fehlermeldungen und die Entwicklung von Frustrationstoleranz. Wir haben gelernt, dass Bugs ein ganz normaler Teil des Entwicklungsprozesses sind. Anstatt frustriert zu sein, haben wir Geduld entwickelt, Fehlermeldungen systematisch zu analysieren und strukturiert nach Lösungen zu suchen. Zudem half uns die bewusste Reduktion des Funktionsumfangs: Der Verzicht auf private Termine schärfte das Profil der App als reines Fokus- und Lerntool für den akademischen Erfolg.

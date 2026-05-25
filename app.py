@@ -19,23 +19,21 @@ from utils.login_manager import LoginManager
 from pages.home_page import show_home_page, show_profile_sidebar_button, show_sidebar_nav
 
 # ---------------------------------------------------------
-# ------------------------- LOGIN --------------------------
+# 4.1 Login‑System und Zugriffskontrolle
 # ---------------------------------------------------------
 
 data_manager = DataManager(
     fs_protocol='webdav',
-    fs_root_folder="lernapp"
-)
+    fs_root_folder="lernapp")
 login_manager = LoginManager(data_manager)
-
-show_profile_sidebar_button()
 login_manager.login_register()
+show_profile_sidebar_button()
 if "username" not in st.session_state or st.session_state.username is None:
     st.stop()
 
 show_sidebar_nav()
 
-# ...
+# Standardseite setzen
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
@@ -47,13 +45,11 @@ st.markdown("""
 html, body, .stApp {
     height: 100%;
     background: linear-gradient(135deg, #dbeafe, #fce7f3);
-    background-attachment: fixed;
-}
+    background-attachment: fixed;}
 
 /* Entfernt ALLE weißen Balken */
 .stAppViewContainer, .main, .block-container {
-    background: transparent !important;
-}
+    background: transparent !important;}
 
 /* Cards wirken wie schwebende Elemente */
 .card {
@@ -62,8 +58,7 @@ html, body, .stApp {
     border-radius: 16px;
     padding: 22px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 30px;
-}
+    margin-bottom: 30px;}
 
 /* Eingabefelder */
 .stTextInput > div > div > input,
@@ -73,8 +68,7 @@ html, body, .stApp {
     border: 1px solid #d0d0d0;
     padding: 10px;
     background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(6px);
-}
+    backdrop-filter: blur(6px);}
 
 /* Buttons */
 .stButton > button {
@@ -84,13 +78,11 @@ html, body, .stApp {
     padding: 10px 22px;
     font-weight: bold;
     border: none;
-    transition: 0.2s;
-}
+    transition: 0.2s;}
 
 .stButton > button:hover {
     transform: scale(1.03);
-    background: linear-gradient(135deg, #4338ca, #7e22ce);
-}
+    background: linear-gradient(135deg, #4338ca, #7e22ce);}
 
 </style>
 """, unsafe_allow_html=True)

@@ -1,0 +1,96 @@
+# Nutzertestung – Abschließende Evaluation
+
+Diese Testphase wurde durchgeführt, um die Benutzerfreundlichkeit, Verständlichkeit und Funktionalität der App *smartplan* zu überprüfen. Ziel war es, herauszufinden, ob die App intuitiv nutzbar ist, ob die Kernfunktionen verstanden werden und welche Verbesserungsmöglichkeiten sich aus realem Nutzerfeedback ergeben.
+
+---
+## 1. Hypothesenbildung
+
+Vor Beginn der Testphase wurden folgende Hypothesen formuliert:
+### **Hypothese 1:**  
+Das Punktesystem (XP, Level‑Ups) steigert die Motivation der Nutzer, Aufgaben und Prüfungen konsequent zu bearbeiten.
+### **Hypothese 2:**  
+Die Struktur der App (Dashboard, Aufgaben, Prüfungen) ist intuitiv verständlich und ohne Anleitung nutzbar.
+### **Hypothese 3:**  
+Die Theme‑Auswahl wird als nützlich wahrgenommen und unterstützt die persönliche Stimmung beim Lernen.
+
+
+---
+
+## 2. Testprotokoll
+
+### **Testpersonen:**  
+3 Nutzer aus unterschiedlichen Bereichen (Studium, Ausbildung, Büroarbeit).
+
+### **Ablauf:**  
+Die Testpersonen sollten ohne Anleitung:
+
+1. sich einloggen  
+2. eine Aufgabe erstellen  
+3. eine Prüfung anlegen  
+4. Themes ausprobieren  
+5. den Wochenfortschritt ansehen  
+6. das Punktesystem beobachten  
+7. Feedback zu Design, Verständlichkeit und Motivation geben  
+
+### **Beobachtungen:**  
+- Alle Testpersonen fanden sich schnell im Dashboard zurecht.  
+- Aufgaben und Prüfungen konnten ohne Hilfe erstellt werden.  
+- Das Punktesystem wurde sofort verstanden und positiv kommentiert.  
+- Die Theme‑Auswahl wurde genutzt, aber nicht immer verstanden.  
+- Der gleichbleibende Motivationstext wurde als „langweilig“ empfunden.  
+- Der Wunsch nach einer Profilansicht (Name, E‑Mail) wurde mehrfach geäußert.
+
+---
+
+## 3. Auswertungstemplate & Ergebnisse
+
+| Testperson | Aufgabe erfolgreich? | Prüfung erfolgreich? | Verständnis Themes | Feedback XP-System | Zeitaufwand |
+|-----------|----------------------|----------------------|--------------------|--------------------|-------------|
+| Nutzer 1  | Ja                   | Ja                   | mittel             | motivierend        | < 2 Min     |
+| Nutzer 2  | Ja                   | Ja                   | unklar             | sehr positiv       | < 2 Min     |
+| Nutzer 3  | Ja                   | Ja                   | unklar             | positiv            | ~ 3 Min     |
+
+
+# Auswertungstemplate
+
+| **Kategorie**            | **Feedback der Nutzer**                                                                 |
+|--------------------------|-------------------------------------------------------------------------------------------|
+| **Was war gut?**      | - Schönes, modernes Design<br>- Gute Farbauswahl<br>- Übersichtliches Layout<br>- Verständlich aufgebaut |
+| **Was war schlecht?** | - Themes nicht klar verständlich<br>- Motivationstext immer gleich → wirkt langweilig     |
+| **Neue Ideen**        | - Timer‑Funktion<br>- Profilansicht (Name, E‑Mail)<br>- Geteilte Wochenplanung mit Freunden |
+| **Neue Probleme**     | - Schwierigkeiten bei Kalender‑Verknüpfung<br>- Risiko von Instabilität bei vielen neuen Funktionen |
+
+
+---
+
+## 4. Schlussfolgerung
+
+Die Testergebnisse bestätigen **Hypothese 1 und 2**:
+
+- Das XP‑System wurde von allen Testpersonen als motivierend wahrgenommen.  
+- Die Grundstruktur der App (Dashboard, Aufgaben, Prüfungen) wurde ohne Anleitung verstanden.  
+
+**Hypothese 3** wurde nur teilweise bestätigt:
+
+- Die Themes wurden zwar genutzt, aber nicht intuitiv verstanden.  
+- Hier besteht Optimierungsbedarf (z. B. kurze Beschreibung, Icons, Vorschau).
+
+### **Wichtige Erkenntnisse aus dem Test:**
+
+1. **Profilansicht fehlt:**  
+   Nutzer möchten beim Einloggen ihre Daten (Name, E‑Mail) sehen.
+
+2. **Themes müssen verständlicher werden:**  
+   Eine kurze Erklärung oder visuelle Vorschau wäre hilfreich.
+
+3. **Motivationstexte sollten dynamisch sein:**  
+   Ein rotierender Pool an Sprüchen würde die App lebendiger machen.
+
+4. **Stabilität bei Erweiterungen beachten:**  
+   Nutzer haben Sorge, dass zusätzliche Features die App verlangsamen könnten.
+
+### **Fazit:**  
+Die App ist in ihrer Grundfunktion intuitiv, motivierend und gut nutzbar.  
+Das Design wurde sehr positiv bewertet.  
+Für zukünftige Versionen sollten jedoch die Themes, Motivationstexte und die Profilansicht verbessert werden, um das Nutzererlebnis weiter zu steigern.
+
