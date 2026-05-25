@@ -9,7 +9,6 @@ from pages.exams_page import show_exams_page
 from pages.point_system_page import show_point_system_page
 from pages.profile_page import show_profile_page
 
-
 from utils.data_manager import DataManager
 
 import html
@@ -18,7 +17,6 @@ from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
 from pages.home_page import show_home_page, show_sidebar_nav, show_profile_sidebar_button
-
 
 # ---------------------------------------------------------
 # ------------------------- LOGIN --------------------------
