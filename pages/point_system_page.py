@@ -85,25 +85,34 @@ def show_point_system_page():
     colors = get_theme_colors()
     apply_theme()
     
+    # Bestimmung der Textfarbe für die Cards basierend auf dem Theme
+    card_text_color = colors.get('text', '#000000')
+    
     st.markdown(f"""
     <style>
+    /* Das große Profilbanner passt sich nun farblich dem Theme an */
     .hero-banner {{
-        background: linear-gradient(135deg, {colors.get('primary', '#7c3aed')} 0%, #4c1d95 100%);
-        color: white;
+        background: linear-gradient(135deg, {colors.get('primary', '#7c3aed')} 0%, {colors.get('secondary', '#4c1d95')} 100%);
+        color: white !important;
         padding: 30px;
         border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         margin-bottom: 25px;
         text-align: center;
     }}
+    
+    /* Die "Bubbles" / White-Cards ziehen nun die korrekte Hintergrundfarbe des Themes */
     .game-card {{
-        background: #ffffff;
+        background-color: {colors.get('card', '#ffffff')} !important;
+        color: {card_text_color} !important;
         border-radius: 16px;
         padding: 20px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         margin-bottom: 20px;
-        border: 1px solid #f3f4f6;
+        border: 1px solid rgba(0,0,0,0.05);
     }}
+    
+    /* Die Listen-Einträge der Erfolge */
     .reward-item {{
         display: flex;
         align-items: center;
@@ -111,28 +120,39 @@ def show_point_system_page():
         padding: 10px 14px;
         border-radius: 10px;
         margin-bottom: 8px;
-        background: #f9fafb;
     }}
+    
+    /* Freigeschaltete Quests erhalten einen dezenten Akzent der Theme-Sekundärfarbe */
     .reward-unlocked {{
-        background: #ecfdf5;
+        background: rgba(16, 185, 129, 0.12);
         border-left: 5px solid #10b981;
+        color: {card_text_color} !important;
     }}
+    
+    /* Gesperrte Quests passen sich ebenfalls an */
     .reward-locked {{
-        background: #f3f4f6;
-        opacity: 0.6;
+        background: rgba(0, 0, 0, 0.04);
+        opacity: 0.5;
         border-left: 5px solid #9ca3af;
+        color: {card_text_color} !important;
     }}
+    
     .badge-pill {{
-        background: rgba(255,255,255,0.2);
+        background: rgba(0,0,0,0.06);
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 13px;
         font-weight: bold;
     }}
+    
+    /* Erzwinge korrekte Überschriftenfarben innerhalb der Cards */
+    .game-card h3 {{
+        color: {card_text_color} !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-    # JETZT KOMPLETT DYNAMISCH: Echte Punkte live berechnen
+    # Echte Punkte live berechnen
     total_points = calculate_live_points()
     lvl_info = calc_level_and_progress(total_points)
     history_data = generate_live_history(total_points)
@@ -140,22 +160,22 @@ def show_point_system_page():
     # --- HERO BANNER ---
     st.markdown(f"""
     <div class="hero-banner">
-        <span style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; opacity: 0.8;">Spieler-Profil</span>
-        <h1 style="margin: 5px 0 15px 0; color: white; font-size: 40px;">👑 {st.session_state.get('username','Held')}</h1>
+        <span style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; opacity: 0.9;">Spieler-Profil</span>
+        <h1 style="margin: 5px 0 15px 0; color: white !important; font-size: 40px;">👑 {st.session_state.get('username','Held')}</h1>
         <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
             <div>
-                <div style="font-size: 13px; opacity: 0.7;">AKTUELLES LEVEL</div>
-                <div style="font-size: 24px; font-weight: bold;">LVL {lvl_info['level']}</div>
+                <div style="font-size: 13px; opacity: 0.8;">AKTUELLES LEVEL</div>
+                <div style="font-size: 24px; font-weight: bold; color: white !important;">LVL {lvl_info['level']}</div>
             </div>
             <div style="border-left: 1px solid rgba(255,255,255,0.3); height: 40px;"></div>
             <div>
-                <div style="font-size: 13px; opacity: 0.7;">SCORE</div>
-                <div style="font-size: 24px; font-weight: bold;">{total_points} EXP</div>
+                <div style="font-size: 13px; opacity: 0.8;">SCORE</div>
+                <div style="font-size: 24px; font-weight: bold; color: white !important;">{total_points} EXP</div>
             </div>
             <div style="border-left: 1px solid rgba(255,255,255,0.3); height: 40px;"></div>
             <div>
-                <div style="font-size: 13px; opacity: 0.7;">RANKING</div>
-                <div style="font-size: 24px; font-weight: bold;">{lvl_info['level_name'].split('— ')[1]}</div>
+                <div style="font-size: 13px; opacity: 0.8;">RANKING</div>
+                <div style="font-size: 24px; font-weight: bold; color: white !important;">{lvl_info['level_name'].split('— ')[1]}</div>
             </div>
         </div>
     </div>
@@ -169,16 +189,18 @@ def show_point_system_page():
         st.markdown(f"### ⚡ Nächstes Level-Up")
         
         prog_percent = int(lvl_info['progress_fraction'] * 100)
+        
+        # Nutzen der Theme-Farben für den inneren Ladebalken
         st.markdown(f"""
-        <div style="width: 100%; background-color: #e5e7eb; border-radius: 10px; margin: 12px 0 6px 0;">
-            <div style="width: {prog_percent}%; background: linear-gradient(90deg, #10b981, #34d399); height: 16px; border-radius: 10px; text-align: center; color: white; font-size: 11px; font-weight: bold; line-height: 16px;">
+        <div style="width: 100%; background-color: rgba(0,0,0,0.08); border-radius: 10px; margin: 12px 0 6px 0;">
+            <div style="width: {prog_percent}%; background: linear-gradient(90deg, {colors.get('primary', '#10b981')}, {colors.get('secondary', '#34d399')}); height: 16px; border-radius: 10px; text-align: center; color: white !important; font-size: 11px; font-weight: bold; line-height: 16px;">
                 {prog_percent}%
             </div>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
-        <div style="display: flex; justify-content: space-between; font-size: 14px; color: #4b5563;">
+        <div style="display: flex; justify-content: space-between; font-size: 14px; opacity: 0.8;">
             <span><b>{total_points}</b> / {lvl_info['next_threshold']} EXP</span>
             <span>Noch <b>{lvl_info['points_to_next']} EXP</b> bis Level {lvl_info['level'] + 1}</span>
         </div>
@@ -211,20 +233,20 @@ def show_point_system_page():
                 st.markdown(f"""
                 <div class="reward-item reward-unlocked">
                     <div>
-                        <span style="font-size: 12px; font-weight: bold; color: #065f46;">LVL {lvl} • {clean_name}</span><br>
-                        <span style="font-size: 14px; color: #111827;">{badge}</span>
+                        <span style="font-size: 12px; font-weight: bold;">LVL {lvl} • {clean_name}</span><br>
+                        <span style="font-size: 14px;">{badge}</span>
                     </div>
-                    <span class="badge-pill" style="background: #d1fae5; color: #065f46;">✅ Bereit</span>
+                    <span class="badge-pill">✅ Bereit</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
                 <div class="reward-item reward-locked">
                     <div>
-                        <span style="font-size: 12px; font-weight: bold; color: #374151;">LVL {lvl} • ???</span><br>
-                        <span style="font-size: 14px; color: #6b7280;">{badge.split(" ")[0]} Ab {thresh} EXP</span>
+                        <span style="font-size: 12px; font-weight: bold;">LVL {lvl} • ???</span><br>
+                        <span style="font-size: 14px; opacity: 0.7;">{badge.split(" ")[0]} Ab {thresh} EXP</span>
                     </div>
-                    <span class="badge-pill" style="background: #e5e7eb; color: #4b5563;">🔒 Locked</span>
+                    <span class="badge-pill">🔒 Locked</span>
                 </div>
                 """, unsafe_allow_html=True)
                 
