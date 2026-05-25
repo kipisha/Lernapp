@@ -7,13 +7,45 @@ import random
 import copy
 
 # --- Data load helpers ---
-def load_tasks():
+def load_data(filename):
+    return DataManager().load_user_data(filename, initial_value=[])
+
+
+def save_done(item, filename):
     dm = DataManager()
-    return dm.load_user_data("tasks.json", initial_value=[])
+    data = load_data(filename)
+
+    updated = _find_and_update(
+        data,
+        item,
+        lambda e: {
+            **e,
+            "done": True,
+            "done_at": datetime.utcnow().isoformat()
+        }
+    )
+
+    if updated:
+        dm.save_user_data(data, filename)
+
+    return updated
+
+
+def load_tasks():
+    return load_data("tasks.json")
+
 
 def load_exams():
-    dm = DataManager()
-    return dm.load_user_data("exams.json", initial_value=[])
+    return load_data("exams.json")
+
+
+def mark_task_done(task):
+    return save_done(task, "tasks.json")
+
+
+def mark_exam_done(exam):
+    return save_done(exam, "exams.json")
+
 
 # Aufgaben ignorieren, die bereits erledigt sind
 def get_next_item(items, date_key):
@@ -44,24 +76,6 @@ def _find_and_update(list_data, item, update_fn):
         if same_id:
             list_data[i] = update_fn(entry)
             return True
-    return False
-
-def mark_task_done(task):
-    dm = DataManager()
-    tasks = dm.load_user_data("tasks.json", initial_value=[])
-    updated = _find_and_update(tasks, task, lambda e: {**e, "done": True, "done_at": datetime.utcnow().isoformat()})
-    if updated:
-        dm.save_user_data(tasks, "tasks.json")
-        return True
-    return False
-
-def mark_exam_done(exam):
-    dm = DataManager()
-    exams = dm.load_user_data("exams.json", initial_value=[])
-    updated = _find_and_update(exams, exam, lambda e: {**e, "done": True, "done_at": datetime.utcnow().isoformat()})
-    if updated:
-        dm.save_user_data(exams, "exams.json")
-        return True
     return False
 
 # --- Motivation ---
@@ -215,7 +229,6 @@ def show_profile_sidebar_button():
 
     
 def show_sidebar_nav():
-    colors = get_theme_colors()
     with st.sidebar:
         st.markdown("<h1 style='color:#7c3aed;'>smartplan ✦</h1>", unsafe_allow_html=True)
         nav_items = [
