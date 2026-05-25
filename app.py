@@ -74,8 +74,7 @@ html, body, .stApp {
     backdrop-filter: blur(6px);}
 
 /* Buttons */
-.stButton > button {
-    background: linear-gradient(135deg, #4f46e5, #9333ea);
+.stButton > button {background: linear-gradient(135deg, #4f46e5, #9333ea);
     color: white;
     border-radius: 12px;
     padding: 10px 22px;
@@ -83,9 +82,7 @@ html, body, .stApp {
     border: none;
     transition: 0.2s;}
 
-.stButton > button:hover {
-    transform: scale(1.03);
-    background: linear-gradient(135deg, #4338ca, #7e22ce);}
+.stButton > button:hover {transform: scale(1.03); background: linear-gradient(135deg, #4338ca, #7e22ce);}
 
 </style>
 """, unsafe_allow_html=True)
