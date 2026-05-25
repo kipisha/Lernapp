@@ -19,8 +19,7 @@ def save_done(item, filename):
         lambda e: {
             **e,
             "done": True,
-            "done_at": datetime.utcnow().isoformat()
-        }
+            "done_at": datetime.utcnow().isoformat()}
     )
     if updated:
         dm.save_user_data(data, filename)
@@ -245,6 +244,12 @@ def show_home_page():
         show_theme_switcher()
     except Exception:
         pass
+    
+        st.markdown("""
+<div style='padding:10px;border-radius:8px;background:#f5f5f7;border:1px solid #e2e2e6;margin-top:10px;'>
+💡 Wähle eines der 4 Themes und passe die App deinem Mood an.
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown(
         f"""
