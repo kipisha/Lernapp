@@ -1,3 +1,12 @@
 ## 1. Wireframe
 
-![Wireframe](../Konzeptphase/images/Wireframe.jpg)
+![Wireframe](./images/Wireframe.jpg)
+
+
+
+
+
+
+
+
+
