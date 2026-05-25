@@ -201,10 +201,7 @@ def show_sidebar_nav():
             if st.button(label, use_container_width=True, key=f"nav_btn_{page}"):
                 st.session_state.page = page
                 st.rerun()
-     
-        if st.button("Logout", use_container_width=True, key="logout_sidebar"):
-            st.session_state.username = None
-            st.rerun()
+
 
 # --- Main page ---
 def show_home_page():
