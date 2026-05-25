@@ -45,7 +45,7 @@ if "page" not in st.session_state:
     st.session_state.page = "Home"
 
 
-st.set_page_config(page_title="smartplan", page_icon=":material/home:")
+st.set_page_config(page_title="lernapp", page_icon=":material/home:")
 st.markdown("""
 <style>
 
