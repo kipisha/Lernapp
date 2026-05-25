@@ -113,15 +113,20 @@ def show_exams_page():
         done = e.get("study_done_min", 0)
         progress = int((done / goal) * 100) if goal > 0 else 0
 
-        with st.expander(f"{e['title']} — {e['subject']} — {e['date']}"):
-            st.markdown(f"**Uhrzeit:** {e['time']}")
+
+        with st.expander(
+            f"{e.get('title', 'No title')} — "
+            f"{e.get('subject', 'No subject')} — "
+            f"{e.get('date', 'No date')}"
+        ):
+            st.markdown(f"**Uhrzeit:** {e.get('time', 'Keine Uhrzeit')}")
 
             st.markdown("**Themen:**")
-            for t in e["topics"]:
+            for t in e.get("topics", []):
                 st.markdown(f"- {t}")
 
             st.markdown("**Notizen:**")
-            st.markdown(e["notes"])
+            st.markdown(e.get("notes", ""))
 
             st.markdown("**Fortschritt:**")
             st.progress(min(1.0, progress / 100))

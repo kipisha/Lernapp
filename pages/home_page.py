@@ -16,23 +16,19 @@ def load_exams():
     return dm.load_user_data("exams.json", initial_value=[])
 
 # Aufgaben ignorieren, die bereits erledigt sind
+def get_next_item(items, date_key):
+    if not items:
+        return None
+    pending = [i for i in items if not i.get("done", False)]
+    if not pending:
+        return None
+    return min(pending, key=lambda i: i.get(date_key, "9999-12-31"))
+
 def get_next_task(tasks):
-    if not tasks:
-        return None
-    todo = [t for t in tasks if not t.get("done", False)]
-    if not todo:
-        return None
-    tasks_sorted = sorted(todo, key=lambda t: t.get("due", "9999-12-31"))
-    return tasks_sorted[0]
+    return get_next_item(tasks, "due")
 
 def get_next_exam(exams):
-    if not exams:
-        return None
-    todo = [e for e in exams if not e.get("done", False)]
-    if not todo:
-        return None
-    exams_sorted = sorted(todo, key=lambda e: e.get("date", "9999-12-31"))
-    return exams_sorted[0]
+    return get_next_item(exams, "date")
 
 # --- Persist changes ---
 def _find_and_update(list_data, item, update_fn):
