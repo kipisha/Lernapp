@@ -67,5 +67,4 @@ Alle Screens wurden in einem einzigen Wireframe‑Bild zusammengeführt.
 ![Wireframe](docs/images/Wireframe.jpg)
 
 Die folgende Gesamtübersicht zeigt alle Screens der App in einem zusammenhängenden Wireframe.
-Sie dient als Orientierung über Navigation, Layout und Funktionslogik.
-
+Sie dient als Orientierung über Navigation, Layout und Funktionslogik

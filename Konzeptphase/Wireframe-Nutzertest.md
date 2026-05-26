@@ -46,6 +46,3 @@
 
 ### **2. Auswertung : Test-Grid**
 ![Test-Grid](images/Test-Grid-2.jpg)
-
-
-

@@ -10,7 +10,6 @@ import copy
 def load_data(filename):
     return DataManager().load_user_data(filename, initial_value=[])
 
-
 def save_done(item, filename):
     dm = DataManager()
     data = load_data(filename)
@@ -30,22 +29,17 @@ def save_done(item, filename):
 
     return updated
 
-
 def load_tasks():
     return load_data("tasks.json")
-
 
 def load_exams():
     return load_data("exams.json")
 
-
 def mark_task_done(task):
     return save_done(task, "tasks.json")
 
-
 def mark_exam_done(exam):
     return save_done(exam, "exams.json")
-
 
 # Aufgaben ignorieren, die bereits erledigt sind
 def get_next_item(items, date_key):
@@ -265,7 +259,6 @@ def show_home_page():
 💡 Wähle eines der 4 Themes und passe die App deinem Mood an.
 </div>
 """, unsafe_allow_html=True)
-
 
     st.markdown(
         f"""
