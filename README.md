@@ -3,6 +3,12 @@
 Dieses Projekt wurde im Rahmen des Moduls Informatik II erstellt.  
 Ziel war es, eine Lernapplikation zu konzipieren, die Schüler*innen beim Organisieren ihres Schulalltags unterstützt.
 
+--- 
+
+## Link zur App 
+
+https://smartplan-bmld.streamlit.app/
+
 ---
 
 ## 👥 Projektteam & Kontakt
